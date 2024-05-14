@@ -13,6 +13,9 @@ module.exports = {
         "prussian-blue-dark": "var(--prussian-blue-dark)",
         "text": "var(--text)",
       },
+      fontFamily: {
+        montserrat: ['"Montserrat"', 'sans-serif'],
+      },
     },
   },
   plugins: [],

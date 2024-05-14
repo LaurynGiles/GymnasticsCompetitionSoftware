@@ -1,6 +1,10 @@
+@import "@fontsource/montserrat/index.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
 @layer components {
   .all-\[unset\] {
@@ -18,5 +22,5 @@
   --prussian-blue-dark: rgb(14, 30, 46);
   --text: rgba(149, 148, 159, 1);
 
-  font-family:'Montserrat-Medium',Helvetica;
+  /* font-family:'Montserrat-Medium',Helvetica; */
 }

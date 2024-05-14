@@ -1,11 +1,9 @@
 import React from "react";
 
-const ArrowIcon = ({ address, changeLocation }) => {
+const ArrowIcon = () => {
   return (
-    <div style={{ display: "flex", alignItems: "center", maxWidth: "300px" }}>
-      <p style={{ overflow: "hidden", textOverflow: "ellipsis", maxWidth: "300px" }}>{address}</p>
       <svg
-        onClick={changeLocation}
+        // onClick={select}
         style={{ marginLeft: "5px", cursor: "pointer" }}
         xmlns="http://www.w3.org/2000/svg"
         width="15"
@@ -28,7 +26,6 @@ const ArrowIcon = ({ address, changeLocation }) => {
           fill="#183431"
         />
       </svg>
-    </div>
   );
 };
 
