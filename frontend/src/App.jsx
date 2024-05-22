@@ -4,6 +4,7 @@ import LoginJudges from './pages/LoginJudges';
 import HomeJudges from './pages/HomeJudges';
 import NotificationsJudges from './pages/NotificationsJudges'
 import CalculationsJudges from './pages/CalculationsJudges'
+import ScoreCardJudges from './pages/ScoreCardJudges';
 import './App.css'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/home" element={<HomeJudges />} />
         <Route path="/notifications" element={<NotificationsJudges />} />
         <Route path="/calculations" element={<CalculationsJudges />} />
+        <Route path="/scorecard" element={<ScoreCardJudges />} />
         {/* <Route path="/register" element={<Register />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/note" element={<Note />} /> */}

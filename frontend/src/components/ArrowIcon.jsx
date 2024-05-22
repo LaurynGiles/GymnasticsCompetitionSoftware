@@ -1,9 +1,9 @@
 import React from "react";
 
-const ArrowIcon = () => {
+const ArrowIcon = ({ rotation = 0}) => {
   return (
       <svg
-        style={{ marginLeft: "5px", cursor: "pointer" }}
+        style={{ marginLeft: "5px", cursor: "pointer", transform: `rotate(${rotation}deg)` }}
         xmlns="http://www.w3.org/2000/svg"
         width="15"
         height="13"

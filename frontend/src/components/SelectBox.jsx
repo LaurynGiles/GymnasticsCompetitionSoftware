@@ -5,15 +5,18 @@ import SelectOptions from "./SelectOptions";
 const SelectBox = ({ title, option , setOption, allOptions}) => {
 
   const [showPopup, setShowPopup] = useState(false);
+  const [rotateArrow, setRotateArrow] = useState(0);
 
   const handleArrowClick = () => {
     setShowPopup(!showPopup);
+    setRotateArrow(rotateArrow === 0 ? 180 : 0);
   };
 
   const handleOptionClick = (selectedOption) => {
     console.log(selectedOption); // You can handle the selected option here
     setOption(selectedOption);
     setShowPopup(false);
+    setRotateArrow(0);
   };
 
   return (
@@ -26,7 +29,7 @@ const SelectBox = ({ title, option , setOption, allOptions}) => {
           {option}
         </div>
         <div onClick={handleArrowClick}>
-          <ArrowIcon />
+          <ArrowIcon rotation={rotateArrow}/>
         </div>
       </div>
       {showPopup && <SelectOptions allOptions={allOptions} handleOptionClick={handleOptionClick}/>}
