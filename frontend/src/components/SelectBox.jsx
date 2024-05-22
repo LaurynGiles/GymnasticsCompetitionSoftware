@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import ArrowIcon from "./ArrowIcon";
+import SelectOptions from "./SelectOptions";
 
-const SelectBox = ({ title, option }) => {
+const SelectBox = ({ title, option , setOption, allOptions}) => {
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleArrowClick = () => {
+    setShowPopup(!showPopup);
+  };
+
+  const handleOptionClick = (selectedOption) => {
+    console.log(selectedOption); // You can handle the selected option here
+    setOption(selectedOption);
+    setShowPopup(false);
+  };
+
   return (
     <div className="inline-flex flex-col items-center justify-center gap-[10px] relative flex-[0_0_auto]">
       <div className="relative w-[200px] h-[25px] mt-[3.00px] font-montserrat font-medium text-prussian-blue text-[20px] text-center tracking-[0] leading-[normal]">
@@ -11,8 +25,11 @@ const SelectBox = ({ title, option }) => {
         <div className="relative w-[185px] mt-[3.00px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
           {option}
         </div>
-        <ArrowIcon />
+        <div onClick={handleArrowClick}>
+          <ArrowIcon />
+        </div>
       </div>
+      {showPopup && <SelectOptions allOptions={allOptions} handleOptionClick={handleOptionClick}/>}
     </div>
   );
 };

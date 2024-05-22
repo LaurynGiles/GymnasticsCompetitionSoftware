@@ -3,7 +3,6 @@ import React from "react";
 const ArrowIcon = () => {
   return (
       <svg
-        // onClick={select}
         style={{ marginLeft: "5px", cursor: "pointer" }}
         xmlns="http://www.w3.org/2000/svg"
         width="15"

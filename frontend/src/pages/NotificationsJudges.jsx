@@ -9,7 +9,7 @@ const NotificationsJudges = () => {
     <div className="bg-[#feffff] flex flex-row justify-center w-full">
       <div className="bg-bright-white w-[400px] h-[800px]">
         <div className="inline-flex flex-col items-center w-full gap-[30px] relative overflow-hidden">
-          <NavigationBarDefault showBackIcon={true}/>
+          <NavigationBarDefault showBackIcon={true} showBookIcon={false}/>
           <Header text="Notifications"/>
           <div className="inline-flex flex-col items-center gap-[15px] relative flex-[0_0_auto]">
             <HeadJudgeNotification notification="Please approach the judging table" time="10:10am" />

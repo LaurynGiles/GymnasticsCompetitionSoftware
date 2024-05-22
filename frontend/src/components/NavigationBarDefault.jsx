@@ -3,23 +3,24 @@ import HomeIcon from "./HomeIcon"
 import BellIcon from "./BellIcon"
 import SettingsIcon from "./SettingsIcon"
 import BackIcon from "./BackIcon";
+import BookIcon from "./BookIcon"
 import { Link } from "react-router-dom";
 
-const NavigationBarDefault = ({ showBackIcon }) => {
-  // const [showBackIconVar, setShowBackIcon] = useState(true); // true to show, false to hide
+const NavigationBarDefault = ({ showBackIcon, showBookIcon }) => {
 
   return (
     <div className="flex items-center w-full justify-center px-[13px] py-[12px] relative bg-glaucous">
-      <LeftHeader showBackIcon={showBackIcon}/>
+      <LeftHeader showBackIcon={showBackIcon} showBookIcon={showBookIcon}/>
       <RightHeader />
     </div>
   );
 };
 
-const LeftHeader = ({ showBackIcon }) => {
+const LeftHeader = ({ showBackIcon, showBookIcon }) => {
   return (
     <div className="flex w-[180px] items-center relative">
       {showBackIcon && <BackIcon />}
+      {showBookIcon && <BookIcon />}
     </div>
   );
 };
