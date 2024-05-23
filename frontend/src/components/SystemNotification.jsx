@@ -1,9 +1,12 @@
 import React from "react";
 
-const SystemNotification = ({notification, time}) => {
+const SystemNotification = ({notification, time, sender}) => {
+
+    const bgColorClass = sender === "head" ? "bg-light-periwinkle" : "bg-notification";
+
     return (
         <div className="inline-flex flex-col items-end justify-center gap-[5px] p-[10px] relative flex-[0_0_auto]">
-            <div className="inline-flex items-end justify-center gap-[10px] px-[14px] py-[20px] relative flex-[0_0_auto] bg-notification-box rounded-[20px] overflow-hidden">
+            <div className={`inline-flex items-end justify-center gap-[10px] px-[14px] py-[20px] relative flex-[0_0_auto] ${bgColorClass} rounded-[20px] overflow-hidden`}>
                 <p className="relative w-[291px] mt-[3.00px] font-montserrat font-normal text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
                     {notification}
                 </p>

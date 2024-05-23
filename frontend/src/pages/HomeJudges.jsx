@@ -17,10 +17,13 @@ const HomeJudges = () => {
   const apparatusOptions = ["Vault", "Bars", "Beam", "Floor"];
 
   return (
-    <div className="bg-[#feffff] flex flex-row justify-center w-full">
-      <div className="bg-bright-white w-[400px] h-[800px]">
-        <div className="inline-flex flex-col h-[800px] w-full items-center gap-[40px] relative">
-        <NavigationBarDefault showBackIcon={false} showBookIcon={false}/>
+    <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
+      <div className="bg-bright-white w-full h-full">
+      <div className="fixed top-0 w-[400px] z-10">
+          <NavigationBarDefault showBackIcon={false} showBookIcon={false} />
+        </div>
+        <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] gap-[40px] relative">
+        {/* <NavigationBarDefault showBackIcon={false} showBookIcon={false}/> */}
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           <div className="flex flex-col w-[400px] items-center gap-[15px] px-[31px] py-0 relative flex-[0_0_auto]">
             <Header text="Join a judging table"/>

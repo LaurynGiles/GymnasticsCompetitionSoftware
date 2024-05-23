@@ -1,9 +1,12 @@
 import React from "react";
 
-const HeadJudgeNotification = ({notification, time}) => {
+const Notification = ({notification, time, sender}) => {
+
+    const bgColorClass = sender === "head" ? "bg-light-periwinkle" : "bg-notification-box";
+
     return (
         <div className="inline-flex flex-col items-end justify-center gap-[5px] p-[10px] relative flex-[0_0_auto]">
-            <div className="inline-flex items-end justify-center gap-[10px] px-[14px] py-[20px] relative flex-[0_0_auto] bg-light-periwinkle rounded-[20px] overflow-hidden">
+            <div className={`inline-flex items-end justify-center gap-[10px] px-[14px] py-[20px] relative flex-[0_0_auto] ${bgColorClass} rounded-[20px] overflow-hidden`}>
                 <p className="relative w-[291px] mt-[3.00px] font-montserrat font-normal text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
                     {notification}
                 </p>
@@ -18,4 +21,4 @@ const HeadJudgeNotification = ({notification, time}) => {
   };
 
 
-export default HeadJudgeNotification;
+export default Notification;
