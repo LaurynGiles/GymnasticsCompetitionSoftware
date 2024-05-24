@@ -1,9 +1,8 @@
 import React from "react";
 import BlueButton from "../components/BlueButton";
-import ScoreCardJudges from "../pages/ScoreCardJudges";
 import { Link } from "react-router-dom";
 
-const TotalDeductionsBlock = ({ total }) => {
+const TotalDeductionsBlock = ({ level, age, apparatus, total }) => {
   return (
     <div className="flex w-[365px] items-center justify-center p-[10px] bg-light-periwinkle">
       <div className="flex items-center justify-center gap-[40px]">
@@ -15,7 +14,7 @@ const TotalDeductionsBlock = ({ total }) => {
             {parseFloat(total).toFixed(3)}
           </div>
         </div>
-        <Link to="/scorecard">
+        <Link to={`/scorecard/${encodeURIComponent(level)}/${encodeURIComponent(age)}/${encodeURIComponent(apparatus)}/${encodeURIComponent(total)}`}>
           <BlueButton title={"Submit"} />
         </Link>
       </div>

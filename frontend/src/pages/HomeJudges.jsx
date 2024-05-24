@@ -8,13 +8,15 @@ import { Link } from "react-router-dom";
 
 const HomeJudges = () => {
 
-  const [session, setSession] = useState("Session 1");
-  const [level, setLevel] = useState("Level 1: 7-8 yrs");
+  // const [session, setSession] = useState("1");
+  const [level, setLevel] = useState("1");
+  const [age, setAge] = useState("07-08");
   const [apparatus, setApparatus] = useState("Vault")
 
-  const sessionOptions = ["Session 1", "Session 2", "Session 3"];
-  const levelOptions = ["Level 1: 7-8 yrs", "Level 2: 9-10 yrs", "Level 3: 11-12 yrs"];
-  const apparatusOptions = ["Vault", "Bars", "Beam", "Floor"];
+  // const sessionOptions = ["1", "2", "3"];
+  const levelOptions = ["1", "2", "3"];
+  const ageOptions = ["07-08", "09-10", "11-12", "13-over"];
+  const apparatusOptions = ["Vault", "High Bar", "Parallel bars", "Floor"];
 
   return (
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
@@ -23,16 +25,16 @@ const HomeJudges = () => {
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} />
         </div>
         <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] gap-[40px] relative">
-        {/* <NavigationBarDefault showBackIcon={false} showBookIcon={false}/> */}
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           <div className="flex flex-col w-[400px] items-center gap-[15px] px-[31px] py-0 relative flex-[0_0_auto]">
             <Header text="Join a judging table"/>
-            <div className="inline-flex flex-col items-center justify-center w-full gap-[40px] px-[70px] py-[50px] relative flex-[0_0_auto] bg-anti-flash-white">
-              <SelectBox title="Session" option={session} setOption={setSession} allOptions={sessionOptions}/>
-              <SelectBox title="Level: Age group" option={level} setOption={setLevel} allOptions={levelOptions}/>
-              <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} allOptions={apparatusOptions}/>
-              <Link to="/calculations">
-                <BlueButton title="Join"/>
+            <div className="inline-flex flex-col items-center justify-center w-full gap-[30px] px-[70px] py-[50px] relative flex-[0_0_auto] bg-anti-flash-white">
+              {/* <SelectBox title="Session" option={session} setOption={setSession} allOptions={sessionOptions} optionType={"Session"}/> */}
+              <SelectBox title="Level" option={level} setOption={setLevel} allOptions={levelOptions} optionType={"Level"}/>
+              <SelectBox title="Age group" option={age} setOption={setAge} allOptions={ageOptions} optionType={"Age"}/>
+              <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} allOptions={apparatusOptions} optionType={"Apparatus"}/>
+              <Link to={`/calculations/${encodeURIComponent(level)}/${encodeURIComponent(age)}/${encodeURIComponent(apparatus)}`}>
+                <BlueButton title="Join" />
               </Link>
             </div>
           </div>

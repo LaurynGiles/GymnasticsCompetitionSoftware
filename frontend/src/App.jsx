@@ -14,8 +14,8 @@ function App() {
         <Route path="/login" element={<LoginJudges />} />
         <Route path="/home" element={<HomeJudges />} />
         <Route path="/notifications" element={<NotificationsJudges />} />
-        <Route path="/calculations" element={<CalculationsJudges />} />
-        <Route path="/scorecard" element={<ScoreCardJudges />} />
+        <Route path="/calculations/:level/:age/:apparatus" element={<CalculationsJudges/>} />
+        <Route path="/scorecard/:level/:age/:apparatus/:deductions" element={<ScoreCardJudges />} />
         {/* <Route path="/register" element={<Register />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/note" element={<Note />} /> */}
