@@ -14,7 +14,7 @@ const TotalDeductionsBlock = ({ level, age, apparatus, total }) => {
             {parseFloat(total).toFixed(3)}
           </div>
         </div>
-        <Link to={`/scorecard/${encodeURIComponent(level)}/${encodeURIComponent(age)}/${encodeURIComponent(apparatus)}/${encodeURIComponent(total)}`}>
+        <Link to={`/scorecardjudges/${encodeURIComponent(level)}/${encodeURIComponent(age)}/${encodeURIComponent(apparatus)}/${encodeURIComponent(total)}`}>
           <BlueButton title={"Submit"} />
         </Link>
       </div>

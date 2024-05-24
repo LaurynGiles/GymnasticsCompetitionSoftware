@@ -11,15 +11,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<LoginJudges />} />
-        <Route path="/home" element={<HomeJudges />} />
-        <Route path="/notifications" element={<NotificationsJudges />} />
-        <Route path="/calculations/:level/:age/:apparatus" element={<CalculationsJudges/>} />
-        <Route path="/scorecard/:level/:age/:apparatus/:deductions" element={<ScoreCardJudges />} />
-        {/* <Route path="/register" element={<Register />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/note" element={<Note />} /> */}
         <Route path="/" index element={<Navigate to="/login" />} />
+        <Route path="/login" element={<LoginJudges />} />
+
+        <Route path="/homejudges" element={<HomeJudges />} />
+        <Route path="/notificationsjudges" element={<NotificationsJudges />} />
+        <Route path="/calculationsjudges/:level/:age/:apparatus" element={<CalculationsJudges/>} />
+        <Route path="/scorecardjudges/:level/:age/:apparatus/:deductions" element={<ScoreCardJudges />} />
+      
       </Routes>
     </Router>
   );

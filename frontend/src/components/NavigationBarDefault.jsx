@@ -43,10 +43,10 @@ const RightHeader = () => {
 
   return (
     <div className="flex w-[180px] items-center justify-end gap-[30px] relative">
-      <Link to="/home">
+      <Link to="/homejudges">
         <HomeIcon />
       </Link>
-      <Link to="/notifications" >
+      <Link to="/notificationsjudges" >
         <BellIcon />
       </Link>
       <SettingsIcon />

@@ -6,7 +6,7 @@ import Notification from "../components/Notification";
 const NotificationsJudges = () => {
 
   const [notifications, setNotifications] = useState([]);
-  const [prevPage, setPrevPage] = useState("/home");
+  const [prevPage, setPrevPage] = useState("/homejudges");
 
   useEffect(() => {
     // Function to fetch notifications from the backend
