@@ -5,6 +5,7 @@ import HomeJudges from './pages/HomeJudges';
 import NotificationsJudges from './pages/NotificationsJudges'
 import CalculationsJudges from './pages/CalculationsJudges'
 import ScoreCardJudges from './pages/ScoreCardJudges';
+import LobbyHeadJudges from './pages/LobbyHeadJudges'
 import './App.css'
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
         <Route path="/notificationsjudges" element={<NotificationsJudges />} />
         <Route path="/calculationsjudges/:level/:age/:apparatus" element={<CalculationsJudges/>} />
         <Route path="/scorecardjudges/:level/:age/:apparatus/:deductions" element={<ScoreCardJudges />} />
+
+        <Route path="/lobby" element={<LobbyHeadJudges />} />
       
       </Routes>
     </Router>
