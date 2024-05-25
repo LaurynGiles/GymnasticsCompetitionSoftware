@@ -5,10 +5,12 @@ import NavigationBarDefault from "../components/NavigationBarDefault";
 import Header from "../components/Header";
 import GymnastBlock from "../components/GymnastBlock";
 import BlockHeader from "../components/BlockHeader";
+import Popup from "../components/Popup";
 
 const GymnastSelectHeadJudges = () => {
   const [selectedGymnast, setSelectedGymnast] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   const gymnastBlocks = [
@@ -21,17 +23,23 @@ const GymnastSelectHeadJudges = () => {
 
   const handleSelectGymnast = (index) => {
     setSelectedGymnast(index);
+    setError(false);
   };
 
   const selectedGymnastData = selectedGymnast !== null ? gymnastBlocks[selectedGymnast] : null;
 
   const handleConfirmClick = () => {
-    localStorage.setItem("level", (selectedGymnastData.level));
-    localStorage.setItem("age", (selectedGymnastData.age));
-    localStorage.setItem("number", (selectedGymnastData.number));
-    localStorage.setItem("name", (selectedGymnastData.name));
+    if (error) {
+      setShowPopup(true);
+    } else {
+      localStorage.setItem("level", (selectedGymnastData.level));
+      localStorage.setItem("age", (selectedGymnastData.age));
+      localStorage.setItem("number", (selectedGymnastData.number));
+      localStorage.setItem("name", (selectedGymnastData.name));
   
-    navigate("/calculationsjudges");
+      navigate("/calculationsjudges");
+    }
+    
   };
 
   return (
@@ -44,27 +52,27 @@ const GymnastSelectHeadJudges = () => {
           
           <div className="inline-flex flex-col items-center gap-[15px] px-0 py-[6px] relative flex-[0_0_auto]">
             <BlockHeader text={"District MAG Trials Levels 1-3"}/>
-          <Header text={"Select the next gymnast"}/>
-          {gymnastBlocks.map((gymnast, index) => (
-              <GymnastBlock
-                key={index}
-                index={index}
-                number={gymnast.number}
-                name={gymnast.name}
-                level={gymnast.level}
-                age={gymnast.age}
-                club={gymnast.club}
-                isSelected={selectedGymnast === index}
-                onSelect={handleSelectGymnast}
-              />
-            ))}
-          </div>
-          {error && <div className="text-red-500 font-montserrat">{error}</div>}
-          <div onClick={handleConfirmClick}>
-            <BlueButton title="Confirm" />
+            <Header text={"Select the next gymnast"}/>
+            {gymnastBlocks.map((gymnast, index) => (
+                <GymnastBlock
+                  key={index}
+                  index={index}
+                  number={gymnast.number}
+                  name={gymnast.name}
+                  level={gymnast.level}
+                  age={gymnast.age}
+                  club={gymnast.club}
+                  isSelected={selectedGymnast === index}
+                  onSelect={handleSelectGymnast}
+                />
+              ))}
+            <div onClick={handleConfirmClick}>
+              <BlueButton title="Confirm" />
+            </div>
           </div>
         </div>
       </div>
+      {showPopup && <Popup message={"No gymnast selected"} onClose={() => setShowPopup(false)} />}
     </div>
   );
 };

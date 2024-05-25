@@ -7,12 +7,14 @@ import ScoreBlock from "../components/ScoreBlock";
 import Header from "../components/Header";
 import StartButton from "../components/StartButton";
 import EditableScoreBlock from "../components/EditableScoreBlock";
+import Popup from "../components/Popup";
 
 const StartingScoreHeadJudges = () => {
 
   const [deductions, setDeductions] = useState("0.000");
   const [startScore, setStartScore] = useState("0.000");
   const [penalty, setPenalty] = useState("0.000");
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     setDeductions(localStorage.getItem("total"));
@@ -21,6 +23,7 @@ const StartingScoreHeadJudges = () => {
   const handleEnterClick = () => {
     localStorage.setItem("startscore", startScore);
     localStorage.setItem("penalty", penalty);
+    setShowPopup(true);
   };
 
   return (
@@ -45,7 +48,7 @@ const StartingScoreHeadJudges = () => {
           </div>
           <div className="inline-flex flex-col w-full items-center justify-center gap-[10px] relative flex-[0_0_auto]">
             <div className="flex w-[400px] items-center justify-center gap-[10px] px-[40px] py-0 relative flex-[0_0_auto]">
-              <Header text={"Final score calculation"}/>
+              <Header text={"Starting score and penalties"}/>
             </div>
             <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
               <EditableScoreBlock title="Starting score" score ={startScore} setScore={setStartScore}/>
@@ -60,6 +63,7 @@ const StartingScoreHeadJudges = () => {
           </Link>
         </div>
       </div>
+      {showPopup && <Popup message={"Values have been updated"} onClose={() => setShowPopup(false)} />}
     </div>
   );
 };
