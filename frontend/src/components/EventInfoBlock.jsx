@@ -1,6 +1,21 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
-const EventInfoBlock = ({apparatus, level, age, number, name}) => {
+const EventInfoBlock = () => {
+
+    const [apparatus, setApparatus] = useState("");
+    const [level, setLevel] = useState("");
+    const [number, setNumber] = useState("");
+    const [age, setAge] = useState("");
+    const [name, setName] = useState("");
+
+    useEffect(() => {
+        setApparatus(localStorage.getItem("apparatus"));
+        setLevel(localStorage.getItem("level"));
+        setAge(localStorage.getItem("age"));
+        setNumber(localStorage.getItem("number"));
+        setName(localStorage.getItem("name"));
+    }, []);
+
   return (
 <div className="flex flex-col w-[365.35px] items-center gap-[3px] px-[3px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle rounded-[10px]">
     <div className="flex w-[328px] items-center justify-center gap-[10px] relative flex-[0_0_auto]">

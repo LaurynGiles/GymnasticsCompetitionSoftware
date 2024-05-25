@@ -1,8 +1,17 @@
 import React from "react";
 import BlueButton from "../components/BlueButton";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const TotalDeductionsBlock = ({ level, age, apparatus, total }) => {
+const TotalDeductionsBlock = ({ total }) => {
+
+  const navigate = useNavigate();
+
+  const handleSubmitClick = () => {
+    localStorage.setItem("total", total);
+  
+    navigate("/scorecardjudges");
+  };
+
   return (
     <div className="flex w-[365px] items-center justify-center p-[10px] bg-light-periwinkle">
       <div className="flex items-center justify-center gap-[40px]">
@@ -14,9 +23,9 @@ const TotalDeductionsBlock = ({ level, age, apparatus, total }) => {
             {parseFloat(total).toFixed(3)}
           </div>
         </div>
-        <Link to={`/scorecardjudges/${encodeURIComponent(level)}/${encodeURIComponent(age)}/${encodeURIComponent(apparatus)}/${encodeURIComponent(total)}`}>
-          <BlueButton title={"Submit"} />
-        </Link>
+        <div onClick={handleSubmitClick}>
+            <BlueButton title="Submit" />
+          </div>
       </div>
     </div>
   );

@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginJudges from './pages/LoginJudges';
 import HomeJudges from './pages/HomeJudges';
-import NotificationsJudges from './pages/NotificationsJudges'
-import CalculationsJudges from './pages/CalculationsJudges'
+import NotificationsJudges from './pages/NotificationsJudges';
+import CalculationsJudges from './pages/CalculationsJudges';
 import ScoreCardJudges from './pages/ScoreCardJudges';
-import LobbyHeadJudges from './pages/LobbyHeadJudges'
+import LobbyHeadJudges from './pages/LobbyHeadJudges';
+import GymnastSelectHeadJudges from './pages/GymnastSelectHeadJudges';
 import './App.css'
 
 function App() {
@@ -17,10 +18,11 @@ function App() {
 
         <Route path="/homejudges" element={<HomeJudges />} />
         <Route path="/notificationsjudges" element={<NotificationsJudges />} />
-        <Route path="/calculationsjudges/:level/:age/:apparatus" element={<CalculationsJudges/>} />
-        <Route path="/scorecardjudges/:level/:age/:apparatus/:deductions" element={<ScoreCardJudges />} />
+        <Route path="/calculationsjudges" element={<CalculationsJudges/>} />
+        <Route path="/scorecardjudges" element={<ScoreCardJudges />} />
 
         <Route path="/lobby" element={<LobbyHeadJudges />} />
+        <Route path="/gymnastselect" element={<GymnastSelectHeadJudges />} />
       
       </Routes>
     </Router>

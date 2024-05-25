@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import SelectBox from "../components/SelectBox";
 import BlueButton from "../components/BlueButton";
 import Header from "../components/Header";
 import BlockHeader from "../components/BlockHeader";
-import { Link } from "react-router-dom";
 
 const HomeJudges = () => {
 
   const [role, setRole] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userRole = localStorage.getItem("userRole");
@@ -22,6 +23,21 @@ const HomeJudges = () => {
   const levelOptions = ["1", "2", "3"];
   const ageOptions = ["07-08", "09-10", "11-12", "13-over"];
   const apparatusOptions = ["Vault", "High Bar", "Parallel bars", "Floor"];
+
+  const handleJudgeHome = () => {
+    if (role === "judge") {
+      localStorage.setItem("level", level);
+      localStorage.setItem("age", age);
+      localStorage.setItem("apparatus", apparatus);
+      localStorage.setItem("number", "56");
+      localStorage.setItem("name", "Travis Giles");
+      navigate("/calculationsjudges");
+    } else {
+      localStorage.setItem("apparatus", apparatus);
+      navigate("/lobby");
+    }
+    
+  };
 
   return (
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
@@ -42,13 +58,13 @@ const HomeJudges = () => {
               <SelectBox title="Age group" option={age} setOption={setAge} allOptions={ageOptions} optionType={"Age"}/>
               <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} allOptions={apparatusOptions} optionType={"Apparatus"}/>
               {role === "judge" ? (
-                <Link to={`/calculationsjudges/${encodeURIComponent(level)}/${encodeURIComponent(age)}/${encodeURIComponent(apparatus)}`}>
+                <div onClick={handleJudgeHome}>
                   <BlueButton title="Join" />
-                </Link>
+                </div>
               ) : (
-                <Link to={`/lobby`}>
+                <div onClick={handleJudgeHome}>
                   <BlueButton title="Start" />
-                </Link>
+                </div>
               )}
             </div>
           </div>

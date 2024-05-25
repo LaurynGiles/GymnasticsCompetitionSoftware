@@ -1,5 +1,4 @@
 import React, {useState } from "react";
-import { useParams } from "react-router-dom";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import EventInfoBlock from "../components/EventInfoBlock";
 import DeductionButtonsGroup from "../components/DeductionButtonsGroup";
@@ -10,7 +9,6 @@ const CalculationsJudges = () => {
 
   const [values, setValues] = useState([]);
   const [total, setTotal] = useState(0.0);
-  const { level, age, apparatus } = useParams();
 
   const addValue = (value) => {
     setValues([...values, value]);
@@ -40,18 +38,12 @@ const CalculationsJudges = () => {
           <NavigationBarDefault showBackIcon={false} showBookIcon={true} />
         </div>
         <div className="flex flex-col w-full h-full items-center gap-[40px] overflow-y-auto pt-[75px] relative">
-        <EventInfoBlock
-            apparatus={apparatus}
-            level={level}
-            age={age}
-            number={"56"}
-            name={"Travis Giles"}
-          />
+        <EventInfoBlock />
           <div className="inline-flex items-center justify-center gap-[15px] relative flex-[0_0_auto]">
             <DeductionButtonsGroup addValue={addValue}/>
             <DeductionBlock values={values} removeValue={removeValue}/>
           </div>
-            <TotalDeductionsBlock level={level} age={age} apparatus={apparatus} total={total}/>
+            <TotalDeductionsBlock total={total}/>
         </div>
       </div>
     </div>

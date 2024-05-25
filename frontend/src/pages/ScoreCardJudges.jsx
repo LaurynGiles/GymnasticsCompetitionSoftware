@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import { useParams } from "react-router-dom";
 import EventInfoBlock from "../components/EventInfoBlock";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import ScoreCard from "../components/ScoreCard";
@@ -9,7 +8,6 @@ import ResubmitButton from "../components/ResubmitButton";
 const ScoreCardJudges = () => {
 
   const [showStatus, setShowStatus] = useState(false);
-  const { level, age, apparatus, deductions } = useParams();
 
   const handleButtonClick = () => {
     setShowStatus(!showStatus);
@@ -22,8 +20,8 @@ const ScoreCardJudges = () => {
           <NavigationBarDefault showBackIcon={false} showBookIcon={true} />
         </div>
         <div className="flex flex-col w-full h-full items-center gap-[30px] overflow-y-auto pt-[75px] relative">
-          <EventInfoBlock apparatus={apparatus} level={level} age={age} number={"56"} name={"Travis Giles"}/>
-          <ScoreCard deductions={deductions}/>
+          <EventInfoBlock />
+          <ScoreCard />
           {showStatus && <Status />}
           
           <ResubmitButton title="Request resubmission" handleButtonClick={handleButtonClick}/>

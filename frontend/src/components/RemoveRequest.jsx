@@ -1,11 +1,10 @@
 import React from "react";
-import TickIcon from "../components/TickIcon";
+import XIcon from "../components/XIcon";
 
-const LoginRequest = ({ name, removeAccept, addJoined , index}) => {
+const RemoveRequest = ({ name, removeJoined, index }) => {
 
-  const handleTickClick = () => {
-    removeAccept(index);
-    addJoined(name);
+  const handleXClick = () => {
+    removeJoined(index);
   };
 
   return (
@@ -14,12 +13,12 @@ const LoginRequest = ({ name, removeAccept, addJoined , index}) => {
         <div className="font-montserrat font-normal text-prussian-blue w-[200px] text-[18px] text-center">
           {name}
         </div>
-        <div className="group" onClick={handleTickClick}>
-          <TickIcon />
+        <div className="group" onClick={handleXClick}>
+          <XIcon />
         </div>
       </div>
     </div>
   );
 };
 
-export default LoginRequest;
+export default RemoveRequest;
