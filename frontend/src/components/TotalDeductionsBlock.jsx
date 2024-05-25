@@ -1,15 +1,25 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import BlueButton from "../components/BlueButton";
 import { useNavigate } from "react-router-dom";
 
 const TotalDeductionsBlock = ({ total }) => {
 
   const navigate = useNavigate();
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("userRole");
+    setRole(userRole);
+  }, []);
 
   const handleSubmitClick = () => {
     localStorage.setItem("total", total);
-  
-    navigate("/scorecardjudges");
+
+    if (role === "judge") {
+      navigate("/scorecardjudges");
+    } else {
+      navigate("/startingscore");
+    }
   };
 
   return (

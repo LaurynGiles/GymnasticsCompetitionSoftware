@@ -56,7 +56,7 @@ const LobbyHeadJudges = () => {
           </div>
           <div className="inline-flex flex-col h-[245px] items-center justify-end gap-[10px] px-[20px] py-[50px] relative">
             <Link to="/gymnastselect">
-              <StartButton/>
+              <StartButton title={"Start judging"}/>
             </Link>
           </div>
         </div>
