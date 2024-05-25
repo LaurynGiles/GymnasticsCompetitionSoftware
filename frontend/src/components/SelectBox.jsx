@@ -13,7 +13,6 @@ const SelectBox = ({ title, option , setOption, allOptions, optionType}) => {
   };
 
   const handleOptionClick = (selectedOption) => {
-    console.log(selectedOption); // You can handle the selected option here
     setOption(selectedOption);
     setShowPopup(false);
     setRotateArrow(0);
