@@ -9,9 +9,9 @@ const LoginJudges = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (number === "111") {
+    if (number === "11111") {
       localStorage.setItem("userRole", "judge");
-    } else if (number === "222") {
+    } else if (number === "22222") {
       localStorage.setItem("userRole", "headJudge");
     } else {
       alert("Invalid login number");

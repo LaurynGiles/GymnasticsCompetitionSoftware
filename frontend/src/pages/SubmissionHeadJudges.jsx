@@ -8,17 +8,22 @@ import JudgeScore from "../components/JudgeScore";
 import JudgeAnalysis from "../components/JudgeAnalysis";
 import SmallSelectBox from "../components/SmallSelectBox";
 import Popup from "../components/Popup";
+import ScoreSubmissionBlock from "../components/ScoreSubmissionBlock";
+import BlueButton from "../components/BlueButton";
 
 const SubmissionHeadJudges = () => {
   const [startScore, setStartScore] = useState("0.000");
   const [penalty, setPenalty] = useState("0.000");
+  const [deductions, setDeductions] = useState("0.000");
   const [visibleAnalysis, setVisibleAnalysis] = useState({});
   const [rotateArrow, setRotateArrow] = useState({});
-  const [showPopup, setShowPopup] = useState(false);
+  const [showRequestPopup, setShowRequestPopup] = useState(false);
+  const [showSubmitPopup, setShowSubmitPopup] = useState(false);
 
   useEffect(() => {
     setStartScore(localStorage.getItem("startscore"));
     setPenalty(localStorage.getItem("penalty"));
+    setDeductions(localStorage.getItem("total"));
   }, []);
 
   const updateAnalysisVisibility = (index) => {
@@ -44,7 +49,11 @@ const SubmissionHeadJudges = () => {
   ];
 
   const handleSendClick = () => {
-    setShowPopup(true);
+    setShowRequestPopup(true);
+  };
+
+  const handleSubmitClick = () => {
+    setShowSubmitPopup(true);
   };
 
   return (
@@ -53,19 +62,19 @@ const SubmissionHeadJudges = () => {
         <div className="fixed top-0 w-[400px] z-10">
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} />
         </div>
-        <div className="inline-flex flex-col w-full h-full items-center overflow-y-auto pt-[75px] gap-[30px] relative overflow-hidden">
+        <div className="inline-flex flex-col w-full h-full items-center overflow-y-auto pt-[75px] pb-[50px] gap-[30px] relative overflow-hidden">
           <EventInfoBlock />
-          <Header text={"Starting score and Penalties"}/>
+          
           <div className="inline-flex flex-col items-center gap-[10px] relative flex-[0_0_auto]">
-            
+            <Header text={"Starting score and Penalties"}/>
             <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
               <ScoreBlock title={"Starting score"} score={startScore}/>
               <ScoreBlock title={"Penalty deductions"} score={penalty}/>
             </div>
           </div>
-          <Header text={"Execution scores"} />
+          
           <div className="inline-flex flex-col items-center gap-[10px] px-0 py-[10px] relative flex-[0_0_auto]">
-            
+            <Header text={"Execution scores"} />
             <div className="w-[360px] flex items-center relative flex-[0_0_auto]">
               <div className="relative w-[150px] h-[26px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]">
                 Judge
@@ -90,9 +99,10 @@ const SubmissionHeadJudges = () => {
               </React.Fragment>
             ))}
           </div>
-          <Header text={"Request resubmission"} />
+          
           <div className="inline-flex flex-col items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-            <div className="inline-flex flex-col items-center justify-center gap-[10px] px-[30px] py-[10px] relative flex-[0_0_auto] bg-anti-flash-white">
+            <Header text={"Request resubmission"} />
+            <div className="inline-flex flex-col items-center justify-center gap-[10px] px-[10px] py-[10px] relative flex-[0_0_auto] bg-anti-flash-white">
               <div className="inline-flex items-start justify-center gap-[30px] relative flex-[0_0_auto]">
                 <SmallSelectBox title={"Judge"} option={requestName} setOption={setRequestName} allOptions={requestOptions}/>
                 <div onClick={handleSendClick}> 
@@ -101,9 +111,24 @@ const SubmissionHeadJudges = () => {
               </div>
             </div>
           </div>
+          
+          <div className="inline-flex flex-col items-center gap-[10px] relative flex-[0_0_auto]">
+            <Header text={"Final score submission"} />
+            <div className="inline-flex flex-col items-center gap-[19px] px-[10px] py-[15px] relative flex-[0_0_auto] bg-periwinkle">
+              <div className="inline-flex items-center justify-center gap-[10px] relative">
+                <ScoreSubmissionBlock deductions={deductions} penalties={penalty} startScore={startScore}/>
+                <div className="flex flex-col w-[122px] h-[140px] items-end justify-end gap-[10px] relative" onClick={handleSubmitClick}>
+                  <BlueButton title="Submit" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
         </div>
       </div>
-      {showPopup && <Popup message={`Request sent to ${requestName}`} onClose={() => setShowPopup(false)} />}
+      {showRequestPopup && <Popup message={`Request sent to ${requestName}`} onClose={() => setShowRequestPopup(false)} />}
+      {showSubmitPopup && <Popup message={"Submitted final score"} onClose={() => setShowSubmitPopup(false)} />}
     </div>
   );
 };
