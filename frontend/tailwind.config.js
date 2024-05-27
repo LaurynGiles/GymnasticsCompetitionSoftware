@@ -8,6 +8,7 @@ module.exports = {
         "bright-white": "var(--bright-white)",
         "glaucous": "var(--glaucous)",
         "light-periwinkle": "var(--light-periwinkle)",
+        "periwinkle": "var(--periwinkle)",
         "notification-box": "var(--notification-box)",
         "prussian-blue": "var(--prussian-blue)",
         "prussian-blue-dark": "var(--prussian-blue-dark)",

@@ -49,7 +49,9 @@ const RightHeader = () => {
       <Link to="/notificationsjudges" >
         <BellIcon />
       </Link>
-      <SettingsIcon />
+      <Link to="/settings">
+        <SettingsIcon />
+      </Link>
     </div>
   );
 };
