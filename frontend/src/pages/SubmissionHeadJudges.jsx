@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import SmallBlueButton from "../components/SmallBlueButton";
 import EventInfoBlock from "../components/EventInfoBlock";
 import NavigationBarDefault from "../components/NavigationBarDefault";
@@ -19,6 +20,8 @@ const SubmissionHeadJudges = () => {
   const [rotateArrow, setRotateArrow] = useState({});
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showSubmitPopup, setShowSubmitPopup] = useState(false);
+  const [navigateOnClose, setNavigateOnClose] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setStartScore(localStorage.getItem("startscore"));
@@ -54,6 +57,14 @@ const SubmissionHeadJudges = () => {
 
   const handleSubmitClick = () => {
     setShowSubmitPopup(true);
+    setNavigateOnClose(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowSubmitPopup(false);
+    if (navigateOnClose) {
+      navigate("/gymnastselect");
+    }
   };
 
   return (
@@ -128,7 +139,7 @@ const SubmissionHeadJudges = () => {
         </div>
       </div>
       {showRequestPopup && <Popup message={`Request sent to ${requestName}`} onClose={() => setShowRequestPopup(false)} />}
-      {showSubmitPopup && <Popup message={"Submitted final score"} onClose={() => setShowSubmitPopup(false)} />}
+      {showSubmitPopup && <Popup message={"Submitted final score"} onClose={handleClosePopup} />}
     </div>
   );
 };

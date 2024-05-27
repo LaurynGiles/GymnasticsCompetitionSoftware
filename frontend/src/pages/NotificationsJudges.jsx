@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import Header from "../components/Header";
 import Notification from "../components/Notification";
+import SendMessage from "../components/SendMessage";
 
 const NotificationsJudges = () => {
 
@@ -9,12 +10,11 @@ const NotificationsJudges = () => {
   const [prevPage, setPrevPage] = useState("/homejudges");
 
   useEffect(() => {
-    // Function to fetch notifications from the backend
     const fetchNotifications = async () => {
       try {
-        const response = await fetch("/api/notifications"); // Replace with your actual API endpoint
+        const response = await fetch("/api/notifications");
         const data = await response.json();
-        setNotifications(data.notifications); // Assuming the response has a notifications array
+        setNotifications(data.notifications);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -29,7 +29,8 @@ const NotificationsJudges = () => {
         <div className="fixed top-0 w-[400px] z-10">
           <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={prevPage}/>
         </div>
-        <div className="inline-flex flex-col items-center w-full gap-[30px] overflow-y-auto pt-[75px] relative">
+        <div className="inline-flex flex-col items-center w-full gap-[20px] overflow-y-auto pt-[75px] relative">
+          <SendMessage />
           <Header text="Notifications"/>
           <div className="inline-flex flex-col items-center gap-[15px] relative flex-[0_0_auto]">
             {notifications.map((notification, index) => (

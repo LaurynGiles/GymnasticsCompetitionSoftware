@@ -8,7 +8,7 @@ const ScoreSubmissionBlock = ( {startScore, deductions, penalties} ) => {
                       Starting score
                     </div>
                     <div className="relative w-fit mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
-                      {startScore}
+                      {parseFloat(startScore).toFixed(3)}
                     </div>
                   </div>
                   <div className="flex w-[221px] items-center px-[15px] py-0 relative flex-[0_0_auto]">
@@ -16,7 +16,7 @@ const ScoreSubmissionBlock = ( {startScore, deductions, penalties} ) => {
                       Deductions
                     </div>
                     <div className="relative w-fit mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
-                      {deductions}
+                      {parseFloat(deductions).toFixed(3)}
                     </div>
                   </div>
                   <div className="flex w-[221px] items-center px-[15px] py-0 relative flex-[0_0_auto]">
@@ -24,7 +24,7 @@ const ScoreSubmissionBlock = ( {startScore, deductions, penalties} ) => {
                       Initial score
                     </div>
                     <div className="relative w-fit mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
-                    {startScore - deductions}
+                    {parseFloat(startScore - deductions).toFixed(3)}
                     </div>
                   </div>
                   <div className="flex w-[221px] items-center px-[15px] py-0 relative flex-[0_0_auto]">
@@ -32,7 +32,7 @@ const ScoreSubmissionBlock = ( {startScore, deductions, penalties} ) => {
                       Penalties
                     </div>
                     <div className="relative w-fit mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
-                      0.0
+                      {parseFloat(penalties).toFixed(3)}
                     </div>
                   </div>
                   <div className="flex w-[221px] items-center px-[15px] py-0 relative flex-[0_0_auto]">
@@ -40,7 +40,7 @@ const ScoreSubmissionBlock = ( {startScore, deductions, penalties} ) => {
                       Final score
                     </div>
                     <div className="relative w-fit mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
-                    {startScore - deductions - penalties}
+                    {parseFloat(startScore - deductions - penalties).toFixed(3)}
                     </div>
                   </div>
                 </div>
