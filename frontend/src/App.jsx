@@ -9,6 +9,7 @@ import LobbyHeadJudges from './pages/LobbyHeadJudges';
 import GymnastSelectHeadJudges from './pages/GymnastSelectHeadJudges';
 import StartingScoreHeadJudges from './pages/StartingScoreHeadJudges';
 import SubmissionHeadJudges from './pages/SubmissionHeadJudges';
+import SettingsJudges from './pages/SettingsJudges';
 import './App.css'
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
         <Route path="/gymnastselect" element={<GymnastSelectHeadJudges />} />
         <Route path="/startingscore" element={<StartingScoreHeadJudges />} />
         <Route path="/submission" element={<SubmissionHeadJudges />} />
+
+        <Route path="/settings" element={<SettingsJudges />} />
       
       </Routes>
     </Router>
