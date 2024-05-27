@@ -15,6 +15,7 @@ const StartingScoreHeadJudges = () => {
   const [startScore, setStartScore] = useState("0.000");
   const [penalty, setPenalty] = useState("0.000");
   const [showPopup, setShowPopup] = useState(false);
+  // const [enterClicked, setEnterClicked] = useState(false);
 
   useEffect(() => {
     setDeductions(localStorage.getItem("total"));
@@ -24,6 +25,7 @@ const StartingScoreHeadJudges = () => {
     localStorage.setItem("startscore", startScore);
     localStorage.setItem("penalty", penalty);
     setShowPopup(true);
+    // setEnterClicked(true);
   };
 
   return (
