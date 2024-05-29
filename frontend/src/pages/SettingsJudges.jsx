@@ -4,6 +4,8 @@ import RadioSelectIcon from "../components/RadioSelectIcon";
 import Header from "../components/Header";
 import UserInfo from "../components/UserInfo";
 import FilledRadioSelectIcon from "../components/FilledRadioSelectIcon";
+import BlueButton from "../components/BlueButton";
+import { Link } from "react-router-dom";
 
 export const SettingsJudges = () => {
 
@@ -76,7 +78,7 @@ export const SettingsJudges = () => {
         <div className="fixed top-0 w-[400px] z-10">
           <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={"/calculationsjudges"}/>
         </div>
-        <div className="inline-flex w-full h-full flex-col items-center gap-[30px] overflow-y-auto pt-[75px] relative">
+        <div className="inline-flex w-full h-full flex-col items-center gap-[30px] overflow-y-auto pt-[75px] pb-[50px] relative">
           <Header text={"User information"} />
           <UserInfo number={"548657"} name={"Debbie Giles"} email={"deb@gmail.com"} license={"Category A"} />
           <Header text={"Layout Settings"} />
@@ -128,10 +130,14 @@ export const SettingsJudges = () => {
             </div>
           </div>
           <div className="w-[40px] h-[21px] relative bg-glaucous" />
-        </div>
+            </div>
             {renderConditionalLayoutV()}
             </div>
           </div>
+          <Header text={"Logout"} />
+          <Link to="/login">
+            <BlueButton title={"Logout"} />
+          </Link>
         </div>
       </div>
     </div>
