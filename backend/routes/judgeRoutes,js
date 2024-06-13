@@ -1,0 +1,18 @@
+const express = require('express');
+const {
+  getJudges,
+  createJudge,
+  getJudgeById,
+  updateJudge,
+  deleteJudge
+} = require('../controllers/judgeController');
+
+const router = express.Router();
+
+router.get('/', getJudges);
+router.post('/', createJudge);
+router.get('/:id', getJudgeById);
+router.put('/:id', updateJudge);
+router.delete('/:id', deleteJudge);
+
+module.exports = router;
