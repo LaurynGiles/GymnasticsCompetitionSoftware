@@ -1,6 +1,9 @@
 # Dependency directories
 /node_modules
 
+# Database
+database.sqlite
+
 # Build files
 /build
 /dist
@@ -13,7 +16,9 @@
 
 # IDE/Editor files
 /.vscode
+/.idea
 *.sublime-workspace
+*.sublime-project
 
 # OS generated files
 .DS_Store
@@ -21,3 +26,17 @@ Thumbs.db
 
 # Anima
 .anima
+
+# Optional REPL history
+.node_repl_history
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
+
+#Log files
+logs
+*.log
+npm-debug.log*

@@ -2,15 +2,26 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const judgeRoutes = require('./routes/judgeRoutes');
-const connectDB = require('./config/db');
+const { sequelize } = require('./config/db');
 
 const app = express();
 
+//Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
-connectDB();
+//Routes
+app.use('/judges', judgeRoutes);
 
-app.use('/api/judges', judgeRoutes);
+sequelize.sync().then(() => {
+    console.log('Database synced');
+  }).catch(err => {
+    console.error('Error syncing database:', err);
+  });
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 module.exports = app;
