@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     execution_score: {
-      type: DataTypes.REAL,
+      type: DataTypes.DOUBLE,
       allowNull: false,
     },
   });

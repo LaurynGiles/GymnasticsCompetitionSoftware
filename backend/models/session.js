@@ -14,11 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     level: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
     age: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
     time_slot_id: {

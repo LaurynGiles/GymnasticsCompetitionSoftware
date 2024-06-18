@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const judgeRoutes = require('./routes/judgeRoutes');
+const judgeRoutes = require('./routes/gymnastRoutes');
 const sequelize = require('./config/db');
 const db = require('./models');
 
@@ -14,9 +14,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 //Routes
-// app.use('/judges', judgeRoutes);
+app.use('/api/gymnasts', gymnastRoutes);
 
-sequelize.sync({ force: false }) // set to true if you want tables to be dropped before recreation
+sequelize.sync({ force: true }) // set to true if you want tables to be dropped before recreation
   .then(() => {
     console.log('Database synced');
   }).catch(err => {

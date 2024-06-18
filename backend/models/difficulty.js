@@ -13,15 +13,15 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     difficulty_score: {
-      type: DataTypes.REAL,
+      type: DataTypes.DOUBLE,
       allowNull: false,
     },
     penalty_score: {
-      type: DataTypes.REAL,
+      type: DataTypes.DOUBLE,
       allowNull: false,
     },
     start_score: {
-      type: DataTypes.REAL,
+      type: DataTypes.DOUBLE,
       allowNull: false,
     },
   });
