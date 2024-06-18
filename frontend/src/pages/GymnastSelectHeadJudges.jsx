@@ -6,27 +6,35 @@ import Header from "../components/Header";
 import GymnastBlock from "../components/GymnastBlock";
 import BlockHeader from "../components/BlockHeader";
 import Popup from "../components/Popup";
+import { getAllGymnasts } from "../../api";
 
 const GymnastSelectHeadJudges = () => {
+  const [gymnastInfo, setGymnastInfo] = useState([]);
   const [selectedGymnast, setSelectedGymnast] = useState(null);
   const [error, setError] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
-  const gymnastBlocks = [
-    { number: "56", name: "Travis Giles", level: "3", age: "07-08", club: "Stellenbosch gymnastics" },
-    { number: "58", name: "Daniel Smith", level: "3", age: "07-08", club: "ACS" },
-    { number: "64", name: "Jack Henderson", level: "3", age: "07-08", club: "Eversdal" },
-    { number: "45", name: "Joshua Scott", level: "3", age: "07-08", club: "ACS" },
-    { number: "26", name: "Kade Johnson", level: "3", age: "07-08", club: "Stellenbosch gymnastics" },
-  ];
+  useEffect(() => {
+    const fetchGymnasts = async () => {
+      try {
+        const data = await getAllGymnasts();
+        setGymnastInfo(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching gymnasts:", error);
+      }
+    };
+
+    fetchGymnasts();
+  }, []);
 
   const handleSelectGymnast = (index) => {
     setSelectedGymnast(index);
     setError(false);
   };
 
-  const selectedGymnastData = selectedGymnast !== null ? gymnastBlocks[selectedGymnast] : null;
+  const selectedGymnastData = selectedGymnast !== null ? gymnastInfo[selectedGymnast] : null;
 
   const handleConfirmClick = () => {
     if (error) {
@@ -34,8 +42,9 @@ const GymnastSelectHeadJudges = () => {
     } else {
       localStorage.setItem("level", (selectedGymnastData.level));
       localStorage.setItem("age", (selectedGymnastData.age));
-      localStorage.setItem("number", (selectedGymnastData.number));
-      localStorage.setItem("name", (selectedGymnastData.name));
+      localStorage.setItem("number", (selectedGymnastData.gymnast_id));
+      localStorage.setItem("first_name", (selectedGymnastData.first_name));
+      localStorage.setItem("last_name", (selectedGymnastData.last_name));
   
       navigate("/calculationsjudges");
     }
@@ -53,12 +62,12 @@ const GymnastSelectHeadJudges = () => {
           <div className="inline-flex flex-col items-center gap-[15px] px-0 py-[6px] relative flex-[0_0_auto]">
             <BlockHeader text={"District MAG Trials Levels 1-3"}/>
             <Header text={"Select the next gymnast"}/>
-            {gymnastBlocks.map((gymnast, index) => (
+            {gymnastInfo.map((gymnast, index) => (
                 <GymnastBlock
                   key={index}
                   index={index}
-                  number={gymnast.number}
-                  name={gymnast.name}
+                  number={gymnast.gymnast_id}
+                  name='${gymnast.first_name} ${gymnast.last_name}'
                   level={gymnast.level}
                   age={gymnast.age}
                   club={gymnast.club}

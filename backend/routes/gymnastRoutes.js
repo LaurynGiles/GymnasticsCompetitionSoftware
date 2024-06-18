@@ -1,16 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const getAllGymnasts = require('../controllers/gymnastController');
+const {
+    getAllGymnasts,
+    findGymnast,
+    createGymnast,
+    updateGymnast,
+    deleteGymnast
+} = require('../controllers/gymnastController');
 
-router.get('/gymnasts', getAllGymnasts);
+router.get('/', getAllGymnasts);
 
-// POST a new gymnast
-// router.post('/', createGymnast);
+router.get('/:id', findGymnast);
 
-// PUT update a gymnast
-// router.put('/:id', updateGymnast);
+router.post('/', createGymnast);
 
-// DELETE a gymnast
-// router.delete('/:id', deleteGymnast);
+router.put('/:id', updateGymnast);
+
+router.delete('/:id', deleteGymnast);
 
 module.exports = router;

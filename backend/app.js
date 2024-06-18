@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const judgeRoutes = require('./routes/gymnastRoutes');
+const gymnastRoutes = require('./routes/gymnastRoutes');
 const sequelize = require('./config/db');
 const db = require('./models');
 
