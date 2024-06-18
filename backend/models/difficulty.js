@@ -1,49 +1,42 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const Event = require('./Event');
-const Gymnast = require('./Gymnast');
-const Judge = require('./Judge');
+module.exports = (sequelize, DataTypes) => {
+  const Difficulty = sequelize.define('Difficulty', {
+    event_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    gymnast_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    judge_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    difficulty_score: {
+      type: DataTypes.REAL,
+      allowNull: false,
+    },
+    penalty_score: {
+      type: DataTypes.REAL,
+      allowNull: false,
+    },
+    start_score: {
+      type: DataTypes.REAL,
+      allowNull: false,
+    },
+  });
 
-const Difficulty = sequelize.define('Difficulty', {
-  event_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-    references: {
-      model: Event,
-      key: 'event_id'
-    }
-  },
-  gymnast_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-    references: {
-      model: Gymnast,
-      key: 'gymnast_id'
-    }
-  },
-  judge_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-    references: {
-      model: Judge,
-      key: 'judge_id'
-    }
-  },
-  difficulty_score: {
-    type: DataTypes.REAL,
-    allowNull: false
-  },
-  penalty_score: {
-    type: DataTypes.REAL,
-    allowNull: false
-  },
-  start_score: {
-    type: DataTypes.REAL,
-    allowNull: false
-  }
-});
+  Difficulty.associate = (models) => {
+    Difficulty.belongsTo(models.Event, {
+      foreignKey: 'event_id',
+    });
+    Difficulty.belongsTo(models.Gymnast, {
+      foreignKey: 'gymnast_id',
+    });
+    Difficulty.belongsTo(models.Judge, {
+      foreignKey: 'judge_id',
+    });
+  };
 
-module.exports = Difficulty;
+  return Difficulty;
+};

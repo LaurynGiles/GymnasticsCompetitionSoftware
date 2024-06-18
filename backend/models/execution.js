@@ -1,41 +1,34 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const Event = require('./Event');
-const Gymnast = require('./Gymnast');
-const Judge = require('./Judge');
+module.exports = (sequelize, DataTypes) => {
+  const Execution = sequelize.define('Execution', {
+    event_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    gymnast_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    judge_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    execution_score: {
+      type: DataTypes.REAL,
+      allowNull: false,
+    },
+  });
 
-const Execution = sequelize.define('Execution', {
-  event_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-    references: {
-      model: Event,
-      key: 'event_id'
-    }
-  },
-  gymnast_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-    references: {
-      model: Gymnast,
-      key: 'gymnast_id'
-    }
-  },
-  judge_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-    references: {
-      model: Judge,
-      key: 'judge_id'
-    }
-  },
-  execution_score: {
-    type: DataTypes.REAL,
-    allowNull: false
-  }
-});
+  Execution.associate = (models) => {
+    Execution.belongsTo(models.Event, {
+      foreignKey: 'event_id',
+    });
+    Execution.belongsTo(models.Gymnast, {
+      foreignKey: 'gymnast_id',
+    });
+    Execution.belongsTo(models.Judge, {
+      foreignKey: 'judge_id',
+    });
+  };
 
-module.exports = Execution;
+  return Execution;
+};

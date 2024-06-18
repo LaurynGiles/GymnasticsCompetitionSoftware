@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 
 const sequelize = new Sequelize({
   dialect: process.env.DB_DIALECT,
@@ -11,33 +11,3 @@ const sequelize = new Sequelize({
 });
 
 module.exports = sequelize;
-
-// require('dotenv').config();
-// const { Sequelize } = require('sequelize');
-
-// const sequelize = new Sequelize({
-//   dialect: process.env.DB_DIALECT,
-//   storage: process.env.DB_STORAGE,
-//   logging: process.env.DB_LOGGING === 'true',
-// });
-
-// const initializeDatabase = async () => {
-//   try {
-//     await sequelize.authenticate();
-//     console.log('Connection has been established successfully.');
-
-//     await sequelize.sync();
-//     console.log('Database synced successfully.');
-
-//   } catch (error) {
-//     console.error('Unable to connect to the database:', error);
-//     process.exit(1);
-//   }
-// };
-
-// initializeDatabase();
-  
-// module.exports = {
-//   sequelize,
-//   initializeDatabase,
-// };
