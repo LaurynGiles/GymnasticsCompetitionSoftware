@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Session = sequelize.define('Session', {
     session_id: {
       type: DataTypes.INTEGER,

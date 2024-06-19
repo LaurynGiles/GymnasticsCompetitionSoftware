@@ -1,24 +1,40 @@
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const sequelize = require('../config/db');
+import fs from 'fs/promises';
+import path from 'path';
+import { Sequelize, DataTypes } from 'sequelize';
+import sequelize from '../config/db.js';
+import { fileURLToPath } from 'url';
 
 const db = {};
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-fs.readdirSync(__dirname)
-  .filter(file => file.indexOf('.') !== 0 && file !== 'index.js' && file.slice(-3) === '.js')
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-});
+console.log(__dirname);
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+async function loadModels() {
+  try {
+    const files = await fs.readdir(__dirname);
+
+    for (const file of files) {
+      if (file !== 'index.js' && file.endsWith('.js')) {
+        const { default: defineModel } = await import(path.join(__dirname, file));
+        const model = defineModel(sequelize, Sequelize.DataTypes);
+        db[model.name] = model;
+      }
+    }
+
+    Object.values(db)
+      .filter(model => typeof model.associate === 'function')
+      .forEach(model => model.associate(db));
+
+    db.sequelize = sequelize;
+    db.Sequelize = Sequelize;
+
+    console.log('Models loaded successfully');
+  } catch (err) {
+    console.error('Error loading models:', err);
   }
-});
+}
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+await loadModels();
 
-module.exports = db;
+export default db;

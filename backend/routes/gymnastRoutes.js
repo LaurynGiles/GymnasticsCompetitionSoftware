@@ -1,12 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { getAllGymnasts, findGymnast, createGymnast, updateGymnast, deleteGymnast } from '../controllers/gymnastController.js';
+
 const router = express.Router();
-const {
-    getAllGymnasts,
-    findGymnast,
-    createGymnast,
-    updateGymnast,
-    deleteGymnast
-} = require('../controllers/gymnastController');
 
 router.get('/', getAllGymnasts);
 
@@ -18,4 +13,4 @@ router.put('/:id', updateGymnast);
 
 router.delete('/:id', deleteGymnast);
 
-module.exports = router;
+export default router;

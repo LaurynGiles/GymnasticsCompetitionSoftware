@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Event = sequelize.define('Event', {
     event_id: {
       type: DataTypes.INTEGER,

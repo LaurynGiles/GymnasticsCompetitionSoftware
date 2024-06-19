@@ -1,6 +1,6 @@
-const Gymnast = require('../models/gymnast')
+import Gymnast from '../models/gymnast.js';
 
-async function getAllGymnasts(req, res, next) {
+export async function getAllGymnasts(req, res, next) {
     try {
         const allGymnasts = await Gymnast.findAll();
         res.status(200).json(allGymnasts);
@@ -9,7 +9,7 @@ async function getAllGymnasts(req, res, next) {
     }
 }
 
-async function findGymnast(req, res, next) {
+export async function findGymnast(req, res, next) {
     try {
         const gymnastId = req.params.id;
         const gymnast = await Gymnast.findByPK(gymnastId);
@@ -23,7 +23,7 @@ async function findGymnast(req, res, next) {
     }
 }
 
-async function createGymnast(req, res, next) {
+export async function createGymnast(req, res, next) {
     try {
         const newGymnast = await Gymnast.create(req.body);
         res.status(201).json(newGymnast);
@@ -32,7 +32,7 @@ async function createGymnast(req, res, next) {
     }
 }
 
-async function updateGymnast(req, res, next) {
+export async function updateGymnast(req, res, next) {
     try {
         const gymnastId = req.params.id;
         const [updated] = await Gymnast.update(req.body, {
@@ -49,7 +49,7 @@ async function updateGymnast(req, res, next) {
     }
 }
 
-async function deleteGymnast(req, res, next) {
+export async function deleteGymnast(req, res, next) {
     try {
         const gymnastId = req.params.id;
         const deleted = await Gymnast.destroy({
@@ -64,11 +64,3 @@ async function deleteGymnast(req, res, next) {
         next(error);
     }
 }
-
-module.exports = {
-    getAllGymnasts,
-    findGymnast,
-    createGymnast,
-    updateGymnast,
-    deleteGymnast,
-};

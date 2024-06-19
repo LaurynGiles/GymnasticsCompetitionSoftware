@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const TimeSlot = sequelize.define('TimeSlot', {
     time_slot_id: {
       type: DataTypes.INTEGER,

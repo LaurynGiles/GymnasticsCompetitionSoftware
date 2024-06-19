@@ -1,11 +1,9 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const gymnastRoutes = require('./routes/gymnastRoutes');
-const sequelize = require('./config/db');
-const db = require('./models');
-
-console.log(sequelize);
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import gymnastRoutes from './routes/gymnastRoutes.js';
+import sequelize from './config/db.js';
+import db from './models/index.js';
 
 const app = express();
 
@@ -16,6 +14,22 @@ app.use(cors());
 //Routes
 app.use('/api/gymnasts', gymnastRoutes);
 
+// function logModelDetails() {
+//   Object.values(db).forEach(model => {
+//     if (model.name) {
+//       console.log(`Model: ${model.name}`);
+//       console.log(`Attributes: ${Object.keys(model.rawAttributes).join(', ')}`);
+//       if (model.associations) {
+//         console.log('Associations:');
+//         Object.values(model.associations).forEach(association => {
+//           console.log(`  ${association.associationType} -> ${association.target.name}`);
+//         });
+//       }
+//       console.log('---');
+//     }
+//   });
+// }
+
 sequelize.sync({ force: true }) // set to true if you want tables to be dropped before recreation
   .then(() => {
     console.log('Database synced');
@@ -23,11 +37,12 @@ sequelize.sync({ force: true }) // set to true if you want tables to be dropped 
     console.error('Error syncing database:', err);
   });
 
-  console.log(sequelize);
+console.log(sequelize);
+// logModelDetails();
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
 
-module.exports = app;
+export default app;
