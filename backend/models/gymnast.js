@@ -22,11 +22,11 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
     },
     club: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     district: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
     contact_number: {

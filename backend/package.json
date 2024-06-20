@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha 'test/**/*.js'"
+    "test": "mocha"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
     "@sequelize/core": "^7.0.0-alpha.41",
     "@sequelize/sqlite3": "^7.0.0-alpha.41",
     "body-parser": "^1.20.2",
+    "chai-react-element": "^1.0.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -22,6 +23,7 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@types/chai-http": "^4.2.0",
     "chai": "^5.1.1",
     "chai-http": "^5.0.0",
     "mocha": "^10.4.0"
