@@ -1,8 +1,18 @@
 import app from '../app.js';
+import sequelize from '../config/db.js';
 
 import { use, expect } from 'chai';
 import chaiHttp from 'chai-http';
 const server = use(chaiHttp);
+
+before(async () => {
+  try {
+    await sequelize.sync({ force: false }); // Adjust options as needed
+    console.log('Database synced successfully');
+  } catch (error) {
+    console.error('Error syncing database:', error);
+  }
+});
 
 describe('Gymnast API', () => {
     let createdGymnastId;

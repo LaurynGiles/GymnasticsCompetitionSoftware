@@ -30,7 +30,7 @@ app.use('/api/gymnasts', gymnastRoutes);
 //   });
 // }
 
-sequelize.sync({ force: true }) // set to true if you want tables to be dropped before recreation
+sequelize.sync({ force: false }) // set to true if you want tables to be dropped before recreation
   .then(() => {
     console.log('Database synced');
   }).catch(err => {

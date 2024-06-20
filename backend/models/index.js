@@ -1,14 +1,12 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { Sequelize, DataTypes } from 'sequelize';
-import sequelize from '../config/db.js';
 import { fileURLToPath } from 'url';
+import sequelize from '../config/db.js';
 
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const db = {};
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-console.log(__dirname);
 
 async function loadModels() {
   try {
@@ -17,7 +15,7 @@ async function loadModels() {
     for (const file of files) {
       if (file !== 'index.js' && file.endsWith('.js')) {
         const { default: defineModel } = await import(path.join(__dirname, file));
-        const model = defineModel(sequelize, Sequelize.DataTypes);
+        const model = defineModel(sequelize, DataTypes);
         db[model.name] = model;
       }
     }

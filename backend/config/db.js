@@ -1,15 +1,19 @@
-import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+import { readFileSync } from 'fs';
+import { Sequelize} from 'sequelize';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const sequelize = new Sequelize({
-  dialect: process.env.DB_DIALECT,
-  storage: process.env.DB_STORAGE,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  logging: process.env.DB_LOGGING === 'true',
+const config = JSON.parse(readFileSync(__dirname + '/../config/config.json', 'utf-8'));
+
+const env = process.env.NODE_ENV || 'development';
+
+const sequelize = new Sequelize(config[env].database, config[env].username, config[env].password, {
+  dialect: config[env].dialect,
+  storage: config[env].storage,
+  logging: console.log,
 });
 
 export default sequelize;
