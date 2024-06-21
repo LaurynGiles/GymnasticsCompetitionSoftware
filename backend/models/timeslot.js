@@ -21,6 +21,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.TIME,
       allowNull: false,
     },
+  }, {
+    tableName: 'TimeSlot',
   });
 
   TimeSlot.associate = (models) => {
