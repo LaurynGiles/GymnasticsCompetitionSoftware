@@ -16,6 +16,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       allowNull: false,
     },
+  }, {
+    tableName: 'Execution',  // Explicitly set the table name here
   });
 
   Execution.associate = (models) => {

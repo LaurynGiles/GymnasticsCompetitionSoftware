@@ -5,12 +5,21 @@ import { use, expect } from 'chai';
 import chaiHttp from 'chai-http';
 const server = use(chaiHttp);
 
-describe('Gymnast API', () => {
-    let createdGymnastId;
+before(async () => {
+  // try {
+  //   await sequelize.sync({ force: true });
+  //   console.log('Database synced successfully');
+  // } catch (error) {
+  //   console.error('Error syncing database:', error);
+  // }
+});
 
-    it('should get all gymnasts', (done) => {
+describe('Competition API', () => {
+    let createdCompetitionId;
+
+    it('should get all competitions', (done) => {
         server.request.execute(app)
-            .get('/api/gymnasts')
+            .get('/api/competitions')
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.an('array');

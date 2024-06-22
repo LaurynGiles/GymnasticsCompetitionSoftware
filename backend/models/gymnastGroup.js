@@ -13,6 +13,8 @@ export default (sequelize, DataTypes) => {
         key: 'session_id',
       },
     },
+  }, {
+    tableName: 'GymnastGroup',  // Explicitly set the table name here
   });
 
   GymnastGroup.associate = (models) => {

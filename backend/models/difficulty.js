@@ -24,6 +24,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       allowNull: false,
     },
+  }, {
+    tableName: 'Difficulty',  // Explicitly set the table name here
   });
 
   Difficulty.associate = (models) => {

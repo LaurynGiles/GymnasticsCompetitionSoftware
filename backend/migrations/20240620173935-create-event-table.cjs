@@ -13,7 +13,7 @@ module.exports = {
       session_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Sessions',
+          model: 'Session',
           key: 'session_id',
         },
         onDelete: 'SET NULL',

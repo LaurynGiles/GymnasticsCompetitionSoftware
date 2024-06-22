@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: 'Sessions',
+          model: 'Session',
           key: 'session_id',
         },
       },

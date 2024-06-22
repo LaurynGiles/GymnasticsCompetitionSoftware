@@ -9,6 +9,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+  }, {
+    tableName: 'Apparatus',  // Explicitly set the table name here
   });
 
   Apparatus.associate = (models) => {

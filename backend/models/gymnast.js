@@ -45,6 +45,8 @@ export default (sequelize, DataTypes) => {
         key: 'group_id',
       },
     },
+  }, {
+    tableName: 'Gymnast',  // Explicitly set the table name here
   });
 
   Gymnast.associate = (models) => {

@@ -21,6 +21,8 @@ export default (sequelize, DataTypes) => {
         key: 'apparatus_id',
       },
     },
+  }, {
+    tableName: 'Event',  // Explicitly set the table name here
   });
 
   Event.associate = (models) => {

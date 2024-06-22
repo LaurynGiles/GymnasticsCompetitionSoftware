@@ -37,6 +37,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+  }, {
+    tableName: 'Judge',  // Explicitly set the table name here
   });
 
   Judge.associate = (models) => {

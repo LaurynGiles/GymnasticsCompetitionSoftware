@@ -29,6 +29,8 @@ export default (sequelize, DataTypes) => {
         key: 'time_slot_id',
       },
     },
+  }, {
+    tableName: 'Session',
   });
 
   Session.associate = (models) => {

@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import gymnastRoutes from './routes/gymnastRoutes.js';
+import competitionRoutes from './routes/competitionRoutes.js'
 import sequelize from './config/db.js';
 import db from './models/index.js';
 
@@ -13,6 +14,7 @@ app.use(cors());
 
 //Routes
 app.use('/api/gymnasts', gymnastRoutes);
+app.use('/api/competitions', competitionRoutes);
 
 // function logModelDetails() {
 //   Object.values(db).forEach(model => {
@@ -30,12 +32,12 @@ app.use('/api/gymnasts', gymnastRoutes);
 //   });
 // }
 
-sequelize.sync({ force: false }) // set to true if you want tables to be dropped before recreation
-  .then(() => {
-    console.log('Database synced');
-  }).catch(err => {
-    console.error('Error syncing database:', err);
-  });
+// sequelize.sync({ force: false }) // set to true if you want tables to be dropped before recreation
+//   .then(() => {
+//     console.log('Database synced');
+//   }).catch(err => {
+//     console.error('Error syncing database:', err);
+//   });
 
 console.log(sequelize);
 // logModelDetails();

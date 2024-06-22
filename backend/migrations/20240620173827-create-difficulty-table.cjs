@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Events',
+          model: 'Event',
           key: 'event_id',
         },
         primaryKey: true,
@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Gymnasts',
+          model: 'Gymnast',
           key: 'gymnast_id',
         },
         primaryKey: true,
@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Judges',
+          model: 'Judge',
           key: 'judge_id',
         },
         primaryKey: true,

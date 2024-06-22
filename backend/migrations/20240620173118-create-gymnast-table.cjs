@@ -46,7 +46,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: 'GymnastGroups',
+          model: 'GymnastGroup',
           key: 'group_id',
         },
       },

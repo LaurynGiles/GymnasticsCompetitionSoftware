@@ -25,6 +25,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+  }, {
+    tableName: 'Competition',
   });
 
   Competition.associate = (models) => {
