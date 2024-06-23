@@ -15,7 +15,7 @@ export async function getAllCompetitions(req, res, next) {
 export async function findCompetition(req, res, next) {
     try {
         const competitionId = req.params.id;
-        const competition = await Competition.findByPK(competitionId);
+        const competition = await Competition.findByPk(competitionId);
         if (competition) {
             res.status(200).json(competition);
         } else {

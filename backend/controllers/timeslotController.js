@@ -1,0 +1,69 @@
+import db from '../models/index.js';
+
+const { TimeSlot } = db;
+
+export async function getAllTimeSlots(req, res, next) {
+    try {
+        const allTimeSlots = await TimeSlot.findAll();
+        console.log(allTimeSlots);
+        res.status(200).json(allTimeSlots);
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function findTimeSlot(req, res, next) {
+    try {
+        const timeSlotId = req.params.id;
+        const timeSlot = await TimeSlot.findByPk(timeSlotId);
+        if (timeSlot) {
+            res.status(200).json(timeSlot);
+        } else {
+            res.status(404).send('TimeSlot not found');
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function createTimeSlot(req, res, next) {
+    try {
+        const newTimeSlot = await TimeSlot.create(req.body);
+        res.status(201).json(newTimeSlot);
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function updateTimeSlot(req, res, next) {
+    try {
+        const timeSlotId = req.params.id;
+        const [updated] = await TimeSlot.update(req.body, {
+            where: { time_slot_id: timeSlotId }
+        });
+        if (updated) {
+            const updatedTimeSlot = await TimeSlot.findByPk(timeSlotId);
+            res.status(200).json(updatedTimeSlot);
+        } else {
+            res.status(404).send('TimeSlot not found');
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function deleteTimeSlot(req, res, next) {
+    try {
+        const timeSlotId = req.params.id;
+        const deleted = await TimeSlot.destroy({
+            where: { time_slot_id: timeSlotId }
+        });
+        if (deleted) {
+            res.status(204).send();
+        } else {
+            res.status(404).send('TimeSlot not found');
+        }
+    } catch (error) {
+        next(error);
+    }
+}

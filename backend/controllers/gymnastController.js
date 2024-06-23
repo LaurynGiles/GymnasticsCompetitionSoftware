@@ -15,7 +15,8 @@ export async function getAllGymnasts(req, res, next) {
 export async function findGymnast(req, res, next) {
     try {
         const gymnastId = req.params.id;
-        const gymnast = await Gymnast.findByPK(gymnastId);
+        const gymnast = await Gymnast.findByPk(gymnastId);
+        console.log(gymnast);
         if (gymnast) {
             res.status(200).json(gymnast);
         } else {
@@ -28,9 +29,8 @@ export async function findGymnast(req, res, next) {
 
 export async function createGymnast(req, res, next) {
     try {
-        // const { gsa_id, first_name, last_name, date_of_birth, club, district, contact_number, ethnicity, group_id } = req.body;
-        // console.log(gsa_id);
         const newGymnast = await Gymnast.create(req.body);
+        console.log(newGymnast);
         res.status(201).json(newGymnast);
     } catch (error) {
         next(error);
