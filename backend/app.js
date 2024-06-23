@@ -10,6 +10,7 @@ import gymnastGroupRoutes from './routes/gymnastGroupRoutes.js';
 import judgeRoutes from './routes/judgeRoutes.js';
 import sessionRoutes from './routes/sessionRoutes.js';
 import timeslotRoutes from './routes/timeslotRoutes.js'
+import apparatusRoutes from './routes/apparatusRoutes.js';
 import sequelize from './config/db.js';
 import db from './models/index.js';
 
@@ -29,6 +30,7 @@ app.use('/api/gymnastgroups', gymnastGroupRoutes);
 app.use('/api/judges', judgeRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/timeslots', timeslotRoutes);
+app.use('/api/apparatuses', apparatusRoutes);
 
 // function logModelDetails() {
 //   Object.values(db).forEach(model => {

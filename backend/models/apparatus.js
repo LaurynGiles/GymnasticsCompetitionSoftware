@@ -10,7 +10,7 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
     },
   }, {
-    tableName: 'Apparatus',  // Explicitly set the table name here
+    tableName: 'Apparatus',
   });
 
   Apparatus.associate = (models) => {

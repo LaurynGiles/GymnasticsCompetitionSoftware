@@ -5,6 +5,7 @@ const { Event } = db;
 export async function getAllEvents(req, res, next) {
     try {
         const allEvents = await Event.findAll();
+        console.log(allEvents);
         res.status(200).json(allEvents);
     } catch (error) {
         next(error);
@@ -42,6 +43,7 @@ export async function updateEvent(req, res, next) {
         });
         if (updated) {
             const updatedEvent = await Event.findByPk(eventId);
+            console.log(updatedEvent);
             res.status(200).json(updatedEvent);
         } else {
             res.status(404).send('Event not found');

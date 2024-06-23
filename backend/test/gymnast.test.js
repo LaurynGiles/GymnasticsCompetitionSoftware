@@ -55,13 +55,12 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get the created timeslot', (done) => {
+        it('should get all timeslots', (done) => {
             server.request.execute(app)
-                .get(`/api/timeslots/${createdTimeSlotId}`)
+                .get('/api/timeslots')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('time_slot_id', createdTimeSlotId);
+                    expect(res.body).to.be.an('array');
                     done();
                 });
         });
@@ -82,12 +81,13 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get all timeslots', (done) => {
+        it('should get the updated timeslot', (done) => {
             server.request.execute(app)
-                .get('/api/timeslots')
+                .get(`/api/timeslots/${createdTimeSlotId}`)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('array');
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('time_slot_id', createdTimeSlotId);
                     done();
                 });
         });
@@ -144,13 +144,12 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get the created competition', (done) => {
+        it('should get all competitions', (done) => {
             server.request.execute(app)
-                .get(`/api/competitions/${createdCompetitionId}`)
+                .get('/api/competitions')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('competition_id', createdCompetitionId);
+                    expect(res.body).to.be.an('array');
                     done();
                 });
         });
@@ -171,12 +170,13 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get all competitions', (done) => {
+        it('should get the updated competition', (done) => {
             server.request.execute(app)
-                .get('/api/competitions')
+                .get(`/api/competitions/${createdCompetitionId}`)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('array');
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('competition_id', createdCompetitionId);
                     done();
                 });
         });
@@ -247,13 +247,12 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get the created session', (done) => {
+        it('should get all sessions', (done) => {
             server.request.execute(app)
-                .get(`/api/sessions/${createdSessionId}`)
+                .get('/api/sessions')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('session_id', createdSessionId);
+                    expect(res.body).to.be.an('array');
                     done();
                 });
         });
@@ -274,12 +273,13 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get all sessions', (done) => {
+        it('should get the updated session', (done) => {
             server.request.execute(app)
-                .get('/api/sessions')
+                .get(`/api/sessions/${createdSessionId}`)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('array');
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('session_id', createdSessionId);
                     done();
                 });
         });
@@ -328,13 +328,12 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get the created gymnast group', (done) => {
+        it('should get all gymnast groups', (done) => {
             server.request.execute(app)
-                .get(`/api/gymnastgroups/${createdGymnastGroupId}`)
+                .get('/api/gymnastgroups')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('group_id', createdGymnastGroupId);
+                    expect(res.body).to.be.an('array');
                     done();
                 });
         });
@@ -355,12 +354,13 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get all gymnast groups', (done) => {
+        it('should get the updated gymnast group', (done) => {
             server.request.execute(app)
-                .get('/api/gymnastgroups')
+                .get(`/api/gymnastgroups/${createdGymnastGroupId}`)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('array');
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('group_id', createdGymnastGroupId);
                     done();
                 });
         });
@@ -425,14 +425,12 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get the created gymnast', (done) => {
-            console.log(createdGymnastId);
+        it('should get all gymnasts', (done) => {
             server.request.execute(app)
-                .get(`/api/gymnasts/${createdGymnastId}`)
+                .get('/api/gymnasts')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('gymnast_id', createdGymnastId);
+                    expect(res.body).to.be.an('array');
                     done();
                 });
         });
@@ -457,12 +455,14 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get all gymnasts', (done) => {
+        it('should get the updated gymnast', (done) => {
+            console.log(createdGymnastId);
             server.request.execute(app)
-                .get('/api/gymnasts')
+                .get(`/api/gymnasts/${createdGymnastId}`)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('array');
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('gymnast_id', createdGymnastId);
                     done();
                 });
         });
@@ -476,4 +476,543 @@ describe('API Tests', () => {
                 });
         });
     });
+
+
+    describe('Apparatus API', () => {
+
+        let createdApparatusId;
+
+        it('should create a new apparatus', (done) => {
+            const apparatus1 = {
+                apparatus_name: "Floor"
+            };
+
+            server.request.execute(app)
+                .post('/api/apparatuses')
+                .send(apparatus1)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('apparatus_id');
+                });
+
+            const apparatus2 = {
+                apparatus_name: "High Bar"
+            };
+
+            server.request.execute(app)
+                .post('/api/apparatuses')
+                .send(apparatus2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('apparatus_id');
+                });
+
+            const apparatus3 = {
+                apparatus_name: "Parallel bar"
+            };
+    
+            server.request.execute(app)
+                .post('/api/apparatuses')
+                .send(apparatus3)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('apparatus_id');
+                    createdApparatusId = res.body.apparatus_id;
+                    done();
+                });
+        });
+
+        it('should get all apparatuses', (done) => {
+            server.request.execute(app)
+                .get('/api/apparatuses')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+
+        it('should update a apparatus', (done) => {
+            const updatedApparatus = {
+                apparatus_name: "Vault"
+            };
+    
+            server.request.execute(app)
+                .put(`/api/apparatuses/${createdApparatusId}`)
+                .send(updatedApparatus)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.apparatus_name).to.equal('Vault');
+                    done();
+                });
+        });
+
+        it('should get the updated apparatus', (done) => {
+            server.request.execute(app)
+                .get(`/api/apparatuses/${createdApparatusId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('apparatus_id', createdApparatusId);
+                    done();
+                });
+        });
+
+        it('should delete a apparatus', (done) => {
+            server.request.execute(app)
+                .delete(`/api/apparatuses/${createdApparatusId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+                    done();
+                });
+        });
+    });
+
+    describe('Judge API', () => {
+
+        let createdJudgeId;
+
+        it('should create a new judge', (done) => {
+            const judge1 = {
+                gsa_id: 'J123456',
+                first_name: 'Alice',
+                last_name: 'Brown',
+                club: 'North Gymnastics Club',
+                level: '1',
+                gender: 'Female',
+                contact_number: '4596257784',
+                email: 'alice.brown@northgym.com'
+            };
+
+            server.request.execute(app)
+                .post('/api/judges')
+                .send(judge1)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('judge_id');
+                });
+
+            const judge2 = {
+                gsa_id: 'J654321',
+                first_name: 'Bob',
+                last_name: 'Smith',
+                club: 'South Gymnastics Club',
+                level: '2',
+                gender: 'Male',
+                contact_number: '2267458125',
+                email: 'bob.smith@southgym.com'
+            };
+
+            server.request.execute(app)
+                .post('/api/judges')
+                .send(judge2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('judge_id');
+                });
+
+            const judge3 = {
+                gsa_id: 'J789012',
+                first_name: 'Carol',
+                last_name: 'Jones',
+                club: 'East Gymnastics Club',
+                level: '3',
+                gender: 'Female',
+                contact_number: '4568162954',
+                email: 'carol.jones@eastgym.com'
+            };
+    
+            server.request.execute(app)
+                .post('/api/judges')
+                .send(judge3)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('judge_id');
+                    createdJudgeId = res.body.judge_id;
+                    done();
+                });
+        });
+
+        it('should get all judges', (done) => {
+            server.request.execute(app)
+                .get('/api/judges')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+
+        it('should update a judge', (done) => {
+            const updatedJudge = {
+                club: 'Stellenbosch Gymnastics'
+            };
+    
+            server.request.execute(app)
+                .put(`/api/judges/${createdJudgeId}`)
+                .send(updatedJudge)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.club).to.equal('Stellenbosch Gymnastics');
+                    done();
+                });
+        });
+
+        it('should get the updated judge', (done) => {
+            server.request.execute(app)
+                .get(`/api/judges/${createdJudgeId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('judge_id', createdJudgeId);
+                    done();
+                });
+        });
+
+        it('should delete a judge', (done) => {
+            server.request.execute(app)
+                .delete(`/api/judges/${createdJudgeId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+                    done();
+                });
+        });
+    });
+
+    describe('Event API', () => {
+
+        let createdEventId;
+
+        it('should create a new event', (done) => {
+            const event1 = {
+                session_id: 1,
+                apparatus_id: 1
+            };
+
+            server.request.execute(app)
+                .post('/api/events')
+                .send(event1)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id');
+                });
+
+            const event2 = {
+                session_id: 1,
+                apparatus_id: 2
+            };
+
+            server.request.execute(app)
+                .post('/api/events')
+                .send(event2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id');
+                });
+
+            const event3 = {
+                session_id: 2,
+                apparatus_id: 1 
+            };
+    
+            server.request.execute(app)
+                .post('/api/events')
+                .send(event3)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id');
+                    createdEventId = res.body.event_id;
+                    done();
+                });
+        });
+
+        it('should get all events', (done) => {
+            server.request.execute(app)
+                .get('/api/events')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+
+        it('should update a event', (done) => {
+            const updatedEvent = {
+                apparatus_id: 2
+            };
+    
+            server.request.execute(app)
+                .put(`/api/events/${createdEventId}`)
+                .send(updatedEvent)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.apparatus_id).to.equal(2);
+                    done();
+                });
+        });
+
+        it('should get the updated event', (done) => {
+            server.request.execute(app)
+                .get(`/api/events/${createdEventId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id', createdEventId);
+                    done();
+                });
+        });
+
+        it('should delete a event', (done) => {
+            server.request.execute(app)
+                .delete(`/api/events/${createdEventId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+                    done();
+                });
+        });
+    });
+
+    describe('Difficulty API', () => {
+
+        let createdDifficultyKey;
+
+        it('should create a new difficulty score', (done) => {
+            const difficulty1 = {
+                event_id: 1,
+                gymnast_id: 1,
+                judge_id: 1,
+                difficulty_score: 8.5,
+                penalty_score: 0.3,
+                start_score: 9.0
+            };
+
+            server.request.execute(app)
+                .post('/api/difficulties')
+                .send(difficulty1)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id', difficulty1.event_id);
+                    expect(res.body).to.have.property('gymnast_id', difficulty1.gymnast_id);
+                    expect(res.body).to.have.property('judge_id', difficulty1.judge_id);
+                });
+
+            const difficulty2 = {
+                event_id: 1,
+                gymnast_id: 1,
+                judge_id: 2,
+                difficulty_score: 8.0,
+                penalty_score: 0.5,
+                start_score: 8.5
+            };
+
+            server.request.execute(app)
+                .post('/api/difficulties')
+                .send(difficulty2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id', difficulty2.event_id);
+                    expect(res.body).to.have.property('gymnast_id', difficulty2.gymnast_id);
+                    expect(res.body).to.have.property('judge_id', difficulty2.judge_id);
+                });
+
+            const difficulty3 = {
+                event_id: 2,
+                gymnast_id: 1,
+                judge_id: 2,
+                difficulty_score: 9.0,
+                penalty_score: 0.2,
+                start_score: 9.5
+            };
+    
+            server.request.execute(app)
+                .post('/api/difficulties')
+                .send(difficulty3)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id', difficulty3.event_id);
+                    expect(res.body).to.have.property('gymnast_id', difficulty3.gymnast_id);
+                    expect(res.body).to.have.property('judge_id', difficulty3.judge_id);
+                    createdDifficultyKey = { event_id: difficulty3.event_id, gymnast_id: difficulty3.gymnast_id, judge_id: difficulty3.judge_id };
+                    done();
+                });
+        });
+
+        it('should get all difficulty scores', (done) => {
+            server.request.execute(app)
+                .get('/api/difficulties')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+
+        it('should update a difficulty score', (done) => {
+            const updatedDifficulty = {
+                difficulty_score: 8.7,
+                penalty_score: 0.1,
+                start_score: 9.8
+            };
+    
+            server.request.execute(app)
+            .put(`/api/difficulties/${createdDifficultyKey.event_id}/${createdDifficultyKey.gymnast_id}/${createdDifficultyKey.judge_id}`)
+            .send(updatedDifficulty)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('object');
+                expect(res.body.difficulty_score).to.equal(8.7);
+                expect(res.body.penalty_score).to.equal(0.1);
+                expect(res.body.start_score).to.equal(9.8);
+                done();
+            });
+        });
+
+        it('should get the updated difficulty score', (done) => {
+            server.request.execute(app)
+            .get(`/api/difficulties/${createdDifficultyKey.event_id}/${createdDifficultyKey.gymnast_id}/${createdDifficultyKey.judge_id}`)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('event_id', createdDifficultyKey.event_id);
+                expect(res.body).to.have.property('gymnast_id', createdDifficultyKey.gymnast_id);
+                expect(res.body).to.have.property('judge_id', createdDifficultyKey.judge_id);
+                done();
+            });
+        });
+
+        it('should delete a difficulty score', (done) => {
+            server.request.execute(app)
+                .delete(`/api/difficulties/${createdDifficultyKey.event_id}/${createdDifficultyKey.gymnast_id}/${createdDifficultyKey.judge_id}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+                    done();
+                });
+        });
+    });
+
+    describe('Execution API', () => {
+        let createdExecutionKey;
+    
+        it('should create a new execution score', (done) => {
+            const execution1 = {
+                event_id: 1,
+                gymnast_id: 1,
+                judge_id: 1,
+                execution_score: 8.5
+            };
+    
+            server.request.execute(app)
+                .post('/api/executions')
+                .send(execution1)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id', execution1.event_id);
+                    expect(res.body).to.have.property('gymnast_id', execution1.gymnast_id);
+                    expect(res.body).to.have.property('judge_id', execution1.judge_id);
+                });
+    
+            const execution2 = {
+                event_id: 1,
+                gymnast_id: 1,
+                judge_id: 2,
+                execution_score: 8.0
+            };
+    
+            server.request.execute(app)
+                .post('/api/executions')
+                .send(execution2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id', execution2.event_id);
+                    expect(res.body).to.have.property('gymnast_id', execution2.gymnast_id);
+                    expect(res.body).to.have.property('judge_id', execution2.judge_id);
+                });
+    
+            const execution3 = {
+                event_id: 2,
+                gymnast_id: 1,
+                judge_id: 2,
+                execution_score: 9.0
+            };
+    
+            server.request.execute(app)
+                .post('/api/executions')
+                .send(execution3)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id', execution3.event_id);
+                    expect(res.body).to.have.property('gymnast_id', execution3.gymnast_id);
+                    expect(res.body).to.have.property('judge_id', execution3.judge_id);
+                    createdExecutionKey = { event_id: execution3.event_id, gymnast_id: execution3.gymnast_id, judge_id: execution3.judge_id };
+                    done();
+                });
+        });
+    
+        it('should get all execution scores', (done) => {
+            server.request.execute(app)
+                .get('/api/executions')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+    
+        it('should update an execution score', (done) => {
+            const updatedExecution = {
+                execution_score: 8.7
+            };
+    
+            server.request.execute(app)
+                .put(`/api/executions/${createdExecutionKey.event_id}/${createdExecutionKey.gymnast_id}/${createdExecutionKey.judge_id}`)
+                .send(updatedExecution)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.execution_score).to.equal(8.7);
+                    done();
+                });
+        });
+    
+        it('should get the updated execution score', (done) => {
+            server.request.execute(app)
+                .get(`/api/executions/${createdExecutionKey.event_id}/${createdExecutionKey.gymnast_id}/${createdExecutionKey.judge_id}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('event_id', createdExecutionKey.event_id);
+                    expect(res.body).to.have.property('gymnast_id', createdExecutionKey.gymnast_id);
+                    expect(res.body).to.have.property('judge_id', createdExecutionKey.judge_id);
+                    done();
+                });
+        });
+    
+        it('should delete an execution score', (done) => {
+            server.request.execute(app)
+                .delete(`/api/executions/${createdExecutionKey.event_id}/${createdExecutionKey.gymnast_id}/${createdExecutionKey.judge_id}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+                    done();
+                });
+        });
+    });
+    
 });

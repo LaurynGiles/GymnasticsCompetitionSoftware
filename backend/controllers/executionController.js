@@ -5,6 +5,7 @@ const { Execution } = db;
 export async function getAllExecutions(req, res, next) {
     try {
         const allExecutions = await Execution.findAll();
+        console.log(allExecutions);
         res.status(200).json(allExecutions);
     } catch (error) {
         next(error);
@@ -58,6 +59,7 @@ export async function updateExecution(req, res, next) {
                     judge_id: judgeId
                 }
             });
+            console.log(updatedExecution);
             res.status(200).json(updatedExecution);
         } else {
             res.status(404).send('Execution not found');

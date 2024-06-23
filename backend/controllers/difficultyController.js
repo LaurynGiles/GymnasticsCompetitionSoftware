@@ -5,6 +5,7 @@ const { Difficulty } = db;
 export async function getAllDifficulties(req, res, next) {
     try {
         const allDifficulties = await Difficulty.findAll();
+        console.log(allDifficulties);
         res.status(200).json(allDifficulties);
     } catch (error) {
         next(error);
@@ -58,6 +59,7 @@ export async function updateDifficulty(req, res, next) {
                     judge_id: judgeId
                 }
             });
+            console.log(updatedDifficulty);
             res.status(200).json(updatedDifficulty);
         } else {
             res.status(404).send('Difficulty not found');

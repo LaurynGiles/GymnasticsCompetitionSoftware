@@ -5,6 +5,7 @@ const { Apparatus } = db;
 export async function getAllApparatus(req, res, next) {
     try {
         const allApparatus = await Apparatus.findAll();
+        console.log(allApparatus);
         res.status(200).json(allApparatus);
     } catch (error) {
         next(error);
@@ -42,6 +43,7 @@ export async function updateApparatus(req, res, next) {
         });
         if (updated) {
             const updatedApparatus = await Apparatus.findByPk(apparatusId);
+            console.log(updatedApparatus);
             res.status(200).json(updatedApparatus);
         } else {
             res.status(404).send('Apparatus not found');

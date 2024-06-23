@@ -5,6 +5,7 @@ const { Judge } = db;
 export async function getAllJudges(req, res, next) {
     try {
         const allJudges = await Judge.findAll();
+        console.log(allJudges);
         res.status(200).json(allJudges);
     } catch (error) {
         next(error);
