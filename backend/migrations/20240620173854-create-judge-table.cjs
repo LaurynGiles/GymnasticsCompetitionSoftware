@@ -30,6 +30,17 @@ module.exports = {
         type: Sequelize.STRING(20),
         allowNull: false,
       },
+      head_judge: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
+      role: {
+        type: Sequelize.STRING(1),
+        allowNull: false,
+        validate: {
+          isIn: [['D', 'E']],
+        },
+      },
       gender: {
         type: Sequelize.STRING(20),
         allowNull: false,

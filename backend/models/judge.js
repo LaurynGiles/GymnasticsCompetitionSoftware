@@ -25,6 +25,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    head_judge: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.STRING(1),
+      allowNull: false,
+    },
     gender: {
       type: DataTypes.STRING(20),
       allowNull: false,

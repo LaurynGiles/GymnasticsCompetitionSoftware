@@ -1,6 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import sequelize from './config/db.js';
+import db from './models/index.js';
+// import './auth.js';
+import cookieParser from 'cookie-parser';
+
 import gymnastRoutes from './routes/gymnastRoutes.js';
 import competitionRoutes from './routes/competitionRoutes.js';
 import difficultyRoutes from './routes/difficultyRoutes.js';
@@ -11,14 +16,14 @@ import judgeRoutes from './routes/judgeRoutes.js';
 import sessionRoutes from './routes/sessionRoutes.js';
 import timeslotRoutes from './routes/timeslotRoutes.js'
 import apparatusRoutes from './routes/apparatusRoutes.js';
-import sequelize from './config/db.js';
-import db from './models/index.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
 //Middleware
 app.use(bodyParser.json());
 app.use(cors());
+app.use(cookieParser('your-secret-key'));
 
 //Routes
 app.use('/api/gymnasts', gymnastRoutes);
@@ -31,6 +36,7 @@ app.use('/api/judges', judgeRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/timeslots', timeslotRoutes);
 app.use('/api/apparatuses', apparatusRoutes);
+app.use('/api', authRoutes);
 
 // function logModelDetails() {
 //   Object.values(db).forEach(model => {

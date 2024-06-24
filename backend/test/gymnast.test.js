@@ -583,6 +583,8 @@ describe('API Tests', () => {
                 last_name: 'Brown',
                 club: 'North Gymnastics Club',
                 level: '1',
+                head_judge: true,
+                role: 'D',
                 gender: 'Female',
                 contact_number: '4596257784',
                 email: 'alice.brown@northgym.com'
@@ -603,6 +605,8 @@ describe('API Tests', () => {
                 last_name: 'Smith',
                 club: 'South Gymnastics Club',
                 level: '2',
+                head_judge: false,
+                role: 'E',
                 gender: 'Male',
                 contact_number: '2267458125',
                 email: 'bob.smith@southgym.com'
@@ -623,6 +627,8 @@ describe('API Tests', () => {
                 last_name: 'Jones',
                 club: 'East Gymnastics Club',
                 level: '3',
+                head_judge: true,
+                role: 'D',
                 gender: 'Female',
                 contact_number: '4568162954',
                 email: 'carol.jones@eastgym.com'
