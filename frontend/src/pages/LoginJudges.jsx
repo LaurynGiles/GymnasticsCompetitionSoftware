@@ -3,24 +3,26 @@ import BlueButton from "../components/BlueButton";
 import InputBox from "../components/InputBox";
 import SmallLogo from "../components/SmallLogo";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { loginJudge } from "../utils/api.js";
 
 const LoginJudges = () => {
   const [number, setNumber] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     try {
-      const response = axios.post('/api/login', { gsa_id: number });
-      if (response.data.message === 'Login successful') {
-        const judgeInfo = JSON.parse(Cookies.get('judgeInfo'));
-        localStorage.setItem('userRole', judgeInfo.role);
-        localStorage.setItem('headJudge', judgeInfo.head_judge);
+      const response = await loginJudge(number);
+      if (response.success) {
+        const { judge_id, role, head_judge } = response;
+        localStorage.setItem('userRole', role);
+        localStorage.setItem('headJudge', head_judge);
+        localStorage.setItem('judgeId', judge_id);
         navigate('/homejudges');
+      } else {
+        alert(response.message);
       }
     } catch (error) {
-      alert("Invalid GSA number");
+      alert('Invalid GSA number');
     }
   };
 

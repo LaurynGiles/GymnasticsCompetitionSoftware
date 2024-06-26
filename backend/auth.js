@@ -1,19 +1,20 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import db from './models/index.js';
-
-const Judge = db.Judge;
+import { findJudgeByGsaId } from './service/judgeService.js';
+const { Judge } = db;
 
 passport.use(new LocalStrategy({
     usernameField: 'gsa_id',
     passwordField: 'gsa_id',
-    session: false, // Assuming you're not maintaining sessions
 },
-async (gsa_id, _, done) => {
+async (gsa_id, _ , done) => {
     try {
-        const judge = await Judge.findOne({ where: { gsa_id } });
+        console.log(gsa_id);
+        const judge = await findJudgeByGsaId(gsa_id);
+        console.log(judge);
         if (!judge) {
-            return done(null, false, { message: 'Incorrect GSA ID.' });
+            return done(null, false, { message: 'Invalid GSA number' });
         }
         return done(null, judge);
     } catch (err) {

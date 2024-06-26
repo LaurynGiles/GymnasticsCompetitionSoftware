@@ -1,4 +1,5 @@
 import db from '../models/index.js';
+import { findJudgeByGsaId } from '../service/judgeService.js';
 
 const { Judge } = db;
 
@@ -16,6 +17,22 @@ export async function findJudge(req, res, next) {
     try {
         const judgeId = req.params.id;
         const judge = await Judge.findByPk(judgeId);
+        if (judge) {
+            res.status(200).json(judge);
+        } else {
+            res.status(404).send('Judge not found');
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function findJudgeGsa(req, res, next) {
+    try {
+        const gsa_id = req.params.gsa_id;
+        console.log(gsa_id);
+        const judge = await findJudgeByGsaId(gsa_id);
+        console.log(judge);
         if (judge) {
             res.status(200).json(judge);
         } else {

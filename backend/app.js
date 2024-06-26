@@ -3,8 +3,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import sequelize from './config/db.js';
 import db from './models/index.js';
-// import './auth.js';
-import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport from 'passport';
+import crypto from 'crypto';
+import './auth.js';
+// import cookieParser from 'cookie-parser';
 
 import gymnastRoutes from './routes/gymnastRoutes.js';
 import competitionRoutes from './routes/competitionRoutes.js';
@@ -22,8 +25,25 @@ const app = express();
 
 //Middleware
 app.use(bodyParser.json());
-app.use(cors());
-app.use(cookieParser('your-secret-key'));
+app.use(cors({
+    origin: 'http://localhost:5173', // Replace with your frontend URL
+    credentials: true
+}));
+
+// const crypto = require('crypto');
+const secret = crypto.randomBytes(64).toString('hex');
+console.log(secret);
+
+// Setup session management
+app.use(session({
+    secret: secret, // Replace with your own secret
+    resave: false, // False: Session not saved back to session store if not modified during request
+    saveUninitialized: false, //False: Session not created until something is stored in it
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Routes
 app.use('/api/gymnasts', gymnastRoutes);

@@ -574,7 +574,7 @@ describe('API Tests', () => {
 
     describe('Judge API', () => {
 
-        let createdJudgeId;
+        let createdJudgeId, createdJudgeGSA;
 
         it('should create a new judge', (done) => {
             const judge1 = {
@@ -642,6 +642,7 @@ describe('API Tests', () => {
                     expect(res.body).to.be.an('object');
                     expect(res.body).to.have.property('judge_id');
                     createdJudgeId = res.body.judge_id;
+                    createdJudgeGSA = res.body.gsa_id;
                     done();
                 });
         });
@@ -672,9 +673,20 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get the updated judge', (done) => {
+        it('should get the updated judge using id', (done) => {
             server.request.execute(app)
-                .get(`/api/judges/${createdJudgeId}`)
+                .get(`/api/judges/id/${createdJudgeId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('judge_id', createdJudgeId);
+                    done();
+                });
+        });
+
+        it('should get the updated judge using gsa_id', (done) => {
+            server.request.execute(app)
+                .get(`/api/judges/gsa/${createdJudgeGSA}`)
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body).to.be.an('object');
