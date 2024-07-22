@@ -73,7 +73,6 @@ export async function deleteTimeSlot(req, res, next) {
 }
 
 export async function getActiveTimeSlot(req, res, next) {
-    console.log("HEREEE");
     try {
       const activeTimeSlot = await TimeSlot.findOne({
         where: { completed: false },

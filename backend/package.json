@@ -5,7 +5,14 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "NODE_ENV=test mocha"
+    "test": "NODE_ENV=test mocha",
+    "migrate": "npx sequelize-cli db:migrate",
+    "seed": "npx sequelize-cli db:seed:all",
+    "mig-seed": "npm run migrate && npm run seed",
+    "undo-migrate": "npx sequelize-cli db:migrate:undo",
+    "undo-all-migrate": "npx sequelize-cli db:migrate:undo:all",
+    "undo-seed": "npx sequelize-cli db:seed:undo",
+    "undo-all-seed": "npx sequelize-cli db:seed:undo:all"
   },
   "keywords": [],
   "author": "",

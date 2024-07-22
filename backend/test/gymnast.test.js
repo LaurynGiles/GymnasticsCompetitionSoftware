@@ -39,9 +39,9 @@ describe('API Tests', () => {
 
             const timeslot2 = {
                 date: '2024-03-01',
-                report_time: '08:00:00',
-                competition_time: '09:00:00',
-                award_time: '12:00:00',
+                report_time: '10:00:00',
+                competition_time: '11:00:00',
+                award_time: '14:00:00',
                 complete: false
             };
     

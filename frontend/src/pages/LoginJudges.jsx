@@ -7,6 +7,7 @@ import { loginJudge } from "../utils/api.js";
 
 const LoginJudges = () => {
   const [number, setNumber] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -22,10 +23,10 @@ const LoginJudges = () => {
         localStorage.setItem('judgeId', judge_id);
         navigate('/homejudges');
       } else {
-        alert(response.message);
+        setErrorMessage(response.message);
       }
     } catch (error) {
-      alert('Invalid GSA number');
+      setErrorMessage('Authentication error');
     }
   };
 
@@ -34,8 +35,13 @@ const LoginJudges = () => {
       <div className="bg-glaucous overflow-hidden w-full h-full">
         <div className="relative w-[446px] h-[769px] top-[-162px] left-[-23px]">
           <SmallLogo />
-          <div className="inline-flex flex-col items-center gap-[20px] px-[50px] py-[70px] absolute top-[500px] left-[34px]">
-            <InputBox number={number} setNumber={setNumber} />
+          <div className="inline-flex flex-col items-center gap-[30px] px-[50px] py-[70px] absolute top-[500px] left-[34px]">
+            <div className="flex flex-col items-center w-[284px]">
+              {errorMessage && (
+                <div className="text-red-500 mb-2">{errorMessage}</div>
+              )}
+              <InputBox number={number} setNumber={setNumber} hasError={!!errorMessage} />
+            </div>
             <div onClick={handleLogin}>
               <BlueButton title="Login" />
             </div>

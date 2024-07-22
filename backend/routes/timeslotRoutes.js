@@ -3,11 +3,11 @@ import { getAllTimeSlots, findTimeSlot, createTimeSlot, updateTimeSlot, deleteTi
 
 const router = express.Router();
 
+router.get('/active', getActiveTimeSlot);
+
 router.get('/', getAllTimeSlots);
 
 router.get('/:id', findTimeSlot);
-
-router.get('/active/', getActiveTimeSlot);
 
 router.post('/', createTimeSlot);
 

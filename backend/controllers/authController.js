@@ -5,7 +5,7 @@ export const login = (req, res, next) => {
     passport.authenticate('local', (err, judge, info) => {
         console.log("AUTHENTICATING");
         if (err) {
-            return res.status(500).json({ message: 'An error occurred during authentication' });
+            return res.status(500).json({ message: 'Authentication error' });
         }
         if (!judge) {
             console.log("here");

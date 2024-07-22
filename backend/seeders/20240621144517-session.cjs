@@ -8,6 +8,7 @@ module.exports = {
         level: '1',
         age: '12-14',
         time_slot_id: 1,
+        completed: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -16,6 +17,7 @@ module.exports = {
         level: '2',
         age: '15-17',
         time_slot_id: 2,
+        completed: false,
         createdAt: new Date(),
         updatedAt: new Date()
       }

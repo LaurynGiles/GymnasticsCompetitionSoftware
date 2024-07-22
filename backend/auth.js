@@ -15,7 +15,7 @@ async (gsa_id, _ , done) => {
         console.log("AFTER");
         // console.log(judge);
         if (!judge) {
-            return done(null, false, { message: 'Invalid GSA number' });
+            return done(null, false, { message: 'Unregistered GSA number' });
         }
         return done(null, judge);
     } catch (err) {
