@@ -13,7 +13,10 @@ const LoginJudges = () => {
     try {
       const response = await loginJudge(number);
       if (response.success) {
-        const { judge_id, role, head_judge } = response;
+        const { judge_id, role, head_judge } = response.data;
+        console.log(judge_id);
+        console.log(role);
+        console.log(head_judge);
         localStorage.setItem('userRole', role);
         localStorage.setItem('headJudge', head_judge);
         localStorage.setItem('judgeId', judge_id);

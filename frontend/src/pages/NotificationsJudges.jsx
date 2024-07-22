@@ -7,7 +7,7 @@ import SendMessage from "../components/SendMessage";
 const NotificationsJudges = () => {
 
   const [notifications, setNotifications] = useState([]);
-  const [role, setRole] = useState(null);
+  const [head, setHead] = useState(null);
   const [prevPage, setPrevPage] = useState("/homejudges");
 
   useEffect(() => {
@@ -23,8 +23,8 @@ const NotificationsJudges = () => {
 
     fetchNotifications();
 
-    const userRole = localStorage.getItem("userRole");
-    setRole(userRole);
+    const headJudge = localStorage.getItem("headJudge");
+    setHead(headJudge);
   }, []);
 
   return (
@@ -34,7 +34,7 @@ const NotificationsJudges = () => {
           <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={prevPage}/>
         </div>
         <div className="inline-flex flex-col items-center w-full gap-[20px] overflow-y-auto pt-[75px] relative">
-          {role === "headJudge" && <SendMessage />}
+          {head === "true" && <SendMessage />}
           <Header text="Notifications"/>
           <div className="inline-flex flex-col items-center gap-[15px] relative flex-[0_0_auto]">
             {notifications.map((notification, index) => (

@@ -29,6 +29,10 @@ export default (sequelize, DataTypes) => {
         key: 'time_slot_id',
       },
     },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   }, {
     tableName: 'Session',
   });

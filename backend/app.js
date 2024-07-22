@@ -20,13 +20,24 @@ import sessionRoutes from './routes/sessionRoutes.js';
 import timeslotRoutes from './routes/timeslotRoutes.js'
 import apparatusRoutes from './routes/apparatusRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import completeRoutes from './routes/completeRoutes.js';
 
 const app = express();
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+];
 
 //Middleware
 app.use(bodyParser.json());
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend URL
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
@@ -56,6 +67,7 @@ app.use('/api/judges', judgeRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/timeslots', timeslotRoutes);
 app.use('/api/apparatuses', apparatusRoutes);
+app.use('/api/complete', completeRoutes);
 app.use('/api', authRoutes);
 
 // function logModelDetails() {

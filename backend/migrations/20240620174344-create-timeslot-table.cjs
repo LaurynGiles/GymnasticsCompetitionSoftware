@@ -26,6 +26,10 @@ module.exports = {
         type: Sequelize.TIME,
         allowNull: false,
       },
+      completed: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

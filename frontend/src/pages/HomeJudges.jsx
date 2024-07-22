@@ -8,12 +8,12 @@ import BlockHeader from "../components/BlockHeader";
 
 const HomeJudges = () => {
 
-  const [role, setRole] = useState(null);
+  const [head, setHead] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userRole = localStorage.getItem("userRole");
-    setRole(userRole);
+    const headJudge = localStorage.getItem("headJudge");
+    setHead(headJudge);
   }, []);
 
   const [level, setLevel] = useState("1");
@@ -25,7 +25,7 @@ const HomeJudges = () => {
   const apparatusOptions = ["Vault", "High Bar", "Parallel bars", "Floor"];
 
   const handleJudgeHome = () => {
-    if (role === "judge") {
+    if (head === "false") {
       localStorage.setItem("level", level);
       localStorage.setItem("age", age);
       localStorage.setItem("apparatus", apparatus);
@@ -48,7 +48,7 @@ const HomeJudges = () => {
         <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] gap-[40px] relative">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           <div className="flex flex-col w-[400px] items-center gap-[15px] px-[31px] py-0 relative flex-[0_0_auto]">
-            {role === "judge" ? (
+            {head === "false" ? (
               <Header text="Join a judging table"/>
             ) : (
               <Header text="Start a judging table"/>
@@ -57,7 +57,7 @@ const HomeJudges = () => {
               <SelectBox title="Level" option={level} setOption={setLevel} allOptions={levelOptions} optionType={"Level"}/>
               <SelectBox title="Age group" option={age} setOption={setAge} allOptions={ageOptions} optionType={"Age"}/>
               <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} allOptions={apparatusOptions} optionType={"Apparatus"}/>
-              {role === "judge" ? (
+              {head === "false" ? (
                 <div onClick={handleJudgeHome}>
                   <BlueButton title="Join" />
                 </div>

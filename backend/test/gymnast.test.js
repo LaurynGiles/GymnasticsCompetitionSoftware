@@ -24,7 +24,8 @@ describe('API Tests', () => {
                 date: '2024-03-01',
                 report_time: '08:00:00',
                 competition_time: '09:00:00',
-                award_time: '12:00:00'
+                award_time: '12:00:00',
+                complete: false
             };
 
             server.request.execute(app)
@@ -40,7 +41,8 @@ describe('API Tests', () => {
                 date: '2024-03-01',
                 report_time: '08:00:00',
                 competition_time: '09:00:00',
-                award_time: '12:00:00'
+                award_time: '12:00:00',
+                complete: false
             };
     
             server.request.execute(app)
@@ -63,6 +65,19 @@ describe('API Tests', () => {
                     expect(res.body).to.be.an('array');
                     done();
                 });
+        });
+
+        it('should get the current active TimeSlot', (done) => {
+            server.request.execute(app)
+              .get('/api/timeSlots/active/')
+              .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('time_slot_id');
+                expect(res.body).to.have.property('date');
+                expect(res.body).to.have.property('competition_time');
+                done();
+            });
         });
 
         it('should update a timeslot', (done) => {
@@ -200,7 +215,8 @@ describe('API Tests', () => {
                 competition_id: 1,
                 level: '1',
                 age: '8-9',
-                time_slot_id: 1
+                time_slot_id: 1,
+                complete: false
             };
 
             server.request.execute(app)
@@ -216,7 +232,8 @@ describe('API Tests', () => {
                 competition_id: 1,
                 level: '3',
                 age: '10-11',
-                time_slot_id: 1
+                time_slot_id: 1,
+                complete: false
             };
 
             server.request.execute(app)
@@ -232,7 +249,8 @@ describe('API Tests', () => {
                 competition_id: 1,
                 level: '1',
                 age: '7-8',
-                time_slot_id: 1
+                time_slot_id: 1,
+                complete: false
             };
     
             server.request.execute(app)
@@ -712,7 +730,8 @@ describe('API Tests', () => {
         it('should create a new event', (done) => {
             const event1 = {
                 session_id: 1,
-                apparatus_id: 1
+                apparatus_id: 1,
+                complete: false
             };
 
             server.request.execute(app)
@@ -726,7 +745,8 @@ describe('API Tests', () => {
 
             const event2 = {
                 session_id: 1,
-                apparatus_id: 2
+                apparatus_id: 2,
+                complete: false
             };
 
             server.request.execute(app)
@@ -740,7 +760,8 @@ describe('API Tests', () => {
 
             const event3 = {
                 session_id: 2,
-                apparatus_id: 1 
+                apparatus_id: 1,
+                complete: false
             };
     
             server.request.execute(app)
@@ -1031,6 +1052,45 @@ describe('API Tests', () => {
                     done();
                 });
         });
+    });
+
+    describe('Completion Checks API', () => {
+
+        it('should check event completion and mark as complete if all gymnasts have scores', (done) => {
+            const eventId = 1;
+            server.request.execute(app)
+              .get(`/api/complete/event/${eventId}`)
+              .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('message');
+                expect(res.body.message).to.be.oneOf(['Event marked as complete.', 'Event not complete yet.']);
+                done();
+            });
+        });
+
+        it('should check session completion and mark as complete if all events are complete', (done) => {
+            const sessionId = 1;
+            server.request.execute(app)
+              .get(`/api/complete/session/${sessionId}`)
+              .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('message');
+                expect(res.body.message).to.be.oneOf(['Session marked as complete.', 'Session not complete yet.']);
+                done();
+              });
+        });
+
+        it('should check timeslot completion and mark as complete if all sessions are complete', (done) => {
+            const timeSlotId = 1;
+            server.request.execute(app)
+              .get(`/api/complete/timeSlot/${timeSlotId}`)
+              .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('message');
+                expect(res.body.message).to.be.oneOf(['TimeSlot marked as complete.', 'TimeSlot not complete yet.']);
+                done();
+              });
+          });
     });
     
 });

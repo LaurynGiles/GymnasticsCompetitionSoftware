@@ -4,6 +4,7 @@ import axiosInstance from './axios.js';
 export const loginJudge = async (gsa_id) => {
     try {
         const response = await axiosInstance.post('/login', { gsa_id });
+        console.log(response.data);
         return { success: true, data: response.data };
     } catch (error) {
         console.error("Error logging in judge:", error);

@@ -21,6 +21,10 @@ export default (sequelize, DataTypes) => {
         key: 'apparatus_id',
       },
     },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   }, {
     tableName: 'Event',  // Explicitly set the table name here
   });

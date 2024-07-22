@@ -1,11 +1,13 @@
 import express from 'express';
-import { getAllTimeSlots, findTimeSlot, createTimeSlot, updateTimeSlot, deleteTimeSlot } from '../controllers/timeslotController.js';
+import { getAllTimeSlots, findTimeSlot, createTimeSlot, updateTimeSlot, deleteTimeSlot, getActiveTimeSlot } from '../controllers/timeslotController.js';
 
 const router = express.Router();
 
 router.get('/', getAllTimeSlots);
 
 router.get('/:id', findTimeSlot);
+
+router.get('/active/', getActiveTimeSlot);
 
 router.post('/', createTimeSlot);
 

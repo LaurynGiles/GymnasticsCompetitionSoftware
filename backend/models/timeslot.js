@@ -21,6 +21,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.TIME,
       allowNull: false,
     },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   }, {
     tableName: 'TimeSlot',
   });
