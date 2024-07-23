@@ -72,6 +72,22 @@ export async function deleteTimeSlot(req, res, next) {
     }
 }
 
+export async function fetchActiveTimeSlot() {
+    try {
+      const activeTimeSlot = await db.TimeSlot.findOne({
+        where: { completed: false },
+        order: [
+          ['date', 'ASC'],
+          ['competition_time', 'ASC']
+        ]
+      });
+      return activeTimeSlot;
+    } catch (error) {
+      console.error('Error fetching active time slot:', error);
+      throw error;
+    }
+  }
+
 export async function getActiveTimeSlot(req, res, next) {
     try {
       const activeTimeSlot = await TimeSlot.findOne({
@@ -82,13 +98,14 @@ export async function getActiveTimeSlot(req, res, next) {
         ]
       });
   
-      console.log(activeTimeSlot);
+    //   console.log(activeTimeSlot);
       if (activeTimeSlot) {
         return res.status(200).json(activeTimeSlot);
       } else {
         return res.status(404).json({ message: 'No active TimeSlot found' });
       }
     } catch (error) {
+        // console.log(error);
       next(error);
     }
   }

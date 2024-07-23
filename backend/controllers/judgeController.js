@@ -31,6 +31,7 @@ export async function findJudgeGsa(req, res, next) {
     try {
         const gsa_id = req.params.gsa_id;
         const judge = await findJudgeByGsaId(gsa_id);
+        console.log(judge);
         if (judge) {
             res.status(200).json(judge);
         } else {

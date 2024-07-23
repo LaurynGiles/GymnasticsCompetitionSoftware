@@ -30,7 +30,7 @@ export default (sequelize, DataTypes) => {
   });
 
   Competition.associate = (models) => {
-    Competition.hasMany(models.Session, {
+    Competition.hasMany(models.TimeSlot, {
       foreignKey: 'competition_id',
     });
   };

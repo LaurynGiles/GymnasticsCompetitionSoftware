@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "test": "NODE_ENV=test mocha",
+    "test-migrate": "NODE_ENV=test npx sequelize-cli db:migrate",
+    "test-undo-migrate": "NODE_ENV=test npx sequelize-cli db:migrate:undo",
+    "test-undo-all-migrate": "NODE_ENV=test npx sequelize-cli db:migrate:undo:all",
     "migrate": "npx sequelize-cli db:migrate",
     "seed": "npx sequelize-cli db:seed:all",
     "mig-seed": "npm run migrate && npm run seed",

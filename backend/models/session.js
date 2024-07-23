@@ -5,14 +5,6 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    competition_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Competition',
-        key: 'competition_id',
-      },
-    },
     level: {
       type: DataTypes.STRING(20),
       allowNull: false,
@@ -38,9 +30,6 @@ export default (sequelize, DataTypes) => {
   });
 
   Session.associate = (models) => {
-    Session.belongsTo(models.Competition, {
-      foreignKey: 'competition_id',
-    });
     Session.belongsTo(models.TimeSlot, {
       foreignKey: 'time_slot_id',
     });

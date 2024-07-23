@@ -1,7 +1,9 @@
 import express from 'express';
-import { getAllSessions, findSession, createSession, updateSession, deleteSession } from '../controllers/sessionController.js';
+import { getAllSessions, findSession, createSession, updateSession, deleteSession, getSessionsByTimeSlot } from '../controllers/sessionController.js';
 
 const router = express.Router();
+
+router.get('/byTimeSlot/:timeSlotId', getSessionsByTimeSlot);
 
 router.get('/', getAllSessions);
 

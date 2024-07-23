@@ -15,108 +15,6 @@ describe('API Tests', () => {
         }
     });
 
-    describe('TimeSlot API', () => {
-
-        let createdTimeSlotId;
-
-        it('should create a new timeslot', (done) => {
-            const timeslot1 = {
-                date: '2024-03-01',
-                report_time: '08:00:00',
-                competition_time: '09:00:00',
-                award_time: '12:00:00',
-                complete: false
-            };
-
-            server.request.execute(app)
-                .post('/api/timeslots')
-                .send(timeslot1)
-                .end((err, res) => {
-                    expect(res).to.have.status(201);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('time_slot_id');
-                });
-
-            const timeslot2 = {
-                date: '2024-03-01',
-                report_time: '10:00:00',
-                competition_time: '11:00:00',
-                award_time: '14:00:00',
-                complete: false
-            };
-    
-            server.request.execute(app)
-                .post('/api/timeslots')
-                .send(timeslot2)
-                .end((err, res) => {
-                    expect(res).to.have.status(201);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('time_slot_id');
-                    createdTimeSlotId = res.body.time_slot_id;
-                    done();
-                });
-        });
-
-        it('should get all timeslots', (done) => {
-            server.request.execute(app)
-                .get('/api/timeslots')
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('array');
-                    done();
-                });
-        });
-
-        it('should get the current active TimeSlot', (done) => {
-            server.request.execute(app)
-              .get('/api/timeSlots/active/')
-              .end((err, res) => {
-                expect(res).to.have.status(200);
-                expect(res.body).to.be.an('object');
-                expect(res.body).to.have.property('time_slot_id');
-                expect(res.body).to.have.property('date');
-                expect(res.body).to.have.property('competition_time');
-                done();
-            });
-        });
-
-        it('should update a timeslot', (done) => {
-            const updatedTimeSlot = {
-                date: '2024-04-01'
-            };
-    
-            server.request.execute(app)
-                .put(`/api/timeslots/${createdTimeSlotId}`)
-                .send(updatedTimeSlot)
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body.date).to.equal('2024-04-01');
-                    done();
-                });
-        });
-
-        it('should get the updated timeslot', (done) => {
-            server.request.execute(app)
-                .get(`/api/timeslots/${createdTimeSlotId}`)
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('time_slot_id', createdTimeSlotId);
-                    done();
-                });
-        });
-
-        it('should delete a timeslot', (done) => {
-            server.request.execute(app)
-                .delete(`/api/timeslots/${createdTimeSlotId}`)
-                .end((err, res) => {
-                    expect(res).to.have.status(204);
-                    done();
-                });
-        });
-    });
-
     describe('Competition API', () => {
 
         let createdCompetitionId;
@@ -206,13 +104,116 @@ describe('API Tests', () => {
         });
     });
 
+    describe('TimeSlot API', () => {
+
+        let createdTimeSlotId;
+
+        it('should create a new timeslot', (done) => {
+            const timeslot1 = {
+                competition_id: 1,
+                date: '2024-03-01',
+                report_time: '08:00:00',
+                competition_time: '09:00:00',
+                award_time: '12:00:00',
+                complete: false
+            };
+
+            server.request.execute(app)
+                .post('/api/timeslots')
+                .send(timeslot1)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('time_slot_id');
+                });
+
+            const timeslot2 = {
+                competition_id: 1,
+                date: '2024-03-01',
+                report_time: '10:00:00',
+                competition_time: '11:00:00',
+                award_time: '14:00:00',
+                complete: false
+            };
+    
+            server.request.execute(app)
+                .post('/api/timeslots')
+                .send(timeslot2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('time_slot_id');
+                    createdTimeSlotId = res.body.time_slot_id;
+                    done();
+                });
+        });
+
+        it('should get all timeslots', (done) => {
+            server.request.execute(app)
+                .get('/api/timeslots')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+
+        it('should get the current active TimeSlot', (done) => {
+            server.request.execute(app)
+              .get('/api/timeSlots/active/')
+              .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.property('time_slot_id');
+                expect(res.body).to.have.property('date');
+                expect(res.body).to.have.property('competition_time');
+                done();
+            });
+        });
+
+        it('should update a timeslot', (done) => {
+            const updatedTimeSlot = {
+                date: '2024-04-01'
+            };
+    
+            server.request.execute(app)
+                .put(`/api/timeslots/${createdTimeSlotId}`)
+                .send(updatedTimeSlot)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.date).to.equal('2024-04-01');
+                    done();
+                });
+        });
+
+        it('should get the updated timeslot', (done) => {
+            server.request.execute(app)
+                .get(`/api/timeslots/${createdTimeSlotId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('time_slot_id', createdTimeSlotId);
+                    done();
+                });
+        });
+
+        it('should delete a timeslot', (done) => {
+            server.request.execute(app)
+                .delete(`/api/timeslots/${createdTimeSlotId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+                    done();
+                });
+        });
+    });
+
     describe('Session API', () => {
 
         let createdSessionId;
 
         it('should create a new session', (done) => {
             const session1 = {
-                competition_id: 1,
                 level: '1',
                 age: '8-9',
                 time_slot_id: 1,
@@ -229,7 +230,6 @@ describe('API Tests', () => {
                 });
 
             const session2 = {
-                competition_id: 1,
                 level: '3',
                 age: '10-11',
                 time_slot_id: 1,
@@ -246,7 +246,6 @@ describe('API Tests', () => {
                 });
 
             const session3 = {
-                competition_id: 1,
                 level: '1',
                 age: '7-8',
                 time_slot_id: 1,
@@ -271,6 +270,21 @@ describe('API Tests', () => {
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+
+        it('should get sessions with timeslot id 1', (done) => {
+            const timeSlotId = 1;
+            server.request.execute(app)
+                .get(`/api/sessions/byTimeSlot/${timeSlotId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    res.body.forEach(session => {
+                        expect(session).to.have.property('session_id');
+                        expect(session).to.have.property('time_slot_id', timeSlotId);
+                    });
                     done();
                 });
         });
@@ -660,7 +674,9 @@ describe('API Tests', () => {
                     expect(res.body).to.be.an('object');
                     expect(res.body).to.have.property('judge_id');
                     createdJudgeId = res.body.judge_id;
+                    console.log(createdJudgeId);
                     createdJudgeGSA = res.body.gsa_id;
+                    console.log(createdJudgeGSA);
                     done();
                 });
         });
@@ -776,12 +792,48 @@ describe('API Tests', () => {
                 });
         });
 
+        // it('should not create a duplicate event', (done) => {
+        //     const duplicateEvent = {
+        //         session_id: 1,
+        //         apparatus_id: 1,
+        //         complete: false
+        //     };
+    
+        //     server.request.execute(app)
+        //         .post('/api/events')
+        //         .send(duplicateEvent)
+        //         .end((err, res) => {
+        //             expect(res).to.have.status(400); // Expecting a Bad Request or similar error
+        //             expect(res.body).to.be.an('object');
+        //             expect(res.body).to.have.property('message');
+        //             done();
+        //         });
+        // });
+
         it('should get all events', (done) => {
             server.request.execute(app)
                 .get('/api/events')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+
+        it('should get all events for given session IDs', (done) => {
+            const sessionIds = [1, 2];
+            server.request.execute(app)
+                .post('/api/events/bySessions')
+                .send({ sessionIds })
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    res.body.forEach(event => {
+                        expect(event).to.have.property('event_id');
+                        expect(sessionIds).to.include(event.session_id);
+                        expect(event).to.have.property('apparatus_id');
+                        expect(event.Apparatus).to.have.property('apparatus_name');
+                    });
                     done();
                 });
         });

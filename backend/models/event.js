@@ -26,7 +26,13 @@ export default (sequelize, DataTypes) => {
       defaultValue: false,
     },
   }, {
-    tableName: 'Event',  // Explicitly set the table name here
+    tableName: 'Event',
+    indexes: [
+      {
+        unique: true,
+        fields: ['session_id', 'apparatus_id']
+      }
+    ]
   });
 
   Event.associate = (models) => {
@@ -35,6 +41,7 @@ export default (sequelize, DataTypes) => {
     });
     Event.belongsTo(models.Apparatus, {
       foreignKey: 'apparatus_id',
+      as: 'Apparatus',
     });
     Event.hasMany(models.Execution, {
       foreignKey: 'event_id',

@@ -5,38 +5,93 @@ import SelectBox from "../components/SelectBox";
 import BlueButton from "../components/BlueButton";
 import Header from "../components/Header";
 import BlockHeader from "../components/BlockHeader";
+import { getActiveTimeSlot, getSessionsByTimeSlot, getEventsBySessionIds, checkEventExists } from "../utils/api.js";
 
 const HomeJudges = () => {
 
   const [head, setHead] = useState(null);
+  const [levelOptions, setLevelOptions] = useState([]);
+  const [ageOptions, setAgeOptions] = useState([]);
+  const [apparatusOptions, setApparatusOptions] = useState([]);
+  const [level, setLevel] = useState("");
+  const [age, setAge] = useState("");
+  const [apparatus, setApparatus] = useState("")
   const navigate = useNavigate();
 
   useEffect(() => {
-    const headJudge = localStorage.getItem("headJudge");
-    setHead(headJudge);
+    const fetchData = async () => {
+      const headJudge = localStorage.getItem("headJudge");
+      setHead(headJudge);
+
+      const activeTimeSlot = await getActiveTimeSlot();
+
+      console.log(activeTimeSlot);
+
+      if (activeTimeSlot) {
+        const sessions = await getSessionsByTimeSlot(activeTimeSlot.time_slot_id);
+
+        console.log(sessions);
+
+        const uniqueLevels = new Set();
+        const uniqueAges = new Set();
+        const sessionIds = sessions.map(session => session.session_id);
+
+        sessions.forEach(session => {
+          uniqueLevels.add(session.level);
+          uniqueAges.add(session.age);
+        });
+
+        console.log(sessionIds);
+        const events = await getEventsBySessionIds(sessionIds);
+        const uniqueApparatus = new Set(events.map(event => event.Apparatus.apparatus_name));
+
+        setLevelOptions(Array.from(uniqueLevels));
+        setAgeOptions(Array.from(uniqueAges));
+        setApparatusOptions(Array.from(uniqueApparatus));
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const [level, setLevel] = useState("1");
-  const [age, setAge] = useState("07-08");
-  const [apparatus, setApparatus] = useState("Vault")
-
-  const levelOptions = ["1", "2", "3"];
-  const ageOptions = ["07-08", "09-10", "11-12", "13-over"];
-  const apparatusOptions = ["Vault", "High Bar", "Parallel bars", "Floor"];
-
-  const handleJudgeHome = () => {
-    if (head === "false") {
-      localStorage.setItem("level", level);
-      localStorage.setItem("age", age);
-      localStorage.setItem("apparatus", apparatus);
-      localStorage.setItem("number", "56");
-      localStorage.setItem("name", "Travis Giles");
-      navigate("/calculationsjudges");
-    } else {
-      localStorage.setItem("apparatus", apparatus);
-      navigate("/lobby");
+  useEffect(() => {
+    if (levelOptions.length > 0) {
+      setLevel(levelOptions[0]);
     }
-    
+  }, [levelOptions]);
+  
+  useEffect(() => {
+    if (ageOptions.length > 0) {
+      setAge(ageOptions[0]);
+    }
+  }, [ageOptions]);
+  
+  useEffect(() => {
+    if (apparatusOptions.length > 0) {
+      setApparatus(apparatusOptions[0]);
+    }
+  }, [apparatusOptions]);
+
+  const handleJudgeHome = async () => {
+    try {
+      console.log(level);
+      console.log(age);
+      console.log(apparatus);
+      const eventExists = await checkEventExists(level, age, apparatus);
+      console.log(eventExists);
+      if (eventExists) {
+        localStorage.setItem("apparatus", apparatus);
+        if (head === "false") {
+          navigate("/calculationsjudges");
+        } else {
+          navigate("/lobby");
+        }
+      } else {
+        alert("No event found for the selected options.");
+      }
+    } catch (error) {
+      console.error("Error checking event existence:", error);
+    }
   };
 
   return (

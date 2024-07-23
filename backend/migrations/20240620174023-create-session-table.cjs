@@ -10,16 +10,6 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      competition_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'Competition',
-          key: 'competition_id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-      },
       level: {
         type: Sequelize.STRING(20),
         allowNull: false,

@@ -18,6 +18,7 @@ module.exports = {
         },
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
+        allowNull: false,
       },
       apparatus_id: {
         type: Sequelize.INTEGER,
@@ -27,6 +28,7 @@ module.exports = {
         },
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
+        allowNull: false,
       },
       completed: {
         type: Sequelize.BOOLEAN,
@@ -42,6 +44,12 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
+    });
+
+    await queryInterface.addConstraint('Event', {
+      fields: ['session_id', 'apparatus_id'],
+      type: 'unique',
+      name: 'unique_session_apparatus_combination',
     });
   },
 

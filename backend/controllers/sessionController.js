@@ -67,3 +67,20 @@ export async function deleteSession(req, res, next) {
         next(error);
     }
 }
+
+export async function getSessionsByTimeSlot(req, res, next) {
+    try {
+      const { timeSlotId } = req.params;
+      const sessions = await Session.findAll({ where: { time_slot_id: timeSlotId } });
+
+      console.log(sessions);
+
+      if (sessions) {
+            res.status(200).json(sessions);
+      } else {
+            res.status(404).send('Session not found');
+      }
+    } catch (error) {
+      next(error);
+    }
+}

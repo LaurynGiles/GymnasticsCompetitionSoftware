@@ -6,6 +6,9 @@ import db from './models/index.js';
 import session from 'express-session';
 import passport from 'passport';
 import crypto from 'crypto';
+import path from 'path';
+import fs from 'fs/promises';
+import { fileURLToPath } from 'url';
 import './auth.js';
 // import cookieParser from 'cookie-parser';
 
@@ -30,6 +33,7 @@ const allowedOrigins = [
 
 //Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -70,35 +74,68 @@ app.use('/api/apparatuses', apparatusRoutes);
 app.use('/api/complete', completeRoutes);
 app.use('/api', authRoutes);
 
-// function logModelDetails() {
-//   Object.values(db).forEach(model => {
-//     if (model.name) {
-//       console.log(`Model: ${model.name}`);
-//       console.log(`Attributes: ${Object.keys(model.rawAttributes).join(', ')}`);
-//       if (model.associations) {
-//         console.log('Associations:');
-//         Object.values(model.associations).forEach(association => {
-//           console.log(`  ${association.associationType} -> ${association.target.name}`);
-//         });
-//       }
-//       console.log('---');
-//     }
-//   });
-// }
+function logModelDetails() {
+  Object.values(db).forEach(model => {
+    if (model.name && model.name != "Sequelize") {
+      console.log(`Model: ${model.name}`);
+      console.log(`Attributes: ${Object.keys(model.rawAttributes).join(', ')}`);
+      if (model.associations) {
+        console.log('Associations:');
+        Object.values(model.associations).forEach(association => {
+          console.log(`  ${association.associationType} -> ${association.target.name}`);
+        });
+      }
+      console.log('---');
+    }
+  });
+}
 
-// sequelize.sync({ force: false }) // set to true if you want tables to be dropped before recreation
-//   .then(() => {
-//     console.log('Database synced');
-//   }).catch(err => {
-//     console.error('Error syncing database:', err);
-//   });
+async function seedDatabase() {
+    try {
+        
+        const __dirname = path.dirname(fileURLToPath(import.meta.url));
+        console.log(__dirname);
+        const seedersPath = path.join(__dirname, '/seeders/');
+        console.log(seedersPath);
+
+        const files = await fs.readdir(seedersPath);
+
+        for (const file of files) {
+          if (file.endsWith('.cjs')) {
+            const { up } = await import(path.join(seedersPath, file));
+            await up(db.sequelize.getQueryInterface(), db.Sequelize);
+          }
+        }
+
+        console.log('Database seeded successfully.');
+    } catch (error) {
+        console.error('Error seeding database:', error);
+    }
+}
+
+try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+} catch (error) {
+    console.error('Unable to connect to the database:', error);
+}
+
+sequelize.sync({ force: true })
+  .then(() => {
+    console.log('Database synced');
+    seedDatabase();
+  }).catch(err => {
+    console.error('Error syncing database:', err);
+  });
 
 console.log(sequelize);
-// logModelDetails();
+logModelDetails();
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
+
+// sequelize.close()
 
 export default app;

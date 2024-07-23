@@ -35,7 +35,7 @@ const SelectBox = ({ title, option , setOption, allOptions, optionType}) => {
       </div>
       <div className="flex w-[255px] items-center justify-center gap-[20px] px-[15px] py-[8px] relative flex-[0_0_auto] bg-bright-white rounded-[20px] overflow-hidden border-2 border-solid border-[#6279b8]">
         <div className="relative w-[185px] mt-[3.00px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
-          {renderOption(option)}
+          {option != "" && renderOption(option)}
         </div>
         <div onClick={handleArrowClick}>
           <ArrowIcon rotation={rotateArrow}/>

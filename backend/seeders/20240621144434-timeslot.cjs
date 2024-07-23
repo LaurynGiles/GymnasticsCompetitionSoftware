@@ -4,6 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('TimeSlot', [
       {
+        competition_id: 1,
         date: '2024-03-01',
         report_time: '08:00:00',
         competition_time: '09:00:00',
@@ -12,6 +13,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
+        competition_id: 1,
         date: '2024-03-02',
         report_time: '10:00:00',
         competition_time: '11:00:00',
