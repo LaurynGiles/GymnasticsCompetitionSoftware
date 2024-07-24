@@ -21,8 +21,9 @@ const HomeJudges = () => {
   const [level, setLevel] = useState("");
   const [age, setAge] = useState("");
   const [apparatus, setApparatus] = useState("")
-  const [groupId, setGroupId] = useState(null);
+  // const [groupId, setGroupId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [groupMessage, setGroupMessage] = useState("");
   const navigate = useNavigate();
   const judgeId = localStorage.getItem('judgeId');
 
@@ -80,34 +81,59 @@ const HomeJudges = () => {
     }
   }, [apparatusOptions]);
 
-  const handleJoinGroup = (groupId) => {
-    console.log("Tyring to join group");
-    socket.emit('joinGroup', { groupId, judgeId });
-    setGroupId(groupId);
+  useEffect(() => {
+    socket.on('errorMessage', (message) => {
+      setErrorMessage(message);
+    });
+
+    socket.on('groupMessage', (message) => {
+      setGroupMessage(message);
+    });
+
+    return () => {
+      socket.off('errorMessage');
+      socket.off('groupMessage');
+    };
+  }, []);
+
+  const handleJoinGroup = (groupId, isHead) => {
+    return new Promise((resolve, reject) => {
+      socket.emit('joinGroup', { groupId, judgeId, isHead }, (response) => {
+        if (response.success) {
+          resolve();
+        } else {
+          setErrorMessage(response.error);
+          reject(response.error);
+        }
+      });
+    });
   };
 
   const handleJudgeHome = async () => {
     try {
-      console.log(level);
-      console.log(age);
-      console.log(apparatus);
       const event = await checkEventExists(level, age, apparatus);
+
       console.log(event);
+      
       if (event.exists) {
         const newGroupID = event.event_id;
-        handleJoinGroup(newGroupID); // JOINING the server
+        const isHead = head == "true";
+        await handleJoinGroup(newGroupID, isHead);
         localStorage.setItem("apparatus", apparatus);
 
-        if (head === "false") {
+        if (!isHead) {
           navigate("/calculationsjudges");
         } else {
           navigate("/lobby");
         }
+
       } else {
+        console.log("Error does not exist");
         setErrorMessage("This event does not exist");
       }
     } catch (error) {
-      setErrorMessage(error);
+      console.log(error);
+      setErrorMessage(error || "Error connecting to server");
     }
   };
 
@@ -139,7 +165,10 @@ const HomeJudges = () => {
                 </div>
               )}
               {errorMessage && (
-                <div className="text-red-500 mb-2">{errorMessage}</div>
+                <div className="text-red-500 mb-2 text-center font-montserrat">{errorMessage}</div>
+              )}
+              {groupMessage && (
+                <div className="text-green-500 mb-2">{groupMessage}</div>
               )}
             </div>
           </div>
