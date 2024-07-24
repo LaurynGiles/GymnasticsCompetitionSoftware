@@ -145,7 +145,7 @@ export async function getEventsBySessionIds(req, res, next) {
         console.log(event);
     
         if (event) {
-          return res.json({ exists: true });
+          return res.json({ exists: true, event_id: event.event_id });
         } else {
           return res.json({ exists: false });
         }

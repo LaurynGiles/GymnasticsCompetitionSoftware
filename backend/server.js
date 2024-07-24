@@ -26,6 +26,7 @@ io.on('connection', (socket) => {  //Sets up a listener for new connections, soc
 
     socket.join(`group_${groupId}`); //Adds the socket to a room named group_<groupID>
     io.to(`group_${groupId}`).emit('groupMessage', `Judge ${judgeId} joined group ${groupId}`); //Sends a message to all sockets indicating the join
+    console.log(`socket joined group${groupId}`);
   });
 
   socket.on('leaveGroup', ({ groupId, judgeId }) => { //Event triggered when a user wants to leave a group, with payload of groupID and judgeID
@@ -44,6 +45,10 @@ io.on('connection', (socket) => {  //Sets up a listener for new connections, soc
   });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// app.listen(PORT, () => {
+//   console.log(`App is running on port ${PORT}`);
+// });

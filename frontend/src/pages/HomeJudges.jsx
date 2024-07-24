@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import SelectBox from "../components/SelectBox";
 import BlueButton from "../components/BlueButton";
 import Header from "../components/Header";
 import BlockHeader from "../components/BlockHeader";
 import { getActiveTimeSlot, getSessionsByTimeSlot, getEventsBySessionIds, checkEventExists } from "../utils/api.js";
+
+const socket = io("http://localhost:5000", {
+  transports: ['websocket', 'polling']
+});
 
 const HomeJudges = () => {
 
@@ -16,7 +21,10 @@ const HomeJudges = () => {
   const [level, setLevel] = useState("");
   const [age, setAge] = useState("");
   const [apparatus, setApparatus] = useState("")
+  const [groupId, setGroupId] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const judgeId = localStorage.getItem('judgeId');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,25 +80,34 @@ const HomeJudges = () => {
     }
   }, [apparatusOptions]);
 
+  const handleJoinGroup = (groupId) => {
+    console.log("Tyring to join group");
+    socket.emit('joinGroup', { groupId, judgeId });
+    setGroupId(groupId);
+  };
+
   const handleJudgeHome = async () => {
     try {
       console.log(level);
       console.log(age);
       console.log(apparatus);
-      const eventExists = await checkEventExists(level, age, apparatus);
-      console.log(eventExists);
-      if (eventExists) {
+      const event = await checkEventExists(level, age, apparatus);
+      console.log(event);
+      if (event.exists) {
+        const newGroupID = event.event_id;
+        handleJoinGroup(newGroupID); // JOINING the server
         localStorage.setItem("apparatus", apparatus);
+
         if (head === "false") {
           navigate("/calculationsjudges");
         } else {
           navigate("/lobby");
         }
       } else {
-        alert("No event found for the selected options.");
+        setErrorMessage("This event does not exist");
       }
     } catch (error) {
-      console.error("Error checking event existence:", error);
+      setErrorMessage(error);
     }
   };
 
@@ -120,6 +137,9 @@ const HomeJudges = () => {
                 <div onClick={handleJudgeHome}>
                   <BlueButton title="Start" />
                 </div>
+              )}
+              {errorMessage && (
+                <div className="text-red-500 mb-2">{errorMessage}</div>
               )}
             </div>
           </div>
