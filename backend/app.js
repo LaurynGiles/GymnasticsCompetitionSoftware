@@ -10,7 +10,6 @@ import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import './auth.js';
-// import cookieParser from 'cookie-parser';
 
 import gymnastRoutes from './routes/gymnastRoutes.js';
 import competitionRoutes from './routes/competitionRoutes.js';

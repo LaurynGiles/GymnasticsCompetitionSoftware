@@ -5,7 +5,6 @@ const { GymnastGroup } = db;
 export async function getAllGymnastGroups(req, res, next) {
     try {
         const allGymnastGroups = await GymnastGroup.findAll();
-        console.log(allGymnastGroups);
         res.status(200).json(allGymnastGroups);
     } catch (error) {
         next(error);

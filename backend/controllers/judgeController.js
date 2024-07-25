@@ -6,7 +6,6 @@ const { Judge } = db;
 export async function getAllJudges(req, res, next) {
     try {
         const allJudges = await Judge.findAll();
-        console.log(allJudges);
         res.status(200).json(allJudges);
     } catch (error) {
         next(error);
@@ -31,7 +30,6 @@ export async function findJudgeGsa(req, res, next) {
     try {
         const gsa_id = req.params.gsa_id;
         const judge = await findJudgeByGsaId(gsa_id);
-        console.log(judge);
         if (judge) {
             res.status(200).json(judge);
         } else {

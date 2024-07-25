@@ -1,20 +1,14 @@
 import passport from 'passport';
 
 export const login = (req, res, next) => {
-    console.log("beginning");
     passport.authenticate('local', (err, judge, info) => {
-        console.log("AUTHENTICATING");
         if (err) {
             return res.status(500).json({ message: 'Authentication error' });
         }
         if (!judge) {
-            console.log("here");
             return res.status(400).json({ message: info.message });
         }
-        console.log("Returning");
-        console.log(judge.judge_id);
-        console.log(judge.role);
-        res.status(200).json({ judge_id: judge.judge_id, role: judge.role, head_judge: judge.head_judge });
+        res.status(200).json({ judge_id: judge.judge_id, role: judge.role, head_judge: judge.head_judge, judge_fname: judge.first_name, judge_lname: judge.last_name });
     })(req, res, next);
 };
 

@@ -1,45 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
+import { useLocation, useNavigate } from "react-router-dom";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import SelectBox from "../components/SelectBox";
 import BlueButton from "../components/BlueButton";
 import Header from "../components/Header";
 import BlockHeader from "../components/BlockHeader";
+import { useNotifications } from "../utils/connection.jsx";
 import { getActiveTimeSlot, getSessionsByTimeSlot, getEventsBySessionIds, checkEventExists } from "../utils/api.js";
-
-const socket = io("http://localhost:5000", {
-  transports: ['websocket', 'polling']
-});
 
 const HomeJudges = () => {
 
-  const [head, setHead] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { judge_id, role, head_judge, judge_fname, judge_lname } = location.state;
+  console.log(judge_id);
+  console.log(role);
+  console.log(head_judge);
+  console.log(judge_fname);
+  console.log(judge_lname);
+  const { socket, addNotification } = useNotifications();
+
   const [levelOptions, setLevelOptions] = useState([]);
   const [ageOptions, setAgeOptions] = useState([]);
   const [apparatusOptions, setApparatusOptions] = useState([]);
   const [level, setLevel] = useState("");
   const [age, setAge] = useState("");
   const [apparatus, setApparatus] = useState("")
-  // const [groupId, setGroupId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [groupMessage, setGroupMessage] = useState("");
-  const navigate = useNavigate();
-  const judgeId = localStorage.getItem('judgeId');
 
   useEffect(() => {
     const fetchData = async () => {
-      const headJudge = localStorage.getItem("headJudge");
-      setHead(headJudge);
-
       const activeTimeSlot = await getActiveTimeSlot();
-
-      console.log(activeTimeSlot);
 
       if (activeTimeSlot) {
         const sessions = await getSessionsByTimeSlot(activeTimeSlot.time_slot_id);
-
-        console.log(sessions);
 
         const uniqueLevels = new Set();
         const uniqueAges = new Set();
@@ -49,8 +43,6 @@ const HomeJudges = () => {
           uniqueLevels.add(session.level);
           uniqueAges.add(session.age);
         });
-
-        console.log(sessionIds);
         const events = await getEventsBySessionIds(sessionIds);
         const uniqueApparatus = new Set(events.map(event => event.Apparatus.apparatus_name));
 
@@ -61,6 +53,7 @@ const HomeJudges = () => {
     };
 
     fetchData();
+
   }, []);
 
   useEffect(() => {
@@ -81,24 +74,27 @@ const HomeJudges = () => {
     }
   }, [apparatusOptions]);
 
-  useEffect(() => {
-    socket.on('errorMessage', (message) => {
-      setErrorMessage(message);
-    });
+  // useEffect(() => {
+  //   if (!socket) return;
+    
+  //   socket.on('errorMessage', (message) => {
+  //     setErrorMessage(message);
+  //   });
 
-    socket.on('groupMessage', (message) => {
-      setGroupMessage(message);
-    });
+  //   socket.on('groupMessage', (message) => {
+  //     setGroupMessage(message);
+  //   });
 
-    return () => {
-      socket.off('errorMessage');
-      socket.off('groupMessage');
-    };
-  }, []);
+  //   return () => {
+  //     socket.off('errorMessage');
+  //     socket.off('groupMessage');
+  //   };
+  // }, [socket]);
 
-  const handleJoinGroup = (groupId, isHead) => {
+  const handleJoinGroup = (group_id) => {
     return new Promise((resolve, reject) => {
-      socket.emit('joinGroup', { groupId, judgeId, isHead }, (response) => {
+      console.log(head_judge);
+      socket.emit('joinGroup', { group_id, judge_id, head_judge, judge_fname, judge_lname }, (response) => {
         if (response.success) {
           resolve();
         } else {
@@ -112,23 +108,20 @@ const HomeJudges = () => {
   const handleJudgeHome = async () => {
     try {
       const event = await checkEventExists(level, age, apparatus);
-
-      console.log(event);
       
       if (event.exists) {
         const newGroupID = event.event_id;
-        const isHead = head == "true";
-        await handleJoinGroup(newGroupID, isHead);
+        await handleJoinGroup(newGroupID);
         localStorage.setItem("apparatus", apparatus);
 
-        if (!isHead) {
+        if (!head_judge) {
           navigate("/calculationsjudges");
         } else {
           navigate("/lobby");
         }
 
       } else {
-        console.log("Error does not exist");
+        console.log("Error: event does not exist");
         setErrorMessage("This event does not exist");
       }
     } catch (error) {
@@ -141,12 +134,12 @@ const HomeJudges = () => {
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
         <div className="fixed top-0 w-[400px] z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={false} />
+          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/homejudges"} isHead={head_judge}/>
         </div>
         <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] gap-[40px] relative">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           <div className="flex flex-col w-[400px] items-center gap-[15px] px-[31px] py-0 relative flex-[0_0_auto]">
-            {head === "false" ? (
+            {!head_judge ? (
               <Header text="Join a judging table"/>
             ) : (
               <Header text="Start a judging table"/>
@@ -155,7 +148,7 @@ const HomeJudges = () => {
               <SelectBox title="Level" option={level} setOption={setLevel} allOptions={levelOptions} optionType={"Level"}/>
               <SelectBox title="Age group" option={age} setOption={setAge} allOptions={ageOptions} optionType={"Age"}/>
               <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} allOptions={apparatusOptions} optionType={"Apparatus"}/>
-              {head === "false" ? (
+              {!head_judge ? (
                 <div onClick={handleJudgeHome}>
                   <BlueButton title="Join" />
                 </div>
@@ -167,9 +160,9 @@ const HomeJudges = () => {
               {errorMessage && (
                 <div className="text-red-500 mb-2 text-center font-montserrat">{errorMessage}</div>
               )}
-              {groupMessage && (
+              {/* {groupMessage && (
                 <div className="text-green-500 mb-2">{groupMessage}</div>
-              )}
+              )} */}
             </div>
           </div>
         </div>

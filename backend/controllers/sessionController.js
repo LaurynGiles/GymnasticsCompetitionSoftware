@@ -5,7 +5,6 @@ const { Session } = db;
 export async function getAllSessions(req, res, next) {
     try {
         const allSessions = await Session.findAll();
-        console.log(allSessions);
         res.status(200).json(allSessions);
     } catch (error) {
         next(error);
@@ -72,8 +71,6 @@ export async function getSessionsByTimeSlot(req, res, next) {
     try {
       const { timeSlotId } = req.params;
       const sessions = await Session.findAll({ where: { time_slot_id: timeSlotId } });
-
-      console.log(sessions);
 
       if (sessions) {
             res.status(200).json(sessions);

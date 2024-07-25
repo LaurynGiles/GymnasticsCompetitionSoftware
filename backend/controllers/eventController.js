@@ -6,7 +6,6 @@ const { Event, Apparatus } = db;
 export async function getAllEvents(req, res, next) {
     try {
         const allEvents = await Event.findAll();
-        console.log(allEvents);
         res.status(200).json(allEvents);
     } catch (error) {
         next(error);
@@ -31,14 +30,8 @@ export async function createEvent(req, res, next) {
     try {
         const newEvent = await Event.create(req.body);
 
-        // if (newEvent) {
-        //     res.status(201).json(newEvent);
-        // } else {
-        //     res.status(404).send('Error creating event');
-        // }
         res.status(201).json(newEvent);
     } catch (error) {
-        console.log(error);
         next(error);
     }
 }
@@ -51,7 +44,6 @@ export async function updateEvent(req, res, next) {
         });
         if (updated) {
             const updatedEvent = await Event.findByPk(eventId);
-            console.log(updatedEvent);
             res.status(200).json(updatedEvent);
         } else {
             res.status(404).send('Event not found');
@@ -79,9 +71,7 @@ export async function deleteEvent(req, res, next) {
 
 export async function getEventsBySessionIds(req, res, next) {
     try {
-      console.log("IN FUNC");
       const { sessionIds } = req.body;
-      console.log(req.body);
 
       const events = await Event.findAll({
         where: { session_id: sessionIds },
@@ -92,11 +82,10 @@ export async function getEventsBySessionIds(req, res, next) {
         }]
       });
 
-      console.log(events);
       if (events) {
             res.status(200).json(events);
       } else {
-        console.log("EVENT NOT FOUND");
+            console.log("EVENT NOT FOUND");
             res.status(404).send('Event not found');
       }
     } catch (error) {
@@ -109,8 +98,6 @@ export async function getEventsBySessionIds(req, res, next) {
 
     try {
         const activeTimeSlot = await fetchActiveTimeSlot();
-        console.log("HERE");
-        console.log(activeTimeSlot);
     
         if (!activeTimeSlot) {
           return res.status(404).json({ exists: false });
@@ -123,8 +110,6 @@ export async function getEventsBySessionIds(req, res, next) {
             time_slot_id: activeTimeSlot.time_slot_id
           }
         });
-
-        console.log(sessions);
     
         const sessionIds = sessions.map(session => session.session_id);
     
@@ -141,8 +126,6 @@ export async function getEventsBySessionIds(req, res, next) {
             }
           ]
         });
-
-        console.log(event);
     
         if (event) {
           return res.json({ exists: true, event_id: event.event_id });

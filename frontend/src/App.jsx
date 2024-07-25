@@ -10,11 +10,13 @@ import GymnastSelectHeadJudges from './pages/GymnastSelectHeadJudges';
 import StartingScoreHeadJudges from './pages/StartingScoreHeadJudges';
 import SubmissionHeadJudges from './pages/SubmissionHeadJudges';
 import SettingsJudges from './pages/SettingsJudges';
+import { NotificationProvider } from './utils/connection.jsx';
 import './App.css'
 
 function App() {
   return (
-    <Router>
+    <NotificationProvider>
+      <Router>
       <Routes>
         <Route path="/" index element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginJudges />} />
@@ -33,6 +35,7 @@ function App() {
       
       </Routes>
     </Router>
+  </NotificationProvider>
   );
 }
 

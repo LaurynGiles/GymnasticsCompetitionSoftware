@@ -14,14 +14,13 @@ const LoginJudges = () => {
     try {
       const response = await loginJudge(number);
       if (response.success) {
-        const { judge_id, role, head_judge } = response.data;
+        const { judge_id, role, head_judge, judge_fname, judge_lname } = response.data;
         console.log(judge_id);
         console.log(role);
         console.log(head_judge);
-        localStorage.setItem('userRole', role);
-        localStorage.setItem('headJudge', head_judge);
-        localStorage.setItem('judgeId', judge_id);
-        navigate('/homejudges');
+        console.log(judge_fname);
+        console.log(judge_lname);
+        navigate('/homejudges', { state: { judge_id, role, head_judge, judge_fname, judge_lname} });
       } else {
         setErrorMessage(response.message);
       }

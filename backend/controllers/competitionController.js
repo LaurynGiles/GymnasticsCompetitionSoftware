@@ -5,7 +5,6 @@ const { Competition } = db;
 export async function getAllCompetitions(req, res, next) {
     try {
         const allCompetitions = await Competition.findAll();
-        console.log(allCompetitions);
         res.status(200).json(allCompetitions);
     } catch (error) {
         next(error);

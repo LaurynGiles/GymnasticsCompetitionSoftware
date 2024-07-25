@@ -10,10 +10,7 @@ passport.use(new LocalStrategy({
 },
 async (gsa_id, _ , done) => {
     try {
-        console.log(gsa_id);
         const judge = await findJudgeByGsaId(gsa_id);
-        console.log("AFTER");
-        // console.log(judge);
         if (!judge) {
             return done(null, false, { message: 'Unregistered GSA number' });
         }

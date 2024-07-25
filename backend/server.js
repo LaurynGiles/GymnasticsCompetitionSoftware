@@ -19,27 +19,32 @@ const headJudges = {};
 io.on('connection', (socket) => {  //Sets up a listener for new connections, socket object created for each connection
   console.log('A user connected', socket.id); //Logs new connection with unique socket ID
 
-  socket.on('joinGroup', ({ groupId, judgeId, isHead }, callback) => { //Event triggered when a user wants to join a group, with payload of groupID and judgeID
-    if (!groupUsers[groupId]) {   //Checks if group already exists
-      if (!isHead) {
+  socket.on('joinGroup', ({ group_id, judge_id, head_judge, judge_fname, judge_lname }, callback) => { //Event triggered when a user wants to join a group, with payload of groupID and judgeID
+    console.log(group_id);
+    console.log(judge_id);
+    console.log(head_judge);
+    console.log(judge_fname);
+    console.log(judge_lname);
+    if (!groupUsers[group_id]) {   //Checks if group already exists
+      if (!head_judge) {
         console.log("Error: Group has not been started by a head judge")
         callback({ success: false, error: 'This event needs to be started by a Head judge' });
         return;
       }
-      groupUsers[groupId] = [];   //Initializes new group if it doesn't exist
-      headJudges[groupId] = judgeId;
+      groupUsers[group_id] = [];   //Initializes new group if it doesn't exist
+      headJudges[group_id] = judge_id;
 
-    } else if (!isHead && !headJudges[groupId]) {
+    } else if (!head_judge && !headJudges[group_id]) {
       console.log("Error: Group has not been started by a head judge")
       callback({ success: false, error: 'This event needs to be started by a Head judge' });
       return;
     }
 
-    groupUsers[groupId].push(socket.id); //Adds new socket ID to group array.
+    groupUsers[group_id].push(socket.id); //Adds new socket ID to group array.
 
-    socket.join(`group_${groupId}`); //Adds the socket to a room named group_<groupID>
-    io.to(`group_${groupId}`).emit('groupMessage', `Judge ${judgeId} joined group ${groupId}`); //Sends a message to all sockets indicating the join
-    console.log(`socket joined group${groupId}`);
+    socket.join(`group_${group_id}`); //Adds the socket to a room named group_<groupID>
+    io.to(`group_${group_id}`).emit('groupMessage', `Judge ${judge_fname} ${judge_lname} has joined the judging table`); //Sends a message to all sockets indicating the join
+    console.log(`socket joined group${group_id}`);
 
     callback({ success: true });
   });

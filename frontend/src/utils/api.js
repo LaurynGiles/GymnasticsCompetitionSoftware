@@ -4,7 +4,6 @@ import axiosInstance from './axios.js';
 export const loginJudge = async (gsa_id) => {
     try {
         const response = await axiosInstance.post('/login', { gsa_id });
-        console.log(response.data);
         return { success: true, data: response.data };
     } catch (error) {
         console.error("Error logging in judge:", error);
@@ -39,10 +38,7 @@ export const getSessionsByTimeSlot = async (timeSlotId) => {
 
 export const getEventsBySessionIds = async (sessionIds) => {
     try {
-      console.log("api");
-      console.log(sessionIds);
       const response = await axiosInstance.post('/events/bySessions', { sessionIds });
-      console.log(response);
       return response.data;
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -57,7 +53,6 @@ export const checkEventExists = async (level, age, apparatus) => {
       params: { level, age, apparatus }
     });
 
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error checking event existence:', error);

@@ -1,57 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HomeIcon from "./HomeIcon"
 import BellIcon from "./BellIcon"
 import SettingsIcon from "./SettingsIcon"
 import BackIcon from "./BackIcon";
 import BookIcon from "./BookIcon"
 
-const NavigationBarDefault = ({ showBackIcon, showBookIcon, prevPage }) => {
-
-  // const location = useLocation();
-  // const [prevPage, setPrevPage] = useState("/home");
-
-  // useEffect(() => {
-  //   if (location.pathname !== "/notifications") {
-  //     console.log(`Setting prevPage to ${location.pathname}`);
-  //     setPrevPage(location.pathname);
-  //   }
-  // }, [location.pathname]);
+const NavigationBarDefault = ({ showBackIcon, showBookIcon, prevPage, currPage, isHead }) => {
 
   return (
     <div className="flex items-center w-full justify-center px-[13px] py-[12px] relative bg-glaucous">
       <LeftHeader showBackIcon={showBackIcon} showBookIcon={showBookIcon} prevPage={prevPage}/>
-      <RightHeader/>
+      <RightHeader currPage={currPage} isHead={isHead}/>
     </div>
   );
 };
 
 const LeftHeader = ({ showBackIcon, showBookIcon, prevPage }) => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
   return (
     <div className="flex w-[180px] items-center relative">
       {showBackIcon && 
-        <Link to={prevPage}>
-          <BackIcon />
-        </Link>
+        <BackIcon onClick={() => handleNavigation(prevPage)} />
       }
       {showBookIcon && <BookIcon />}
     </div>
   );
 };
 
-const RightHeader = () => {
+const RightHeader = ({ currPage, isHead }) => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    navigate(path, { state: { currPage, isHead } });
+  };
 
   return (
     <div className="flex w-[180px] items-center justify-end gap-[30px] relative">
-      <Link to="/homejudges">
-        <HomeIcon />
-      </Link>
-      <Link to="/notificationsjudges" >
-        <BellIcon />
-      </Link>
-      <Link to="/settings">
-        <SettingsIcon />
-      </Link>
+      <HomeIcon onClick={() => handleNavigation('/homejudges')} />
+      <BellIcon onClick={() => handleNavigation('/notificationsjudges')} />
+      <SettingsIcon onClick={() => handleNavigation('/settings')} />
     </div>
   );
 };
