@@ -1,12 +1,8 @@
 import React from "react";
 import TickIcon from "../components/TickIcon";
+import XIcon from "../components/XIcon";
 
-const LoginRequest = ({ name, removeAccept, addJoined , index}) => {
-
-  const handleTickClick = () => {
-    removeAccept(index);
-    addJoined(name);
-  };
+const LoginRequest = ({ name, onApprove, onReject }) => {
 
   return (
     <div className="flex items-center justify-center w-[345px]">
@@ -14,8 +10,13 @@ const LoginRequest = ({ name, removeAccept, addJoined , index}) => {
         <div className="font-montserrat font-normal text-prussian-blue w-[200px] text-[18px] text-center">
           {name}
         </div>
-        <div className="group" onClick={handleTickClick}>
-          <TickIcon />
+        <div className="flex items-center gap-[15px]">
+          <div className="group" onClick={onApprove}>
+            <TickIcon />
+          </div>
+          <div className="group" onClick={onReject}>
+            <XIcon />
+          </div>
         </div>
       </div>
     </div>

@@ -31,10 +31,6 @@ const NotificationsJudges = () => {
                   sender={notification.sender}
                 />
               ))}
-            {/* <Notification notification="Please approach the judging table" time="10:10am" sender="head"/>
-            <Notification notification="You joined R1:floor" time="10:07am" sender="system"/>
-            <Notification notification="R1:Floor event is waiting for judges" time="10:05am" sender="system"/>
-            <Notification notification="Welcome to Scorematics!" time="10:05am" sender="system"/> */}
           </div>
         </div>
       </div>

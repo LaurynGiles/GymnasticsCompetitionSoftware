@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import SelectBox from "../components/SelectBox";
 import BlueButton from "../components/BlueButton";
@@ -10,15 +10,8 @@ import { getActiveTimeSlot, getSessionsByTimeSlot, getEventsBySessionIds, checkE
 
 const HomeJudges = () => {
 
-  const location = useLocation();
   const navigate = useNavigate();
-  const { judge_id, role, head_judge, judge_fname, judge_lname } = location.state;
-  console.log(judge_id);
-  console.log(role);
-  console.log(head_judge);
-  console.log(judge_fname);
-  console.log(judge_lname);
-  const { socket, addNotification } = useNotifications();
+  const { judgeInfo, socket, navigateToCalculations, setNavigateToCalculations } = useNotifications();
 
   const [levelOptions, setLevelOptions] = useState([]);
   const [ageOptions, setAgeOptions] = useState([]);
@@ -27,6 +20,13 @@ const HomeJudges = () => {
   const [age, setAge] = useState("");
   const [apparatus, setApparatus] = useState("")
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (navigateToCalculations) {
+      navigate("/calculationsjudges");
+      setNavigateToCalculations(false); // Reset navigation flag
+    }
+  }, [navigateToCalculations, navigate, setNavigateToCalculations]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,29 +74,15 @@ const HomeJudges = () => {
     }
   }, [apparatusOptions]);
 
-  // useEffect(() => {
-  //   if (!socket) return;
-    
-  //   socket.on('errorMessage', (message) => {
-  //     setErrorMessage(message);
-  //   });
-
-  //   socket.on('groupMessage', (message) => {
-  //     setGroupMessage(message);
-  //   });
-
-  //   return () => {
-  //     socket.off('errorMessage');
-  //     socket.off('groupMessage');
-  //   };
-  // }, [socket]);
-
   const handleJoinGroup = (group_id) => {
     return new Promise((resolve, reject) => {
-      console.log(head_judge);
-      socket.emit('joinGroup', { group_id, judge_id, head_judge, judge_fname, judge_lname }, (response) => {
+      socket.emit('joinGroup', { group_id, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
         if (response.success) {
-          resolve();
+          if (response.isHeadJudge) {
+            resolve('headJudge');
+          } else {
+            resolve('waitingForApproval');
+          }
         } else {
           setErrorMessage(response.error);
           reject(response.error);
@@ -111,13 +97,12 @@ const HomeJudges = () => {
       
       if (event.exists) {
         const newGroupID = event.event_id;
-        await handleJoinGroup(newGroupID);
-        localStorage.setItem("apparatus", apparatus);
+        const joinResult = await handleJoinGroup(newGroupID);
 
-        if (!head_judge) {
-          navigate("/calculationsjudges");
-        } else {
+        if (joinResult === 'headJudge') {
           navigate("/lobby");
+        } else if (joinResult === 'waitingForApproval') {
+          setErrorMessage("Your join request has been sent and is waiting for approval.");
         }
 
       } else {
@@ -134,12 +119,12 @@ const HomeJudges = () => {
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
         <div className="fixed top-0 w-[400px] z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/homejudges"} isHead={head_judge}/>
+          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/homejudges"}/>
         </div>
         <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] gap-[40px] relative">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           <div className="flex flex-col w-[400px] items-center gap-[15px] px-[31px] py-0 relative flex-[0_0_auto]">
-            {!head_judge ? (
+            {!judgeInfo.head_judge ? (
               <Header text="Join a judging table"/>
             ) : (
               <Header text="Start a judging table"/>
@@ -148,7 +133,7 @@ const HomeJudges = () => {
               <SelectBox title="Level" option={level} setOption={setLevel} allOptions={levelOptions} optionType={"Level"}/>
               <SelectBox title="Age group" option={age} setOption={setAge} allOptions={ageOptions} optionType={"Age"}/>
               <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} allOptions={apparatusOptions} optionType={"Apparatus"}/>
-              {!head_judge ? (
+              {!judgeInfo.head_judge ? (
                 <div onClick={handleJudgeHome}>
                   <BlueButton title="Join" />
                 </div>
@@ -160,9 +145,6 @@ const HomeJudges = () => {
               {errorMessage && (
                 <div className="text-red-500 mb-2 text-center font-montserrat">{errorMessage}</div>
               )}
-              {/* {groupMessage && (
-                <div className="text-green-500 mb-2">{groupMessage}</div>
-              )} */}
             </div>
           </div>
         </div>

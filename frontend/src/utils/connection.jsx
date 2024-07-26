@@ -10,6 +10,10 @@ export const useNotifications = () => {
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [judgeInfo, setJudgeInfo] = useState({});
+  const [joinRequests, setJoinRequests] = useState([]);
+  const [joinedJudges, setJoinedJudges] = useState([]);
+  const [navigateToCalculations, setNavigateToCalculations] = useState(false);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000"); // Adjust the URL as needed
@@ -25,9 +29,25 @@ export const NotificationProvider = ({ children }) => {
       addNotification({ message, sender: "system", time: new Date().toLocaleTimeString() });
     });
 
+    socketConnection.on("joinRequest", (request) => {
+      setJoinRequests(prev => [...prev, request]);
+    });
+
+    socketConnection.on("judgeJoined", (judge) => {
+      console.log(judge);
+      setJoinedJudges(prev => [...prev, judge]);
+    });
+
+    socketConnection.on("joinApproved", ({ group_id }) => {
+      console.log(`Join approved for group ${group_id}`);
+      setNavigateToCalculations(true);
+    });
+
     return () => {
       socketConnection.off("errorMessage");
       socketConnection.off("groupMessage");
+      socketConnection.off("joinRequest");
+      socketConnection.off("judgeJoined");
       socketConnection.close();
     };
   }, []);
@@ -36,8 +56,19 @@ export const NotificationProvider = ({ children }) => {
     setNotifications((prev) => [notification, ...prev]);
   };
 
+  const approveJoinRequest = (judge) => {
+    setJoinRequests(prev => prev.filter(req => req.judge_id !== judge.judge_id));
+    // setJoinedJudges(prev => [...prev, judge]);
+    socket.emit("approveJoinRequest", judge);
+  };
+
+  const rejectJoinRequest = (judge) => {
+    setJoinRequests(prev => prev.filter(req => req.judge_id !== judge.judge_id));
+    socket.emit("rejectJoinRequest", judge);
+  };
+
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, socket }}>
+    <NotificationContext.Provider value={{ notifications, addNotification, socket, judgeInfo, setJudgeInfo, joinRequests, joinedJudges, approveJoinRequest, rejectJoinRequest, navigateToCalculations, setNavigateToCalculations }}>
       {children}
     </NotificationContext.Provider>
   );

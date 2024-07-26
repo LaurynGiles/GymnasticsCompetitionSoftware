@@ -1,11 +1,7 @@
 import React from "react";
 import XIcon from "../components/XIcon";
 
-const RemoveRequest = ({ name, removeJoined, index }) => {
-
-  const handleXClick = () => {
-    removeJoined(index);
-  };
+const RemoveRequest = ({ name}) => {
 
   return (
     <div className="flex items-center justify-center w-[345px]">
@@ -13,9 +9,9 @@ const RemoveRequest = ({ name, removeJoined, index }) => {
         <div className="font-montserrat font-normal text-prussian-blue w-[200px] text-[18px] text-center">
           {name}
         </div>
-        <div className="group" onClick={handleXClick}>
+        {/* <div className="group" onClick={handleXClick}>
           <XIcon />
-        </div>
+        </div> */}
       </div>
     </div>
   );

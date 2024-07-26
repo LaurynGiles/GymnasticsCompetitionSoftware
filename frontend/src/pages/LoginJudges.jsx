@@ -4,23 +4,26 @@ import InputBox from "../components/InputBox";
 import SmallLogo from "../components/SmallLogo";
 import { useNavigate } from "react-router-dom";
 import { loginJudge } from "../utils/api.js";
+import { useNotifications } from "../utils/connection.jsx";
 
 const LoginJudges = () => {
   const [number, setNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { setJudgeInfo } = useNotifications();
 
   const handleLogin = async () => {
     try {
       const response = await loginJudge(number);
       if (response.success) {
         const { judge_id, role, head_judge, judge_fname, judge_lname } = response.data;
+        setJudgeInfo({ judge_id, role, head_judge, judge_fname, judge_lname });
         console.log(judge_id);
         console.log(role);
         console.log(head_judge);
         console.log(judge_fname);
         console.log(judge_lname);
-        navigate('/homejudges', { state: { judge_id, role, head_judge, judge_fname, judge_lname} });
+        navigate('/homejudges');
       } else {
         setErrorMessage(response.message);
       }

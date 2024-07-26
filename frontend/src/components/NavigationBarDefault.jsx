@@ -6,12 +6,12 @@ import SettingsIcon from "./SettingsIcon"
 import BackIcon from "./BackIcon";
 import BookIcon from "./BookIcon"
 
-const NavigationBarDefault = ({ showBackIcon, showBookIcon, prevPage, currPage, isHead }) => {
+const NavigationBarDefault = ({ showBackIcon, showBookIcon, prevPage, currPage }) => {
 
   return (
     <div className="flex items-center w-full justify-center px-[13px] py-[12px] relative bg-glaucous">
       <LeftHeader showBackIcon={showBackIcon} showBookIcon={showBookIcon} prevPage={prevPage}/>
-      <RightHeader currPage={currPage} isHead={isHead}/>
+      <RightHeader currPage={currPage}/>
     </div>
   );
 };
@@ -33,11 +33,11 @@ const LeftHeader = ({ showBackIcon, showBookIcon, prevPage }) => {
   );
 };
 
-const RightHeader = ({ currPage, isHead }) => {
+const RightHeader = ({ currPage }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
-    navigate(path, { state: { currPage, isHead } });
+    navigate(path, { state: { currPage } });
   };
 
   return (
