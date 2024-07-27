@@ -13,6 +13,8 @@ module.exports = {
         contact_number: '123-456-7890',
         ethnicity: 'Caucasian',
         group_id: 1,
+        level: "1",
+        age: "7-8",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -26,6 +28,8 @@ module.exports = {
         contact_number: '234-567-8901',
         ethnicity: 'Black',
         group_id: 1,
+        level: "1",
+        age: "7-8",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -39,6 +43,8 @@ module.exports = {
         contact_number: '345-678-9012',
         ethnicity: 'Caucasian',
         group_id: 2,
+        level: "1",
+        age: "9-10",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -52,6 +58,8 @@ module.exports = {
         contact_number: '456-789-0123',
         ethnicity: 'Black',
         group_id: 2,
+        level: "1",
+        age: "9-10",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -65,6 +73,8 @@ module.exports = {
         contact_number: '567-890-1234',
         ethnicity: 'Caucasian',
         group_id: 1,
+        level: "1",
+        age: "9-10",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -78,6 +88,8 @@ module.exports = {
         contact_number: '678-901-2345',
         ethnicity: 'Caucasian',
         group_id: 1,
+        level: "1",
+        age: "9-10",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -91,6 +103,8 @@ module.exports = {
         contact_number: '789-012-3456',
         ethnicity: 'Black',
         group_id: 2,
+        level: "1",
+        age: "11-12",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -104,6 +118,8 @@ module.exports = {
         contact_number: '890-123-4567',
         ethnicity: 'Black',
         group_id: 2,
+        level: "1",
+        age: "11-12",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -117,6 +133,8 @@ module.exports = {
         contact_number: '901-234-5678',
         ethnicity: 'Caucasian',
         group_id: 1,
+        level: "1",
+        age: "9-10",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -130,6 +148,8 @@ module.exports = {
         contact_number: '012-345-6789',
         ethnicity: 'Black',
         group_id: 1,
+        level: "1",
+        age: "9-10",
         createdAt: new Date(),
         updatedAt: new Date()
       }

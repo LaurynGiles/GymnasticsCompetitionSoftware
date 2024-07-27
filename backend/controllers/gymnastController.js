@@ -1,6 +1,6 @@
 import db from '../models/index.js';
 
-const { Gymnast, Difficulty } = db;
+const { Gymnast, Difficulty, Event, GymnastGroup } = db;
 
 export async function getAllGymnasts(req, res, next) {
     try {
@@ -71,6 +71,17 @@ export async function getGymnastsByEvent(req, res, next) {
     const { event_id } = req.params;
 
     try {
+        const event = await Event.findByPk(event_id);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        const gymnastGroups = await GymnastGroup.findAll({
+            where: { session_id: event.session_id },
+        });
+
+        const groupIds = gymnastGroups.map(group => group.group_id);
+        
         // Fetch all gymnasts linked to the event
         const gymnasts = await Gymnast.findAll({
             include: {

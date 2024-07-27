@@ -143,6 +143,42 @@ describe('API Tests', () => {
                     expect(res).to.have.status(201);
                     expect(res.body).to.be.an('object');
                     expect(res.body).to.have.property('time_slot_id');
+                });
+
+            const timeslot3 = {
+                competition_id: 1,
+                date: '2024-03-01',
+                report_time: '13:00:00',
+                competition_time: '14:00:00',
+                award_time: '17:00:00',
+                complete: false
+            };
+        
+            server.request.execute(app)
+                .post('/api/timeslots')
+                .send(timeslot3)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('time_slot_id');
+                });
+
+            const timeslot4 = {
+                competition_id: 1,
+                date: '2024-03-02',
+                report_time: '08:00:00',
+                competition_time: '09:00:00',
+                award_time: '12:00:00',
+                complete: false
+            };
+            
+            server.request.execute(app)
+                .post('/api/timeslots')
+                .send(timeslot4)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('time_slot_id');
                     createdTimeSlotId = res.body.time_slot_id;
                     done();
                 });
@@ -214,8 +250,6 @@ describe('API Tests', () => {
 
         it('should create a new session', (done) => {
             const session1 = {
-                level: '1',
-                age: '8-9',
                 time_slot_id: 1,
                 complete: false
             };
@@ -230,9 +264,7 @@ describe('API Tests', () => {
                 });
 
             const session2 = {
-                level: '3',
-                age: '10-11',
-                time_slot_id: 1,
+                time_slot_id: 2,
                 complete: false
             };
 
@@ -246,9 +278,7 @@ describe('API Tests', () => {
                 });
 
             const session3 = {
-                level: '1',
-                age: '7-8',
-                time_slot_id: 1,
+                time_slot_id: 3,
                 complete: false
             };
     
@@ -291,7 +321,7 @@ describe('API Tests', () => {
 
         it('should update a session', (done) => {
             const updatedSession = {
-                level: '2'
+                time_slot_id: '3'
             };
     
             server.request.execute(app)
@@ -300,7 +330,7 @@ describe('API Tests', () => {
                 .end((err, res) => {
                     expect(res).to.have.status(200);
                     expect(res.body).to.be.an('object');
-                    expect(res.body.level).to.equal('2');
+                    expect(res.body.time_slot_id).to.equal(3);
                     done();
                 });
         });
@@ -421,6 +451,8 @@ describe('API Tests', () => {
                 district: 'CWGA',
                 contact_number: '1234567890',
                 ethnicity: 'Caucasian',
+                level: '1',
+                age: '7-8',
                 group_id: 1
             };
 
@@ -442,6 +474,8 @@ describe('API Tests', () => {
                 district: 'CWGA',
                 contact_number: '5691354852',
                 ethnicity: 'Caucasian',
+                level: '2',
+                age: '10-11',
                 group_id: 1
             };
 

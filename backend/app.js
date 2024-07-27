@@ -120,13 +120,16 @@ try {
     console.error('Unable to connect to the database:', error);
 }
 
-sequelize.sync({ force: true })
-  .then(() => {
-    console.log('Database synced');
-    seedDatabase();
-  }).catch(err => {
-    console.error('Error syncing database:', err);
-  });
+if (process.env.NODE_ENV === 'development') {
+  console.log("SYNCING DB");
+  sequelize.sync({ force: true })
+    .then(() => {
+      console.log('Database synced');
+      seedDatabase();
+    }).catch(err => {
+      console.error('Error syncing database:', err);
+    });
+}
 
 console.log(sequelize);
 logModelDetails();

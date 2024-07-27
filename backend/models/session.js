@@ -5,14 +5,6 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    level: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-    },
-    age: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-    },
     time_slot_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -27,6 +19,12 @@ export default (sequelize, DataTypes) => {
     },
   }, {
     tableName: 'Session',
+    indexes: [
+      {
+        unique: true,
+        fields: ['session_id', 'time_slot_id']
+      }
+    ]
   });
 
   Session.associate = (models) => {

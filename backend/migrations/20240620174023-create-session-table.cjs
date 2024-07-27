@@ -10,14 +10,6 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      level: {
-        type: Sequelize.STRING(20),
-        allowNull: false,
-      },
-      age: {
-        type: Sequelize.STRING(20),
-        allowNull: false,
-      },
       time_slot_id: {
         type: Sequelize.INTEGER,
         allowNull: true,

@@ -42,6 +42,14 @@ module.exports = {
         type: Sequelize.STRING(20),
         allowNull: true,
       },
+      level: {
+        type: Sequelize.STRING(20),
+        allowNull: false,
+      },
+      age: {
+        type: Sequelize.STRING(20),
+        allowNull: false,
+      },
       group_id: {
         type: Sequelize.INTEGER,
         allowNull: true,

@@ -30,6 +30,7 @@ export async function createTimeSlot(req, res, next) {
         const newTimeSlot = await TimeSlot.create(req.body);
         res.status(201).json(newTimeSlot);
     } catch (error) {
+        console.log(error);
         next(error);
     }
 }

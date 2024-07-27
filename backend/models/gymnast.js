@@ -37,6 +37,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: true,
     },
+    level: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    age: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
     group_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
