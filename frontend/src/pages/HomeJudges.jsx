@@ -11,7 +11,7 @@ import { getActiveTimeSlot, getSessionsByTimeSlot, getEventsBySessionIds, checkE
 const HomeJudges = () => {
 
   const navigate = useNavigate();
-  const { judgeInfo, socket, navigateToCalculations, setNavigateToCalculations } = useNotifications();
+  const { judgeInfo, socket, navigateToCalculations, setNavigateToCalculations, groupId, setGroupId } = useNotifications();
 
   const [levelOptions, setLevelOptions] = useState([]);
   const [ageOptions, setAgeOptions] = useState([]);
@@ -79,6 +79,7 @@ const HomeJudges = () => {
       socket.emit('joinGroup', { group_id, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
         if (response.success) {
           if (response.isHeadJudge) {
+            setGroupId(group_id);
             resolve('headJudge');
           } else {
             resolve('waitingForApproval');

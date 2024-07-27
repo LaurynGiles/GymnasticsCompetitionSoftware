@@ -1,6 +1,6 @@
 import db from '../models/index.js';
 
-const { Gymnast } = db;
+const { Gymnast, Difficulty } = db;
 
 export async function getAllGymnasts(req, res, next) {
     try {
@@ -63,6 +63,38 @@ export async function deleteGymnast(req, res, next) {
             res.status(404).send('Gymnast not found');
         }
     } catch (error) {
+        next(error);
+    }
+}
+
+export async function getGymnastsByEvent(req, res, next) {
+    const { event_id } = req.params;
+
+    try {
+        // Fetch all gymnasts linked to the event
+        const gymnasts = await Gymnast.findAll({
+            include: {
+                model: Event,
+                where: { event_id },
+            },
+        });
+
+        // Fetch all gymnasts who have completed the event
+        const completedGymnasts = await Difficulty.findAll({
+            where: { event_id },
+            attributes: ['gymnast_id'],
+        });
+
+        const completedGymnastIds = completedGymnasts.map(d => d.gymnast_id);
+
+        const result = gymnasts.map(gymnast => ({
+            ...gymnast.toJSON(),
+            completed: completedGymnastIds.includes(gymnast.gymnast_id),
+        }));
+
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error fetching gymnasts:', error);
         next(error);
     }
 }

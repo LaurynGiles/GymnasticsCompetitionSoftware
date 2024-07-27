@@ -14,6 +14,7 @@ export const NotificationProvider = ({ children }) => {
   const [joinRequests, setJoinRequests] = useState([]);
   const [joinedJudges, setJoinedJudges] = useState([]);
   const [navigateToCalculations, setNavigateToCalculations] = useState(false);
+  const [groupId, setGroupId] = useState(null);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000"); // Adjust the URL as needed
@@ -40,6 +41,7 @@ export const NotificationProvider = ({ children }) => {
 
     socketConnection.on("joinApproved", ({ group_id }) => {
       console.log(`Join approved for group ${group_id}`);
+      setGroupId(group_id);
       setNavigateToCalculations(true);
     });
 
@@ -58,7 +60,6 @@ export const NotificationProvider = ({ children }) => {
 
   const approveJoinRequest = (judge) => {
     setJoinRequests(prev => prev.filter(req => req.judge_id !== judge.judge_id));
-    // setJoinedJudges(prev => [...prev, judge]);
     socket.emit("approveJoinRequest", judge);
   };
 
@@ -68,7 +69,21 @@ export const NotificationProvider = ({ children }) => {
   };
 
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, socket, judgeInfo, setJudgeInfo, joinRequests, joinedJudges, approveJoinRequest, rejectJoinRequest, navigateToCalculations, setNavigateToCalculations }}>
+    <NotificationContext.Provider value={{
+      notifications, 
+      addNotification, 
+      socket, 
+      judgeInfo, 
+      setJudgeInfo, 
+      joinRequests, 
+      joinedJudges, 
+      approveJoinRequest, 
+      rejectJoinRequest, 
+      navigateToCalculations, 
+      setNavigateToCalculations, 
+      groupId, 
+      setGroupId 
+    }}>
       {children}
     </NotificationContext.Provider>
   );

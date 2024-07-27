@@ -5,11 +5,14 @@ import Header from "../components/Header";
 import UserInfo from "../components/UserInfo";
 import FilledRadioSelectIcon from "../components/FilledRadioSelectIcon";
 import BlueButton from "../components/BlueButton";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useNotifications } from "../utils/connection.jsx";
 
 export const SettingsJudges = () => {
 
   const [selectedOption, setSelectedOption] = useState(0);
+  const navigate = useNavigate();
+  const { socket, judgeInfo } = useNotifications();
 
   useEffect(() => {
     const storedLayout = localStorage.getItem("layout");
@@ -69,6 +72,11 @@ export const SettingsJudges = () => {
         </div>
       );
     }
+  };
+
+  const handleLogout = async () => {
+    socket.emit('logout', { judge_id: judgeInfo.judge_id });
+    navigate('/login');
   };
 
 
@@ -135,9 +143,9 @@ export const SettingsJudges = () => {
             </div>
           </div>
           <Header text={"Logout"} />
-          <Link to="/login">
+          <div onClick={handleLogout}>
             <BlueButton title={"Logout"} />
-          </Link>
+          </div>
         </div>
       </div>
     </div>

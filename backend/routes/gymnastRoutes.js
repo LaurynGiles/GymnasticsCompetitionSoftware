@@ -1,7 +1,9 @@
 import express from 'express';
-import { getAllGymnasts, findGymnast, createGymnast, updateGymnast, deleteGymnast } from '../controllers/gymnastController.js';
+import { getAllGymnasts, findGymnast, createGymnast, updateGymnast, deleteGymnast, getGymnastsByEvent } from '../controllers/gymnastController.js';
 
 const router = express.Router();
+
+router.get('/event/:event_id', getGymnastsByEvent);
 
 router.get('/', getAllGymnasts);
 

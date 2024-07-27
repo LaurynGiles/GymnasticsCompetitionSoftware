@@ -31,7 +31,7 @@ const StartingScoreHeadJudges = () => {
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
         <div className="fixed top-0 w-[400px] z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={false} />
+          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/startingscore"}/>
         </div>
         <div className="inline-flex flex-col h-[800px] items-center overflow-y-auto pt-[75px] gap-[30px] relative">
           <EventInfoBlock />

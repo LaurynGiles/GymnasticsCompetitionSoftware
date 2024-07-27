@@ -8,16 +8,52 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175',],
     methods: ['GET', 'POST'],
   },
 });
 
+const loggedInJudges = new Map();
 const groupUsers = {};
 const headJudges = {};
 
 io.on('connection', (socket) => {
   console.log('A user connected', socket.id);
+
+  socket.on('login', ({ judge_id, judge_fname, judge_lname }, callback) => {
+    console.log("Trying to log in judge");
+    if (loggedInJudges.has(judge_id)) {
+      console.log("Judge already logged in");
+      callback({ success: false, message: `${judge_fname} ${judge_lname} is already logged in from another device.` });
+    } else {
+      loggedInJudges.set(judge_id, socket.id);
+      
+      console.log(`Judge ${judge_id} (${judge_fname} ${judge_lname}) logged in.`);
+      callback({ success: true, judge_id, judge_fname, judge_lname });
+    }
+  });
+
+  socket.on('logout', ({ judge_id }) => {
+    if (loggedInJudges.has(judge_id)) {
+      loggedInJudges.delete(judge_id);
+      console.log(`Judge ${judge_id} logged out.`);
+
+      for (const groupId in groupUsers) {
+        groupUsers[groupId] = groupUsers[groupId].filter(id => id !== socket.id);
+
+        if (headJudges[groupId] === socket.id) {
+          delete headJudges[groupId];
+          console.log(`Head judge of group ${groupId} (${judge_id}) logged out.`);
+        }
+  
+        if (groupUsers[groupId].length === 0) {
+          delete groupUsers[groupId];
+        }
+      }
+  
+      console.log(`Judge ${judge_id} removed from all groups.`);
+    }
+  });
 
   socket.on('joinGroup', ({ group_id, judge_id, head_judge, judge_fname, judge_lname }, callback) => {
 
@@ -97,12 +133,22 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('A user disconnected', socket.id);
 
-    for (const groupId in groupUsers) {
-      groupUsers[groupId] = groupUsers[groupId].filter(id => id !== socket.id);
-
-      if (groupUsers[groupId].length === 0) {
-        delete groupUsers[groupId];
-        delete headJudges[groupId];
+    for (const [judge_id, socketId] of loggedInJudges.entries()) {
+      if (socketId === socket.id) {
+        loggedInJudges.delete(judge_id);
+        
+        for (const groupId in groupUsers) {
+          groupUsers[groupId] = groupUsers[groupId].filter(id => id !== socket.id);
+    
+          if (headJudges[groupId] === socket.id) {
+            delete headJudges[groupId];
+            console.log(`Head judge of group ${groupId} (${judge_id}) disconnected.`);
+          }
+    
+          if (groupUsers[groupId].length === 0) {
+            delete groupUsers[groupId];
+          }
+        }
       }
     }
   });

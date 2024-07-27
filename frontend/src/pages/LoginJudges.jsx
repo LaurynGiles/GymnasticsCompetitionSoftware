@@ -10,7 +10,7 @@ const LoginJudges = () => {
   const [number, setNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const { setJudgeInfo } = useNotifications();
+  const { setJudgeInfo, socket } = useNotifications();
 
   const handleLogin = async () => {
     try {
@@ -18,16 +18,30 @@ const LoginJudges = () => {
       if (response.success) {
         const { judge_id, role, head_judge, judge_fname, judge_lname } = response.data;
         setJudgeInfo({ judge_id, role, head_judge, judge_fname, judge_lname });
+
         console.log(judge_id);
         console.log(role);
         console.log(head_judge);
         console.log(judge_fname);
         console.log(judge_lname);
-        navigate('/homejudges');
+
+        console.log("Sending login message to socket");
+
+        socket.emit('login', { judge_id, judge_fname, judge_lname }, (socketResponse) => {
+          if (socketResponse.success) {
+            console.log("Socket joined successfully");
+            navigate('/homejudges');
+          } else {
+            console.log("Socket bad error");
+            setErrorMessage(socketResponse.message);
+          }
+        });
+
       } else {
         setErrorMessage(response.message);
       }
     } catch (error) {
+      console.log(error);
       setErrorMessage('Authentication error');
     }
   };
