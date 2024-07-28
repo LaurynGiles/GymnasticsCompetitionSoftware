@@ -6,7 +6,7 @@ import BlueButton from "../components/BlueButton";
 import Header from "../components/Header";
 import BlockHeader from "../components/BlockHeader";
 import { useNotifications } from "../utils/connection.jsx";
-import { getActiveTimeSlot, getSessionsByTimeSlot, checkEventExists, getAllApps } from "../utils/api.js";
+import { getActiveTimeSlot, getSessionsByTimeSlot, getEventsBySessionAndApparatus, getAllApps } from "../utils/api.js";
 import EventBox from "../components/EventBox.jsx";
 
 const HomeJudges = () => {
@@ -17,8 +17,11 @@ const HomeJudges = () => {
   const [compOptions, setCompOptions] = useState([]);
   const [apparatusOptions, setApparatusOptions] = useState([]);
   const [comp, setComp] = useState("");
+  const [apparatusMap, setApparatusMap] = useState({});
   const [apparatus, setApparatus] = useState("")
+  const [apparatusId, setApparatusId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [eventBoxes, setEventBoxes] = useState([]);
 
   useEffect(() => {
     if (navigateToCalculations) {
@@ -37,18 +40,19 @@ const HomeJudges = () => {
         const apps = await getAllApps();
 
         const setSessions = new Set();
-        const setApps = new Set();
+        const apparatusMap = {};
 
         sessions.forEach(session => {
           setSessions.add(session.session_id);
         });
 
         apps.forEach(app => {
-          setApps.add(app.apparatus_name);
+          apparatusMap[app.apparatus_name] = app.apparatus_id;
         });
 
         setCompOptions(Array.from(setSessions));
-        setApparatusOptions(Array.from(setApps));
+        setApparatusOptions(Object.keys(apparatusMap));
+        setApparatusMap(apparatusMap);
       }
     };
 
@@ -65,50 +69,65 @@ const HomeJudges = () => {
   useEffect(() => {
     if (apparatusOptions.length > 0) {
       setApparatus(apparatusOptions[0]);
+      setApparatusId(apparatusMap[apparatusOptions[0]]);
     }
   }, [apparatusOptions]);
 
-  const handleJoinGroup = (group_id) => {
-    return new Promise((resolve, reject) => {
-      socket.emit('joinGroup', { group_id, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
-        if (response.success) {
-          if (response.isHeadJudge) {
-            setGroupId(group_id);
-            resolve('headJudge');
-          } else {
-            resolve('waitingForApproval');
-          }
-        } else {
-          setErrorMessage(response.error);
-          reject(response.error);
-        }
-      });
-    });
-  };
-
-  const handleJudgeHome = async () => {
-    try {
-      const event = await checkEventExists(level, age, apparatus);
-      
-      if (event.exists) {
-        const newGroupID = event.event_id;
-        const joinResult = await handleJoinGroup(newGroupID);
-
-        if (joinResult === 'headJudge') {
-          navigate("/lobby");
-        } else if (joinResult === 'waitingForApproval') {
-          setErrorMessage("Your join request has been sent and is waiting for approval.");
-        }
-
-      } else {
-        console.log("Error: event does not exist");
-        setErrorMessage("This event does not exist");
+  useEffect(() => {
+    const fetchEventBoxes = async () => {
+      if (comp && apparatusId) {
+        console.log(apparatusId);
+        const events = await getEventsBySessionAndApparatus(comp, apparatusId);
+        console.log("here");
+        console.log(events);
+        setEventBoxes(events);
       }
-    } catch (error) {
-      console.log(error);
-      setErrorMessage(error || "Error connecting to server");
-    }
-  };
+    };
+
+    fetchEventBoxes();
+  }, [comp, apparatusId]);
+
+  // const handleJoinGroup = (group_id) => {
+  //   return new Promise((resolve, reject) => {
+  //     socket.emit('joinGroup', { group_id, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
+  //       if (response.success) {
+  //         if (response.isHeadJudge) {
+  //           setGroupId(group_id);
+  //           resolve('headJudge');
+  //         } else {
+  //           resolve('waitingForApproval');
+  //         }
+  //       } else {
+  //         setErrorMessage(response.error);
+  //         reject(response.error);
+  //       }
+  //     });
+  //   });
+  // };
+
+  // const handleJudgeHome = async () => {
+  //   try {
+  //     const event = await checkEventExists(level, age, apparatus);
+      
+  //     if (event.exists) {
+  //       const newGroupID = event.event_id;
+  //       const joinResult = await handleJoinGroup(newGroupID);
+
+  //       if (joinResult === 'headJudge') {
+  //         navigate("/lobby");
+  //       } else if (joinResult === 'waitingForApproval') {
+  //         setErrorMessage("Your join request has been sent and is waiting for approval.");
+  //       }
+
+  //     } else {
+  //       console.log("Error: event does not exist");
+  //       setErrorMessage("This event does not exist");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setErrorMessage(error || "Error connecting to server");
+  //   }
+  // };
 
   return (
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
@@ -118,10 +137,10 @@ const HomeJudges = () => {
         </div>
         <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] gap-[40px] relative">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
-          <div className="flex flex-col w-[400px] items-center gap-[40px] px-[31px] py-0 relative flex-[0_0_auto]">
+          <div className="flex flex-col w-[400px] items-center gap-[30px] px-[31px] py-0 relative flex-[0_0_auto]">
             <div className="inline-flex flex-col items-center justify-center w-full gap-[15px] px-[190px] py-[20px] relative flex-[0_0_auto] bg-anti-flash-white">
               <SelectBox title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
-              <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} allOptions={apparatusOptions} optionType={"Apparatus"}/>
+              <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} setOptionId={setApparatusId} allOptions={apparatusOptions} allOptionsMap={apparatusMap} optionType={"Apparatus"}/>
               {/* {!judgeInfo.head_judge ? (
                 <div onClick={handleJudgeHome}>
                   <BlueButton title="Join" />
@@ -141,7 +160,14 @@ const HomeJudges = () => {
               ) : (
                 <Header text="Start a judging table"/>
               )}
-              <EventBox />
+              {eventBoxes.map(eventBox => (
+              <EventBox
+                key={eventBox.eventId}
+                apparatus={eventBox.apparatusName}
+                levels={eventBox.levels}
+                ages={eventBox.ages}
+              />
+            ))}
             </div>
           </div>
         </div>

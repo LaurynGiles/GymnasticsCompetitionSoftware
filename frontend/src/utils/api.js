@@ -1,6 +1,5 @@
 import axiosInstance from './axios.js';
 
-// Login a judge
 export const loginJudge = async (gsa_id) => {
     try {
         const response = await axiosInstance.post('/login', { gsa_id });
@@ -66,7 +65,7 @@ export const getGymnastsByEvent = async (event_id) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching gymnasts:', error);
-    throw error;
+    return [];
   }
 }
 
@@ -76,6 +75,17 @@ export const getAllApps = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching apparatuses:', error);
-    throw error;
+    return [];
   }
 }
+
+export const getEventsBySessionAndApparatus = async (sessionId, apparatusId) => {
+  try {
+    const response = await axiosInstance.post('/events/bySessionAndApparatus', { sessionId, apparatusId });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    console.error("Error fetching events:", error);
+    return [];
+  }
+};

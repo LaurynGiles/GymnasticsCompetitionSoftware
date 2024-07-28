@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ArrowIcon from "./ArrowIcon";
 import SelectOptions from "./SelectOptions";
 
-const SelectBox = ({ title, option , setOption, allOptions, optionType}) => {
+const SelectBox = ({ title, option , setOption, setOptionId, allOptions, allOptionsMap, optionType}) => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [rotateArrow, setRotateArrow] = useState(0);
@@ -14,6 +14,12 @@ const SelectBox = ({ title, option , setOption, allOptions, optionType}) => {
 
   const handleOptionClick = (selectedOption) => {
     setOption(selectedOption);
+    console.log(selectedOption);
+    if (setOptionId) {
+      const selectedOptionId = allOptionsMap[selectedOption];
+      console.log(selectedOptionId);
+      setOptionId(selectedOptionId);
+    }
     setShowPopup(false);
     setRotateArrow(0);
   };
