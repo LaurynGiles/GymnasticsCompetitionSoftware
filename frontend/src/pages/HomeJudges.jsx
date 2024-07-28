@@ -6,18 +6,17 @@ import BlueButton from "../components/BlueButton";
 import Header from "../components/Header";
 import BlockHeader from "../components/BlockHeader";
 import { useNotifications } from "../utils/connection.jsx";
-import { getActiveTimeSlot, getSessionsByTimeSlot, getEventsBySessionIds, checkEventExists } from "../utils/api.js";
+import { getActiveTimeSlot, getSessionsByTimeSlot, checkEventExists, getAllApps } from "../utils/api.js";
+import EventBox from "../components/EventBox.jsx";
 
 const HomeJudges = () => {
 
   const navigate = useNavigate();
   const { judgeInfo, socket, navigateToCalculations, setNavigateToCalculations, groupId, setGroupId } = useNotifications();
 
-  const [levelOptions, setLevelOptions] = useState([]);
-  const [ageOptions, setAgeOptions] = useState([]);
+  const [compOptions, setCompOptions] = useState([]);
   const [apparatusOptions, setApparatusOptions] = useState([]);
-  const [level, setLevel] = useState("");
-  const [age, setAge] = useState("");
+  const [comp, setComp] = useState("");
   const [apparatus, setApparatus] = useState("")
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -35,20 +34,21 @@ const HomeJudges = () => {
       if (activeTimeSlot) {
         const sessions = await getSessionsByTimeSlot(activeTimeSlot.time_slot_id);
 
-        const uniqueLevels = new Set();
-        const uniqueAges = new Set();
-        const sessionIds = sessions.map(session => session.session_id);
+        const apps = await getAllApps();
+
+        const setSessions = new Set();
+        const setApps = new Set();
 
         sessions.forEach(session => {
-          uniqueLevels.add(session.level);
-          uniqueAges.add(session.age);
+          setSessions.add(session.session_id);
         });
-        const events = await getEventsBySessionIds(sessionIds);
-        const uniqueApparatus = new Set(events.map(event => event.Apparatus.apparatus_name));
 
-        setLevelOptions(Array.from(uniqueLevels));
-        setAgeOptions(Array.from(uniqueAges));
-        setApparatusOptions(Array.from(uniqueApparatus));
+        apps.forEach(app => {
+          setApps.add(app.apparatus_name);
+        });
+
+        setCompOptions(Array.from(setSessions));
+        setApparatusOptions(Array.from(setApps));
       }
     };
 
@@ -57,16 +57,10 @@ const HomeJudges = () => {
   }, []);
 
   useEffect(() => {
-    if (levelOptions.length > 0) {
-      setLevel(levelOptions[0]);
+    if (compOptions.length > 0) {
+      setComp(compOptions[0]);
     }
-  }, [levelOptions]);
-  
-  useEffect(() => {
-    if (ageOptions.length > 0) {
-      setAge(ageOptions[0]);
-    }
-  }, [ageOptions]);
+  }, [compOptions]);
   
   useEffect(() => {
     if (apparatusOptions.length > 0) {
@@ -124,17 +118,11 @@ const HomeJudges = () => {
         </div>
         <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] gap-[40px] relative">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
-          <div className="flex flex-col w-[400px] items-center gap-[15px] px-[31px] py-0 relative flex-[0_0_auto]">
-            {!judgeInfo.head_judge ? (
-              <Header text="Join a judging table"/>
-            ) : (
-              <Header text="Start a judging table"/>
-            )}
-            <div className="inline-flex flex-col items-center justify-center w-full gap-[30px] px-[70px] py-[50px] relative flex-[0_0_auto] bg-anti-flash-white">
-              <SelectBox title="Level" option={level} setOption={setLevel} allOptions={levelOptions} optionType={"Level"}/>
-              <SelectBox title="Age group" option={age} setOption={setAge} allOptions={ageOptions} optionType={"Age"}/>
+          <div className="flex flex-col w-[400px] items-center gap-[40px] px-[31px] py-0 relative flex-[0_0_auto]">
+            <div className="inline-flex flex-col items-center justify-center w-full gap-[15px] px-[190px] py-[20px] relative flex-[0_0_auto] bg-anti-flash-white">
+              <SelectBox title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
               <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} allOptions={apparatusOptions} optionType={"Apparatus"}/>
-              {!judgeInfo.head_judge ? (
+              {/* {!judgeInfo.head_judge ? (
                 <div onClick={handleJudgeHome}>
                   <BlueButton title="Join" />
                 </div>
@@ -142,10 +130,18 @@ const HomeJudges = () => {
                 <div onClick={handleJudgeHome}>
                   <BlueButton title="Start" />
                 </div>
-              )}
+              )} */}
               {errorMessage && (
                 <div className="text-red-500 mb-2 text-center font-montserrat">{errorMessage}</div>
               )}
+            </div>
+            <div className="inline-flex flex-col items-center justify-center w-full gap-[15px] relative flex-[0_0_auto]">
+              {!judgeInfo.head_judge ? (
+                <Header text="Join a judging table"/>
+              ) : (
+                <Header text="Start a judging table"/>
+              )}
+              <EventBox />
             </div>
           </div>
         </div>

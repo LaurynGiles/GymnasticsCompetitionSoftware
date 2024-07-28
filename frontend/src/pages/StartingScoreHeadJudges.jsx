@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import BlueButton from "../components/BlueButton";
-import EventInfoBlock from "../components/EventInfoBlock";
+import InfoBlock from "../components/InfoBlock";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import ScoreBlock from "../components/ScoreBlock";
 import Header from "../components/Header";
@@ -34,7 +34,7 @@ const StartingScoreHeadJudges = () => {
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/startingscore"}/>
         </div>
         <div className="inline-flex flex-col h-[800px] items-center overflow-y-auto pt-[75px] gap-[30px] relative">
-          <EventInfoBlock />
+          <InfoBlock />
           
           <div className="inline-flex flex-col w-full items-center justify-center gap-[10px] relative flex-[0_0_auto]">
             <div className="flex w-[400px] items-center justify-center gap-[10px] px-[40px] py-0 relative flex-[0_0_auto]">

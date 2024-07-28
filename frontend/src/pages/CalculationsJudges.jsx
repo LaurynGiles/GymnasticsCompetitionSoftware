@@ -1,6 +1,6 @@
 import React, {useState, useEffect } from "react";
 import NavigationBarDefault from "../components/NavigationBarDefault";
-import EventInfoBlock from "../components/EventInfoBlock";
+import InfoBlock from "../components/InfoBlock";
 import DeductionButtonsGroup from "../components/DeductionButtonsGroup";
 import DeductionBlock from "../components/DeductionBlock";
 import TotalDeductionsBlock from "../components/TotalDeductionsBlock";
@@ -85,7 +85,7 @@ const CalculationsJudges = () => {
           <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/calculationsjudges"}/>
         </div>
         <div className="flex flex-col w-full h-full items-center gap-[40px] overflow-y-auto pt-[75px] relative">
-        <EventInfoBlock />
+        <InfoBlock />
           {renderLayout()}
           <TotalDeductionsBlock total={total}/>
         </div>

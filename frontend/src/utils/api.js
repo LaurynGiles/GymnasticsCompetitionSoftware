@@ -69,3 +69,13 @@ export const getGymnastsByEvent = async (event_id) => {
     throw error;
   }
 }
+
+export const getAllApps = async () => {
+  try {
+    const response = await axiosInstance.get(`/apparatuses/`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching apparatuses:', error);
+    throw error;
+  }
+}

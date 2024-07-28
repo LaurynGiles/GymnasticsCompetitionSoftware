@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import SmallBlueButton from "../components/SmallBlueButton";
-import EventInfoBlock from "../components/EventInfoBlock";
+import InfoBlock from "../components/InfoBlock";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import ScoreBlock from "../components/ScoreBlock";
 import Header from "../components/Header";
@@ -74,7 +74,7 @@ const SubmissionHeadJudges = () => {
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/submission"}/>
         </div>
         <div className="inline-flex flex-col w-full h-full items-center overflow-y-auto pt-[75px] pb-[50px] gap-[30px] relative overflow-hidden">
-          <EventInfoBlock />
+          <InfoBlock />
           
           <div className="inline-flex flex-col items-center gap-[10px] relative flex-[0_0_auto]">
             <Header text={"Starting score and Penalties"}/>

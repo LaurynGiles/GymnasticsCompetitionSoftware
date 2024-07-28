@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import EventInfoBlock from "../components/EventInfoBlock";
+import InfoBlock from "../components/InfoBlock";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import ScoreCard from "../components/ScoreCard";
 import Status from "../components/Status";
@@ -20,7 +20,7 @@ const ScoreCardJudges = () => {
           <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/scorecardjudges"}/>
         </div>
         <div className="flex flex-col w-full h-full items-center gap-[30px] overflow-y-auto pt-[75px] relative">
-          <EventInfoBlock />
+          <InfoBlock />
           <ScoreCard />
           {showStatus && <Status />}
           

@@ -19,10 +19,8 @@ const SelectBox = ({ title, option , setOption, allOptions, optionType}) => {
   };
 
   const renderOption = (option) => {
-    if (optionType === "Level") {
-        return `Level ${option}`;
-    } else if (optionType === "Age") {
-        return `${option} yrs`;
+    if (optionType === "Competition") {
+        return `Competition ${option}`;
     } else {
         return option;
     }

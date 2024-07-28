@@ -1,26 +1,26 @@
 import db from '../models/index.js';
 
-const { Event, Session, TimeSlot, GymnastGroup, Gymnast, Execution, Difficulty } = db;
+const { Event, Session, TimeSlot, GymnastGroup, Gymnast, Execution } = db;
 
 export async function checkEventCompletion(req, res, next) {
   try {
+    console.log("CHECKING event");
     const { eventId } = req.params;
-    const event = await Event.findByPk(eventId, {
-      include: [{
-        model: Session,
-        include: [{
-          model: GymnastGroup,
-          include: [Gymnast]
-        }]
-      }, Execution, Difficulty]
-    });
+    const event = await Event.findByPk(eventId, { include: [{ model: GymnastGroup, as: 'GymnastGroup', include: [Gymnast], }, Execution, ], });
 
-    const allGymnasts = event.Session.GymnastGroups.reduce((acc, group) => acc.concat(group.Gymnasts), []);
-    const completedGymnasts = event.Executions.concat(event.Difficulties).filter(score => allGymnasts.some(gymnast => gymnast.gymnast_id === score.gymnast_id));
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    const allGymnasts = event.GymnastGroup.Gymnasts;
+    const completedGymnasts = event.Executions.filter(execution => 
+      allGymnasts.some(gymnast => gymnast.gymnast_id === execution.gymnast_id)
+    );
 
     if (completedGymnasts.length === allGymnasts.length) {
       await Event.update({ completed: true }, { where: { event_id: eventId } });
-      await checkSessionCompletion(event.session_id);
+      req.params.sessionId = event.GymnastGroup.session_id;
+      await checkSessionCompletion(req, res, next);
       return res.status(200).json({ message: 'Event marked as complete.' });
     } else {
       return res.status(200).json({ message: 'Event not complete yet.' });
@@ -32,26 +32,44 @@ export async function checkEventCompletion(req, res, next) {
 
 export async function checkSessionCompletion(req, res, next) {
     try {
-      const { sessionId } = req.params;
-      const session = await Session.findByPk(sessionId, { include: [Event] });
-      const allEventsComplete = session.Events.every(event => event.completed);
-  
+      console.log("CHECKING session");
+      const sessionId = req.params.sessionId;
+      const session = await Session.findByPk(sessionId, { include: [{model: GymnastGroup, include: Event}] });
+
+      if (!session) {
+        console.log("ERROR 1");
+        return res.status(404).json({ message: 'Session not found' });
+      }
+
+      const allEventsComplete = session.GymnastGroups.every(group => 
+        group.Events.every(event => event.completed)
+      );
+
       if (allEventsComplete) {
         await Session.update({ completed: true }, { where: { session_id: sessionId } });
+        req.params.timeSlotId = session.time_slot_id;
         await checkTimeSlotCompletion(req, res, next);
         return res.status(200).json({ message: 'Session marked as complete.' });
       } else {
         return res.status(200).json({ message: 'Session not complete yet.' });
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
   
   export async function checkTimeSlotCompletion(req, res, next) {
     try {
-      const { timeSlotId } = req.params;
+      console.log("CHECKING timeslot");
+      const timeSlotId = req.params.timeSlotId;
       const timeSlot = await TimeSlot.findByPk(timeSlotId, { include: [Session] });
+
+      if (!timeSlot) {
+        console.log("ERROR 2");
+        return res.status(404).json({ message: 'TimeSlot not found' });
+      }
+
       const allSessionsComplete = timeSlot.Sessions.every(session => session.completed);
   
       if (allSessionsComplete) {
@@ -61,6 +79,7 @@ export async function checkSessionCompletion(req, res, next) {
         return res.status(200).json({ message: 'TimeSlot not complete yet.' });
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }

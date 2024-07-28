@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 
-const EventInfoBlock = () => {
+const InfoBlock = () => {
 
     const [apparatus, setApparatus] = useState("");
     const [level, setLevel] = useState("");
@@ -37,4 +37,4 @@ const EventInfoBlock = () => {
   );
 };
 
-export default EventInfoBlock;
+export default InfoBlock;
