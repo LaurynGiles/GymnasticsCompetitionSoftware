@@ -5,17 +5,17 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    session_id: {
+    group_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'Session',
-        key: 'session_id',
-      },
+        model: 'GymnastGroup',
+        key: 'group_id',
+      }
     },
     apparatus_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'Apparatus',
         key: 'apparatus_id',
@@ -30,18 +30,20 @@ export default (sequelize, DataTypes) => {
     indexes: [
       {
         unique: true,
-        fields: ['session_id', 'apparatus_id']
+        fields: ['group_id', 'apparatus_id'],
       }
     ]
   });
 
   Event.associate = (models) => {
-    Event.belongsTo(models.Session, {
-      foreignKey: 'session_id',
-    });
+
     Event.belongsTo(models.Apparatus, {
       foreignKey: 'apparatus_id',
       as: 'Apparatus',
+    });
+    Event.belongsTo(models.GymnastGroup, {
+      foreignKey: 'group_id',
+      as: 'GymnastGroup',
     });
     Event.hasMany(models.Execution, {
       foreignKey: 'event_id',

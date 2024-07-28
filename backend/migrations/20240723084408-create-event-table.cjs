@@ -10,11 +10,11 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      session_id: {
+      group_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Session',
-          key: 'session_id',
+          model: 'GymnastGroup',
+          key: 'group_id',
         },
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
@@ -47,9 +47,9 @@ module.exports = {
     });
 
     await queryInterface.addConstraint('Event', {
-      fields: ['session_id', 'apparatus_id'],
+      fields: ['group_id', 'apparatus_id'],
       type: 'unique',
-      name: 'unique_session_apparatus_combination',
+      name: 'unique_group_apparatus_combination',
     });
   },
 

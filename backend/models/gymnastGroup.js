@@ -21,6 +21,9 @@ export default (sequelize, DataTypes) => {
     GymnastGroup.hasMany(models.Gymnast, {
       foreignKey: 'group_id',
     });
+    GymnastGroup.hasMany(models.Event, {
+      foreignKey: 'group_id',
+    });
     GymnastGroup.belongsTo(models.Session, {
       foreignKey: 'session_id',
     });

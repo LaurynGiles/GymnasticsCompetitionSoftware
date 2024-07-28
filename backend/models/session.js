@@ -34,9 +34,6 @@ export default (sequelize, DataTypes) => {
     Session.hasMany(models.GymnastGroup, {
       foreignKey: 'session_id',
     });
-    Session.hasMany(models.Event, {
-      foreignKey: 'session_id',
-    });
   };
 
   return Session;

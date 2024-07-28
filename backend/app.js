@@ -120,7 +120,8 @@ try {
     console.error('Unable to connect to the database:', error);
 }
 
-if (process.env.NODE_ENV === 'development') {
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === undefined) {
   console.log("SYNCING DB");
   sequelize.sync({ force: true })
     .then(() => {

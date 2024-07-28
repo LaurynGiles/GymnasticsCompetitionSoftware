@@ -3,14 +3,26 @@ export default (sequelize, DataTypes) => {
     event_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      references: {
+        model: 'Event',
+        key: 'event_id',
+      },
     },
     gymnast_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      references: {
+        model: 'Gymnast',
+        key: 'gymnast_id',
+      },
     },
     judge_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      references: {
+        model: 'Judge',
+        key: 'judge_id',
+      },
     },
     difficulty_score: {
       type: DataTypes.DOUBLE,
@@ -25,7 +37,7 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
     },
   }, {
-    tableName: 'Difficulty',  // Explicitly set the table name here
+    tableName: 'Difficulty',
   });
 
   Difficulty.associate = (models) => {

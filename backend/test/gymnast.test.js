@@ -375,12 +375,26 @@ describe('API Tests', () => {
                 });
 
             const gymnastGroup2 = {
-                session_id: 1
+                session_id: 2
             };
     
             server.request.execute(app)
                 .post('/api/gymnastgroups')
                 .send(gymnastGroup2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('group_id');
+                });
+            
+        
+            const gymnastGroup3 = {
+                session_id: 1
+            };
+        
+            server.request.execute(app)
+                .post('/api/gymnastgroups')
+                .send(gymnastGroup3)
                 .end((err, res) => {
                     expect(res).to.have.status(201);
                     expect(res.body).to.be.an('object');
@@ -779,7 +793,7 @@ describe('API Tests', () => {
 
         it('should create a new event', (done) => {
             const event1 = {
-                session_id: 1,
+                group_id: 1,
                 apparatus_id: 1,
                 complete: false
             };
@@ -794,7 +808,7 @@ describe('API Tests', () => {
                 });
 
             const event2 = {
-                session_id: 1,
+                group_id: 1,
                 apparatus_id: 2,
                 complete: false
             };
@@ -809,7 +823,7 @@ describe('API Tests', () => {
                 });
 
             const event3 = {
-                session_id: 2,
+                group_id: 2,
                 apparatus_id: 1,
                 complete: false
             };
@@ -854,23 +868,23 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get all events for given session IDs', (done) => {
-            const sessionIds = [1, 2];
-            server.request.execute(app)
-                .post('/api/events/bySessions')
-                .send({ sessionIds })
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('array');
-                    res.body.forEach(event => {
-                        expect(event).to.have.property('event_id');
-                        expect(sessionIds).to.include(event.session_id);
-                        expect(event).to.have.property('apparatus_id');
-                        expect(event.Apparatus).to.have.property('apparatus_name');
-                    });
-                    done();
-                });
-        });
+        // it('should get all events for given session IDs', (done) => {
+        //     const sessionIds = [1, 2];
+        //     server.request.execute(app)
+        //         .post('/api/events/bySessions')
+        //         .send({ sessionIds })
+        //         .end((err, res) => {
+        //             expect(res).to.have.status(200);
+        //             expect(res.body).to.be.an('array');
+        //             res.body.forEach(event => {
+        //                 expect(event).to.have.property('event_id');
+        //                 expect(sessionIds).to.include(event.session_id);
+        //                 expect(event).to.have.property('apparatus_id');
+        //                 expect(event.Apparatus).to.have.property('apparatus_name');
+        //             });
+        //             done();
+        //         });
+        // });
 
         it('should update a event', (done) => {
             const updatedEvent = {
