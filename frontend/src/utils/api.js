@@ -59,11 +59,12 @@ export const checkEventExists = async (level, age, apparatus) => {
   }
 };
 
-export const getGymnastsByEvent = async (event_id) => {
+export const getGymnastsByEvent = async (event_id, session_id) => {
   try {
-    const response = await axiosInstance.get(`/gymnasts/event/${event_id}`);
+    const response = await axiosInstance.get(`/gymnasts/event/${event_id}/gymnasts`);
     return response.data;
   } catch (error) {
+    console.log(error);
     console.error('Error fetching gymnasts:', error);
     return [];
   }

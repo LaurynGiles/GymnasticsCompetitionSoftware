@@ -70,27 +70,26 @@ export async function deleteGymnast(req, res, next) {
 export async function getGymnastsByEvent(req, res, next) {
     const { event_id } = req.params;
 
+    console.log(event_id);
+
     try {
         const event = await Event.findByPk(event_id);
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
 
-        const gymnastGroups = await GymnastGroup.findAll({
-            where: { session_id: event.session_id },
-        });
+        console.log(event);
 
-        const groupIds = gymnastGroups.map(group => group.group_id);
-        
-        // Fetch all gymnasts linked to the event
+        const groupId = event.group_id;
+
+        console.log(groupId);
+
         const gymnasts = await Gymnast.findAll({
-            include: {
-                model: Event,
-                where: { event_id },
-            },
+            where: { group_id: groupId },
         });
 
-        // Fetch all gymnasts who have completed the event
+        console.log(gymnasts);
+
         const completedGymnasts = await Difficulty.findAll({
             where: { event_id },
             attributes: ['gymnast_id'],
@@ -102,6 +101,8 @@ export async function getGymnastsByEvent(req, res, next) {
             ...gymnast.toJSON(),
             completed: completedGymnastIds.includes(gymnast.gymnast_id),
         }));
+
+        console.log(result);
 
         res.status(200).json(result);
     } catch (error) {

@@ -3,7 +3,7 @@ import { getAllGymnasts, findGymnast, createGymnast, updateGymnast, deleteGymnas
 
 const router = express.Router();
 
-router.get('/event/:event_id', getGymnastsByEvent);
+router.get('/event/:event_id/gymnasts', getGymnastsByEvent);
 
 router.get('/', getAllGymnasts);
 

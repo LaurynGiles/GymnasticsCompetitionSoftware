@@ -5,20 +5,28 @@
   import { useNotifications } from "../utils/connection.jsx";
   import { useNavigate } from "react-router-dom";
 
-  const EventBox = ({group_id, apparatus, levels, ages, gymnasts}) => {
+  const EventBox = ({group_id, apparatus, levels, ages, gymnasts, comp}) => {
 
-    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId } = useNotifications();
+    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId, setSessionId } = useNotifications();
     const [showPopup, setShowPopup] = useState(false);
     const [rotateArrow, setRotateArrow] = useState(180);
     const [statusMessage, setStatusMessage] = useState("");
+    const [buttonClass, setButtonClass] = useState("bg-prussian-blue cursor-pointer");
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const navigate = useNavigate();
   
     useEffect(() => {
       if (joinStatus && group_id == groupId) {
         setStatusMessage("Join approved");
+        setButtonClass("bg-prussian-blue-dark");
+        setIsButtonDisabled(true);
+        setJoinStatus("");
+      } else if (joinStatus && group_id != groupId) {
+        setButtonClass("bg-text cursor-not-allowed");
+        setIsButtonDisabled(true);
         setJoinStatus("");
       }
-    }, [joinStatus, setJoinStatus, setStatusMessage]);
+    }, [joinStatus, setJoinStatus, setStatusMessage, group_id, groupId]);
 
     const handleArrowClick = () => {
       setShowPopup(!showPopup);
@@ -48,7 +56,10 @@
         socket.emit('joinGroup', { group_id, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
           if (response.success) {
             if (response.isHeadJudge) {
+              // console.log(group_id);
               setGroupId(group_id);
+              // console.log(comp);
+              setSessionId(comp);
               resolve('headJudge');
             } else {
               resolve('waitingForApproval');
@@ -81,19 +92,19 @@
               Age groups:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ages.join(" yrs, ")} yrs
             </div>
             {statusMessage && 
-            <div className="relative w-[297px] mt-[20.00px] font-montserrat font-medium text-red-500 text-base tracking-[0] leading-[normal] text-center">
+            <div className="relative w-[297px] mt-[20.00px] font-montserrat font-medium text-dark-prussian-blue text-base tracking-[0] leading-[normal] text-center">
               {statusMessage}
             </div>
             }
           </div>
           <div className="flex w-[337px] items-center gap-[220px] pl-[15px] pr-[13px] py-[15px] relative flex-[0_0_auto]">
-            <div onClick={handleJudgeHome}>
-              {!judgeInfo.head_judge ? (
-                <TinyBlueButton title={"Join"}/>
-              ) : (
-                <TinyBlueButton title={"Start"}/>
-              )}
-            </div>
+              <div onClick={!isButtonDisabled ? handleJudgeHome : null}>
+                {!judgeInfo.head_judge ? (
+                  <TinyBlueButton title={"Join"} group_id={group_id} buttonClass={buttonClass}/>
+                ) : (
+                  <TinyBlueButton title={"Start"} group_id={group_id} buttonClass={buttonClass}/>
+                )}
+              </div>
             <div onClick={handleArrowClick}>
               <ArrowIcon rotation={rotateArrow}/>
             </div>

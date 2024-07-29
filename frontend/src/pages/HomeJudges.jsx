@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import SelectBox from "../components/SelectBox";
 import Header from "../components/Header";
@@ -10,8 +9,7 @@ import EventBox from "../components/EventBox.jsx";
 
 const HomeJudges = () => {
 
-  const navigate = useNavigate();
-  const { judgeInfo, socket, navigateToCalculations, setNavigateToCalculations, groupId, setGroupId } = useNotifications();
+  const { judgeInfo } = useNotifications();
 
   const [compOptions, setCompOptions] = useState([]);
   const [apparatusOptions, setApparatusOptions] = useState([]);
@@ -19,7 +17,6 @@ const HomeJudges = () => {
   const [apparatusMap, setApparatusMap] = useState({});
   const [apparatus, setApparatus] = useState("")
   const [apparatusId, setApparatusId] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
   const [eventBoxes, setEventBoxes] = useState([]);
 
   // useEffect(() => {
@@ -62,6 +59,7 @@ const HomeJudges = () => {
   useEffect(() => {
     if (compOptions.length > 0) {
       setComp(compOptions[0]);
+      console.log(`Comp set to ${comp}`)
     }
   }, [compOptions]);
   
@@ -75,10 +73,7 @@ const HomeJudges = () => {
   useEffect(() => {
     const fetchEventBoxes = async () => {
       if (comp && apparatusId) {
-        console.log(apparatusId);
         const events = await getEventsBySessionAndApparatus(comp, apparatusId);
-        console.log("here");
-        console.log(events);
         setEventBoxes(events);
       }
     };
@@ -113,6 +108,7 @@ const HomeJudges = () => {
                 levels={eventBox.levels}
                 ages={eventBox.ages}
                 gymnasts={eventBox.gymnasts}
+                comp={comp}
               />
             ))}
             </div>

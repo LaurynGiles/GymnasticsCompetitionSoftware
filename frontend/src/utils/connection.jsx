@@ -16,6 +16,8 @@ export const NotificationProvider = ({ children }) => {
   const [navigateToCalculations, setNavigateToCalculations] = useState(false);
   const [joinStatus, setJoinStatus] = useState(false);
   const [groupId, setGroupId] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+  const [gymnastInfo, setGymnastInfo] = useState({});
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -86,7 +88,9 @@ export const NotificationProvider = ({ children }) => {
       groupId, 
       setGroupId,
       joinStatus,
-      setJoinStatus
+      setJoinStatus,
+      sessionId,
+      setSessionId
     }}>
       {children}
     </NotificationContext.Provider>

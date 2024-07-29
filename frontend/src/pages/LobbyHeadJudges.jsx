@@ -5,12 +5,13 @@ import Header from "../components/Header";
 import LoginRequest from "../components/LoginRequest";
 import StartButton from "../components/StartButton";
 import RemoveRequest from "../components/RemoveRequest";
+import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../utils/connection.jsx";
-import { Link } from "react-router-dom";
 
 const LobbyHeadJudges = () => {
 
   const { joinRequests, joinedJudges, approveJoinRequest, rejectJoinRequest } = useNotifications();
+  const navigate = useNavigate();
 
   const handleApprove = (request) => {
     approveJoinRequest(request);
@@ -19,6 +20,11 @@ const LobbyHeadJudges = () => {
   const handleReject = (request) => {
     rejectJoinRequest(request);
   };
+
+  const handleStartClick = () => {
+    navigate('/gymnastselect');
+  };
+
 
   return (
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
@@ -53,9 +59,9 @@ const LobbyHeadJudges = () => {
             </div>
           </div>
           <div className="inline-flex flex-col h-[245px] items-center justify-end gap-[10px] px-[20px] py-[50px] relative">
-            <Link to="/gymnastselect">
+            <div onClick={handleStartClick}>
               <StartButton title={"Start judging"}/>
-            </Link>
+            </div>
           </div>
         </div>
       </div>

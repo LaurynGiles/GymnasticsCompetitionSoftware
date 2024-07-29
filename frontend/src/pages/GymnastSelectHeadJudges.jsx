@@ -14,7 +14,7 @@ const GymnastSelectHeadJudges = () => {
   const [selectedGymnast, setSelectedGymnast] = useState(null);
   const [error, setError] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const { groupId } = useNotifications();
+  const { groupId, sessionId } = useNotifications();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,14 +22,13 @@ const GymnastSelectHeadJudges = () => {
       try {
         const data = await getGymnastsByEvent(groupId);
         setGymnastInfo(data);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching gymnasts:", error);
       }
     };
 
     fetchGymnasts();
-  }, [groupId]);
+  }, [groupId, sessionId]);
 
   const handleSelectGymnast = (index) => {
     setSelectedGymnast(index);
@@ -42,15 +41,14 @@ const GymnastSelectHeadJudges = () => {
     if (error) {
       setShowPopup(true);
     } else {
-      localStorage.setItem("level", (selectedGymnastData.level));
-      localStorage.setItem("age", (selectedGymnastData.age));
-      localStorage.setItem("number", (selectedGymnastData.gymnast_id));
-      localStorage.setItem("first_name", (selectedGymnastData.first_name));
-      localStorage.setItem("last_name", (selectedGymnastData.last_name));
+      // localStorage.setItem("level", (selectedGymnastData.level));
+      // localStorage.setItem("age", (selectedGymnastData.age));
+      // localStorage.setItem("number", (selectedGymnastData.gymnast_id));
+      // localStorage.setItem("first_name", (selectedGymnastData.first_name));
+      // localStorage.setItem("last_name", (selectedGymnastData.last_name));
   
       navigate("/calculationsjudges");
     }
-    
   };
 
   return (
