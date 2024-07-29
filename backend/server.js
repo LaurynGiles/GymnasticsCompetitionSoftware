@@ -59,6 +59,13 @@ io.on('connection', (socket) => {
 
     console.log(`Judge ${judge_id} attempting to join group ${group_id}`);
 
+    for (const groupId in groupUsers) {
+      if (groupUsers[groupId].includes(socket.id)) {
+        callback({ success: false, message: 'You have already joined a group.' });
+        return;
+      }
+    }
+    
     if (!groupUsers[group_id]) {
       if (!head_judge) {
         console.log("Error: Group has not been started by a head judge")
@@ -74,7 +81,7 @@ io.on('connection', (socket) => {
 
       socket.join(`group_${group_id}`);
       io.to(`group_${group_id}`).emit('groupMessage', `${judge_fname} ${judge_lname} has started the judging table`);
-      console.log(`Socket ${socket.id} started group${group_id}`);
+      console.log(`Socket ${socket.id} started group ${group_id}`);
       console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
       callback({ success: true, isHeadJudge: true });
       return;

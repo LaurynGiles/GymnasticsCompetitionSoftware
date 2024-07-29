@@ -14,10 +14,11 @@ export const NotificationProvider = ({ children }) => {
   const [joinRequests, setJoinRequests] = useState([]);
   const [joinedJudges, setJoinedJudges] = useState([]);
   const [navigateToCalculations, setNavigateToCalculations] = useState(false);
+  const [joinStatus, setJoinStatus] = useState(false);
   const [groupId, setGroupId] = useState(null);
 
   useEffect(() => {
-    const socketConnection = io("http://localhost:5000"); // Adjust the URL as needed
+    const socketConnection = io("http://localhost:5000");
     setSocket(socketConnection);
 
     socketConnection.on("errorMessage", (message) => {
@@ -42,7 +43,8 @@ export const NotificationProvider = ({ children }) => {
     socketConnection.on("joinApproved", ({ group_id }) => {
       console.log(`Join approved for group ${group_id}`);
       setGroupId(group_id);
-      setNavigateToCalculations(true);
+      setJoinStatus(true);
+      // setNavigateToCalculations(true);
     });
 
     return () => {
@@ -82,7 +84,9 @@ export const NotificationProvider = ({ children }) => {
       navigateToCalculations, 
       setNavigateToCalculations, 
       groupId, 
-      setGroupId 
+      setGroupId,
+      joinStatus,
+      setJoinStatus
     }}>
       {children}
     </NotificationContext.Provider>

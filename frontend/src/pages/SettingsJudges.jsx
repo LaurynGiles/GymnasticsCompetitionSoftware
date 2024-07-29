@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import NavigationBarDefault from "../components/NavigationBarDefault";
+import { useLocation } from "react-router-dom";
 import RadioSelectIcon from "../components/RadioSelectIcon";
 import Header from "../components/Header";
 import UserInfo from "../components/UserInfo";
@@ -10,6 +11,8 @@ import { useNotifications } from "../utils/connection.jsx";
 
 export const SettingsJudges = () => {
 
+  const location = useLocation();
+  const prevPage = location.state?.currPage || "/homejudges";
   const [selectedOption, setSelectedOption] = useState(0);
   const navigate = useNavigate();
   const { socket, judgeInfo } = useNotifications();
@@ -84,7 +87,7 @@ export const SettingsJudges = () => {
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
       <div className="bg-bright-white w-[400px] h-[800px]">
         <div className="fixed top-0 w-[400px] z-10">
-          <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={"/calculationsjudges"}/>
+          <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={prevPage}/>
         </div>
         <div className="inline-flex w-full h-full flex-col items-center gap-[30px] overflow-y-auto pt-[75px] pb-[50px] relative">
           <Header text={"User information"} />

@@ -12,7 +12,12 @@ module.exports = {
         session_id: 2,
         createdAt: new Date(),
         updatedAt: new Date()
-      }
+      },
+      {
+        session_id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
     ], {});
   },
 

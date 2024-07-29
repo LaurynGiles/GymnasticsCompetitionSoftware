@@ -79,7 +79,7 @@ export async function getEventsBySessionAndApparatus(req, res, next) {
         attributes: ['group_id']
       });
 
-      console.log(groups);
+    //   console.log(groups);
 
       if (!groups.length) {
         return res.status(404).send('No groups found for the given session');
@@ -87,7 +87,7 @@ export async function getEventsBySessionAndApparatus(req, res, next) {
 
       const groupIds = groups.map(group => group.group_id);
 
-      console.log(groupIds);
+    //   console.log(groupIds);
   
       const events = await Event.findAll({
         where: {
@@ -105,7 +105,7 @@ export async function getEventsBySessionAndApparatus(req, res, next) {
         return res.status(404).send('No events found for the given group IDs and apparatus ID');
       }
 
-      console.log(events);
+    //   console.log(events);
 
       const eventData = await Promise.all(events.map(async (event) => {
         const gymnasts = await Gymnast.findAll({
@@ -118,13 +118,13 @@ export async function getEventsBySessionAndApparatus(req, res, next) {
             attributes: ['gymnast_id', 'first_name', 'last_name', 'level', 'age']
         });
 
-        console.log(gymnasts);
+        // console.log(gymnasts);
 
         const levels = [...new Set(gymnasts.map(gymnast => gymnast.level))];
         const ages = [...new Set(gymnasts.map(gymnast => gymnast.age))];
 
-        console.log(levels);
-        console.log(ages);
+        // console.log(levels);
+        // console.log(ages);
 
         return {
             eventId: event.event_id,

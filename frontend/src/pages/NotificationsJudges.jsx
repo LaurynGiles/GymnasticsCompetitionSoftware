@@ -8,10 +8,9 @@ import { useNotifications } from "../utils/connection.jsx"
 
 const NotificationsJudges = () => {
 
-  const { notifications } = useNotifications();
+  const { notifications, judgeInfo } = useNotifications();
   const location = useLocation();
   const prevPage = location.state?.currPage || "/homejudges";
-  const head_judge = location.state?.isHead || false;
 
   return (
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
@@ -20,7 +19,7 @@ const NotificationsJudges = () => {
           <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={prevPage} currPage={"/notificationsjudges"}/>
         </div>
         <div className="inline-flex flex-col items-center w-full gap-[20px] overflow-y-auto pt-[75px] relative">
-          {head_judge && <SendMessage />}
+          {judgeInfo.head_judge && <SendMessage />}
           <Header text="Notifications"/>
           <div className="inline-flex flex-col items-center gap-[15px] relative flex-[0_0_auto]">
             {notifications.map((notification, index) => (
