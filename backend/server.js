@@ -61,7 +61,8 @@ io.on('connection', (socket) => {
 
     for (const groupId in groupUsers) {
       if (groupUsers[groupId].includes(socket.id)) {
-        callback({ success: false, message: 'You have already joined a group.' });
+        console.log("Error: Judge already in a group");
+        callback({ success: false, error: 'You have already joined a group.' });
         return;
       }
     }

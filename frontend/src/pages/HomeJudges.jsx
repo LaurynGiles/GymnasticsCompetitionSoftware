@@ -86,23 +86,6 @@ const HomeJudges = () => {
     fetchEventBoxes();
   }, [comp, apparatusId]);
 
-  const handleJoinGroup = (group_id) => {
-    return new Promise((resolve, reject) => {
-      socket.emit('joinGroup', { group_id, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
-        if (response.success) {
-          if (response.isHeadJudge) {
-            setGroupId(group_id);
-            resolve('headJudge');
-          } else {
-            resolve('waitingForApproval');
-          }
-        } else {
-          reject(response.error);
-        }
-      });
-    });
-  };
-
   return (
     <div>
       <div className="bg-bright-white w-full h-full">
@@ -130,7 +113,6 @@ const HomeJudges = () => {
                 levels={eventBox.levels}
                 ages={eventBox.ages}
                 gymnasts={eventBox.gymnasts}
-                handleJoinGroup={handleJoinGroup}
               />
             ))}
             </div>

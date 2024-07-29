@@ -5,20 +5,20 @@
   import { useNotifications } from "../utils/connection.jsx";
   import { useNavigate } from "react-router-dom";
 
-  const EventBox = ({group_id, apparatus, levels, ages, gymnasts, handleJoinGroup}) => {
+  const EventBox = ({group_id, apparatus, levels, ages, gymnasts}) => {
 
-    const { judgeInfo, joinStatus, setJoinStatus } = useNotifications();
+    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId } = useNotifications();
     const [showPopup, setShowPopup] = useState(false);
     const [rotateArrow, setRotateArrow] = useState(180);
     const [statusMessage, setStatusMessage] = useState("");
     const navigate = useNavigate();
   
     useEffect(() => {
-      if (joinStatus) {
+      if (joinStatus && group_id == groupId) {
         setStatusMessage("Join approved");
-        setJoinApproved("");
+        setJoinStatus("");
       }
-    }, [joinApproved, setJoinApproved, setStatusMessage]);
+    }, [joinStatus, setJoinStatus, setStatusMessage]);
 
     const handleArrowClick = () => {
       setShowPopup(!showPopup);
@@ -41,6 +41,24 @@
         console.log(error);
         setStatusMessage(error || "Error connecting to server");
       }
+    };
+
+    const handleJoinGroup = (group_id) => {
+      return new Promise((resolve, reject) => {
+        socket.emit('joinGroup', { group_id, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
+          if (response.success) {
+            if (response.isHeadJudge) {
+              setGroupId(group_id);
+              resolve('headJudge');
+            } else {
+              resolve('waitingForApproval');
+            }
+          } else {
+            reject(response.error);
+            setStatusMessage(response.error || "Error connecting to server");
+          }
+        });
+      });
     };
 
     return (
