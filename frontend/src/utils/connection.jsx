@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { io } from 'socket.io-client';
-import app from '../../../backend/app';
 
 const NotificationContext = createContext();
 
@@ -45,7 +44,6 @@ export const NotificationProvider = ({ children }) => {
 
     socketConnection.on("joinApproved", ({ group_id, apparatus }) => {
       console.log(`Join approved for group ${group_id}`);
-      set
       setGroupId(group_id);
       setCurrApparatus(apparatus);
       setJoinStatus(true);

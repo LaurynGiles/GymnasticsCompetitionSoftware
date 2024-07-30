@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-// import { useNotifications } from "../utils/connection.jsx";
+import { useNotifications } from "../utils/connection.jsx";
 
 const InfoBlock = () => {
 
@@ -10,15 +10,15 @@ const InfoBlock = () => {
     const [name, setName] = useState("");
     const { nextGymnast, currApparatus} = useNotifications();
 
-    // useEffect(() => {
-    //     if (nextGymnast) {
-    //         setApparatus(`${currApparatus} event`);
-    //         setLevel(`- Level ${nextGymnast.level}`);
-    //         setAge(`${nextGymnast.age} yrs`);
-    //         setNumber(`(${nextGymnast.number})`);
-    //         setName(`${nextGymnast.first_name} ${nextGymnast.last_name}`);
-    //     }
-    // }, [nextGymnast, currApparatus]);
+    useEffect(() => {
+        if (nextGymnast) {
+            setApparatus(`${currApparatus} event`);
+            setLevel(`- Level ${nextGymnast.level}`);
+            setAge(`${nextGymnast.age} yrs`);
+            setNumber(`(${nextGymnast.gymnast_id})`);
+            setName(`${nextGymnast.first_name} ${nextGymnast.last_name}`);
+        }
+    }, [nextGymnast, currApparatus]);
 
   return (
 <div className="flex flex-col w-[365.35px] items-center gap-[3px] px-[3px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle rounded-[10px]">

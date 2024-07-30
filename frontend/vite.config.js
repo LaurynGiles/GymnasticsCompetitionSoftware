@@ -1,9 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
-import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
-import rollupNodePolyFill from 'rollup-plugin-node-polyfills';
-import vitePluginNode from 'vite-plugin-node';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,36 +11,28 @@ export default defineConfig({
         changeOrigin : true,
       }
     },
-    watch: {
-      ignored: ['**/backend/**'], // Ignore the backend directory
-    },
   },
-  plugins: [
-    react(),
-    vitePluginNode({
-      adapter: 'express',
-      appPath: './backend/app.js', // specify your server entry point
-      export: 'default',
-      tsCompiler: 'esbuild',
-    }),
-  ],
+  plugins: [react()],
   build: {
     rollupOptions: {
       external: ['pg-hstore'],
-      plugins: [
-        rollupNodePolyFill(),
-        NodeGlobalsPolyfillPlugin({
-          process: true,
-          buffer: true,
-        }),
-        NodeModulesPolyfillPlugin(),
-      ],
+    },
+    input: {
+      // Specify the main entry point of your frontend
+      main: './src/main.jsx'
+    },
+    output: {
+      // Output settings
+      dir: 'dist'
+    },
+    onwarn: (warning, warn) => {
+      // Ignore certain warnings that might be triggered by backend files
+      if (warning.code !== 'UNUSED_EXTERNAL_IMPORT') {
+        warn(warning);
+      }
     },
   },
-  resolve: {
-    alias: {
-      process: 'rollup-plugin-node-polyfills/polyfills/process-es6',
-      buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
-    },
-  },
+  commonjsOptions: {
+    include: /node_modules/
+  }
 });
