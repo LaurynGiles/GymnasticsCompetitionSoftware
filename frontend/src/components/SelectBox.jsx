@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ArrowIcon from "./ArrowIcon";
 import SelectOptions from "./SelectOptions";
 
-const SelectBox = ({ title, option , setOption, setOptionId, allOptions, allOptionsMap, optionType}) => {
+const SelectBox = ({ noSelect, title, option , setOption, setOptionId, allOptions, allOptionsMap, optionType}) => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [rotateArrow, setRotateArrow] = useState(0);
@@ -41,8 +41,8 @@ const SelectBox = ({ title, option , setOption, setOptionId, allOptions, allOpti
         <div className="relative w-[185px] mt-[3.00px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
           {option != "" && renderOption(option)}
         </div>
-        <div onClick={handleArrowClick}>
-          <ArrowIcon rotation={rotateArrow}/>
+        <div onClick={!noSelect ? handleArrowClick : null}>
+          <ArrowIcon rotation={rotateArrow} noSelect={noSelect}/>
         </div>
       </div>
       {showPopup && <SelectOptions allOptions={allOptions} handleOptionClick={handleOptionClick} optionType={optionType}/>}

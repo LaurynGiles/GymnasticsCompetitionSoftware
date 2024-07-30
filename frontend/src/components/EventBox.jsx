@@ -5,9 +5,9 @@
   import { useNotifications } from "../utils/connection.jsx";
   import { useNavigate } from "react-router-dom";
 
-  const EventBox = ({group_id, apparatus, levels, ages, gymnasts, comp, setShowError, setError}) => {
+  const EventBox = ({group_id, apparatus, levels, ages, gymnasts, setShowError, setError, setNoSelect}) => {
 
-    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId } = useNotifications();
+    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId, setCurrApparatus } = useNotifications();
     const [showPopup, setShowPopup] = useState(false);
     const [rotateArrow, setRotateArrow] = useState(180);
     const [statusMessage, setStatusMessage] = useState("");
@@ -20,10 +20,12 @@
         setStatusMessage("Join approved");
         setButtonClass("bg-prussian-blue-dark");
         setIsButtonDisabled(true);
+        setNoSelect(true);
         setJoinStatus("");
       } else if (joinStatus && group_id != groupId) {
         setButtonClass("bg-text cursor-not-allowed");
         setIsButtonDisabled(true);
+        setNoSelect(true);
         setJoinStatus("");
       }
     }, [joinStatus, setJoinStatus, setStatusMessage, group_id, groupId]);
@@ -40,6 +42,7 @@
           const joinResult = await handleJoinGroup(group_id);
   
           if (joinResult === 'headJudge') {
+            setCurrApparatus(apparatus);
             navigate("/lobby");
           } else if (joinResult === 'waitingForApproval') {
             setStatusMessage("Waiting for approval");

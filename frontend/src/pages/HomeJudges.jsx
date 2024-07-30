@@ -23,6 +23,7 @@ const HomeJudges = () => {
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
+  const [noSelect, setNoSelect] = useState(false);
 
   useEffect(() => {
     if (navigateToCalculations) {
@@ -96,8 +97,8 @@ const HomeJudges = () => {
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           <div className="flex flex-col w-[400px] items-center gap-[30px] px-[31px] py-0 relative flex-[0_0_auto]">
             <div className="inline-flex flex-col items-center justify-center w-full gap-[15px] px-[190px] py-[20px] relative flex-[0_0_auto] bg-anti-flash-white">
-              <SelectBox title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
-              <SelectBox title="Apparatus" option={apparatus} setOption={setApparatus} setOptionId={setApparatusId} allOptions={apparatusOptions} allOptionsMap={apparatusMap} optionType={"Apparatus"}/>
+              <SelectBox noSelect={noSelect} title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
+              <SelectBox noSelect={noSelect} title="Apparatus" option={apparatus} setOption={setApparatus} setOptionId={setApparatusId} allOptions={apparatusOptions} allOptionsMap={apparatusMap} optionType={"Apparatus"}/>
             </div>
             <div className="inline-flex flex-col items-center justify-center w-full gap-[15px] relative flex-[0_0_auto]">
               {!judgeInfo.head_judge ? (
@@ -116,6 +117,7 @@ const HomeJudges = () => {
                 comp={comp}
                 setShowError={setShowError}
                 setError={setError}
+                setNoSelect={setNoSelect}
               />
             ))}
             </div>
