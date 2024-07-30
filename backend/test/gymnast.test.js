@@ -934,7 +934,6 @@ describe('API Tests', () => {
                 judge_id: 1,
                 difficulty_score: 8.5,
                 penalty_score: 0.3,
-                start_score: 9.0
             };
 
             server.request.execute(app)
@@ -954,7 +953,6 @@ describe('API Tests', () => {
                 judge_id: 2,
                 difficulty_score: 8.0,
                 penalty_score: 0.5,
-                start_score: 8.5
             };
 
             server.request.execute(app)
@@ -974,7 +972,6 @@ describe('API Tests', () => {
                 judge_id: 2,
                 difficulty_score: 9.0,
                 penalty_score: 0.2,
-                start_score: 9.5
             };
     
             server.request.execute(app)
@@ -1005,7 +1002,6 @@ describe('API Tests', () => {
             const updatedDifficulty = {
                 difficulty_score: 8.7,
                 penalty_score: 0.1,
-                start_score: 9.8
             };
     
             server.request.execute(app)
@@ -1016,7 +1012,6 @@ describe('API Tests', () => {
                 expect(res.body).to.be.an('object');
                 expect(res.body.difficulty_score).to.equal(8.7);
                 expect(res.body.penalty_score).to.equal(0.1);
-                expect(res.body.start_score).to.equal(9.8);
                 done();
             });
         });

@@ -25,6 +25,23 @@ const HomeJudges = () => {
   const [error, setError] = useState("");
   const [noSelect, setNoSelect] = useState(false);
 
+  const saveStateToLocalStorage = () => {
+    console.log(comp);
+    console.log(apparatus);
+    console.log(apparatusId);
+    if (comp && apparatus && apparatusId) {
+      console.log("Saving state");
+      const state = {
+        comp,
+        apparatus,
+        apparatusId,
+        noSelect
+      };
+
+      localStorage.setItem('homeJudgesState', JSON.stringify(state));
+    }
+  };
+
   useEffect(() => {
     if (navigateToCalculations) {
       setNavigateToCalculations(false);
@@ -33,59 +50,67 @@ const HomeJudges = () => {
   }, [navigateToCalculations, navigate, setNavigateToCalculations]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const activeTimeSlot = await getActiveTimeSlot();
-
-      if (activeTimeSlot) {
-        const sessions = await getSessionsByTimeSlot(activeTimeSlot.time_slot_id);
-
-        const apps = await getAllApps();
-
-        const setSessions = new Set();
-        const apparatusMap = {};
-
-        sessions.forEach(session => {
-          setSessions.add(session.session_id);
-        });
-
-        apps.forEach(app => {
-          apparatusMap[app.apparatus_name] = app.apparatus_id;
-        });
-
-        setCompOptions(Array.from(setSessions));
-        setApparatusOptions(Object.keys(apparatusMap));
-        setApparatusMap(apparatusMap);
+    const loadStateFromLocalStorage = () => {
+      const savedState = localStorage.getItem('homeJudgesState');
+      console.log(savedState);
+      if (savedState) {
+        console.log("Loading state");
+        const state = JSON.parse(savedState);
+        setComp(state.comp || "");
+        setApparatus(state.apparatus || "");
+        setApparatusId(state.apparatusId || null);
+        setNoSelect(state.noSelect);
       }
     };
 
+    loadStateFromLocalStorage();
+
+    const fetchData = async () => {
+        const activeTimeSlot = await getActiveTimeSlot();
+
+        if (activeTimeSlot) {
+          const sessions = await getSessionsByTimeSlot(activeTimeSlot.time_slot_id);
+          const apps = await getAllApps();
+          const setSessions = new Set(sessions.map(session => session.session_id));
+          const newApparatusMap = apps.reduce((acc, app) => ({ ...acc, [app.apparatus_name]: app.apparatus_id }), {});
+
+          setCompOptions(Array.from(setSessions));
+          setApparatusOptions(Object.keys(newApparatusMap));
+          setApparatusMap(newApparatusMap);
+
+          // Set defaults only if no saved state exists
+          if (!localStorage.getItem('homeJudgesState')) {
+            setComp(setSessions.size > 0 ? setSessions.values().next().value : "");
+            if (Object.keys(newApparatusMap).length > 0) {
+              const firstApp = Object.keys(newApparatusMap)[0];
+              setApparatus(firstApp);
+              setApparatusId(newApparatusMap[firstApp]);
+            }
+          }
+
+        }
+    };
+
     fetchData();
+  
+    return saveStateToLocalStorage;
 
   }, []);
 
   useEffect(() => {
-    if (compOptions.length > 0) {
-      setComp(compOptions[0]);
-      console.log(`Comp set to ${comp}`)
-    }
-  }, [compOptions]);
-  
-  useEffect(() => {
-    if (apparatusOptions.length > 0) {
-      setApparatus(apparatusOptions[0]);
-      setApparatusId(apparatusMap[apparatusOptions[0]]);
-    }
-  }, [apparatusOptions]);
-
-  useEffect(() => {
-    const fetchEventBoxes = async () => {
-      if (comp && apparatusId) {
+    if (comp && apparatusId) {
+      const fetchEventBoxes = async () => {
         const events = await getEventsBySessionAndApparatus(comp, apparatusId);
         setEventBoxes(events);
-      }
-    };
+      };
 
-    fetchEventBoxes();
+      fetchEventBoxes();
+    }
   }, [comp, apparatusId]);
+
+  useEffect(() => {
+      saveStateToLocalStorage();
+  }, [comp, apparatus, apparatusId]);
 
   return (
     <div>

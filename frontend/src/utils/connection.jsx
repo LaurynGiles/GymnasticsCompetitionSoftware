@@ -18,6 +18,10 @@ export const NotificationProvider = ({ children }) => {
   const [groupId, setGroupId] = useState(null);
   const [nextGymnast, setNextGymnast] = useState(null);
   const [currApparatus, setCurrApparatus] = useState("");
+  const [deductionTotal, setDeductionTotal] = useState(0.0);
+  const [receivedDeductions, setReceivedDeductions] = useState([]);
+  const [penalty, setPenalty] = useState(null);
+  const [startScore, setStartScore] = useState(null);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -55,11 +59,26 @@ export const NotificationProvider = ({ children }) => {
       setNavigateToCalculations(true);
     });
 
+    socketConnection.on("receiveDeduction", (scoreData) => {
+      console.log(`Score received from ${scoreData.name}: ${scoreData.deduction}`);
+      setReceivedDeductions(prev => [...prev, scoreData]);
+    });
+
+    socketConnection.on('scoresUpdated', ({ startScore, penalty }) => {
+      setStartScore(startScore);
+      setPenalty(penalty);
+      console.log(`Received updated scores: Start Score - ${startScore}, Penalty - ${penalty}`);
+  });
+
     return () => {
       socketConnection.off("errorMessage");
       socketConnection.off("groupMessage");
       socketConnection.off("joinRequest");
       socketConnection.off("judgeJoined");
+      socketConnection.off("joinApproved");
+      socketConnection.off("nextGymnast");
+      socketConnection.off("receiveDeduction");
+      socketConnection.off("scoresUpdated");
       socketConnection.close();
     };
   }, []);
@@ -98,7 +117,15 @@ export const NotificationProvider = ({ children }) => {
       nextGymnast,
       setNextGymnast,
       currApparatus,
-      setCurrApparatus
+      setCurrApparatus,
+      deductionTotal,
+      setDeductionTotal,
+      receivedDeductions,
+      setReceivedDeductions,
+      penalty,
+      setPenalty,
+      startScore,
+      setStartScore
     }}>
       {children}
     </NotificationContext.Provider>

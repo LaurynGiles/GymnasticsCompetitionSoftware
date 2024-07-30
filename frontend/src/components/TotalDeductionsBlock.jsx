@@ -1,21 +1,28 @@
 import React, {useState, useEffect} from "react";
 import BlueButton from "../components/BlueButton";
 import { useNavigate } from "react-router-dom";
+import { useNotifications } from "../utils/connection.jsx";
 
-const TotalDeductionsBlock = ({ total }) => {
+const TotalDeductionsBlock = ({ total, values }) => {
 
   const navigate = useNavigate();
-  const [role, setRole] = useState(null);
-
-  useEffect(() => {
-    const userRole = localStorage.getItem("userRole");
-    setRole(userRole);
-  }, []);
+  const { judgeInfo, groupId, setDeductionTotal, socket } = useNotifications();
 
   const handleSubmitClick = () => {
-    localStorage.setItem("total", total);
+    console.log(total);
+    setDeductionTotal(total);
+    console.log(values);
 
-    if (role === "judge") {
+    socket.emit('submitDeduction', { 
+      groupId, 
+      judgeId: judgeInfo.judge_id, 
+      firstName: judgeInfo.judge_fname, 
+      lastName: judgeInfo.judge_lname, 
+      deduction: total,
+      analysis: values
+    });
+
+    if (!judgeInfo.head_judge) {
       navigate("/scorecardjudges");
     } else {
       navigate("/startingscore");

@@ -10,7 +10,7 @@ const ScoreBlock = ({ title, score }) => {
         </div>
         <div className="w-[122px] h-[46px] bg-bright-white rounded-[10px] flex items-center justify-center">
           <div className="font-montserrat font-semibold text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]">
-            {score}
+            {parseFloat(score).toFixed(3)}
           </div>
         </div>
       </div>

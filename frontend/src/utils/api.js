@@ -90,3 +90,25 @@ export const getEventsBySessionAndApparatus = async (sessionId, apparatusId) => 
     return [];
   }
 };
+
+export const submitDifficulty = async (eventId, judgeId, gymnastId, difficulty, penalty) => {
+  try {
+    const response = await axiosInstance.post('/difficulties/', { event_id: eventId, judge_id: judgeId, gymnast_id: gymnastId, difficulty_score: difficulty, penalty_score: penalty });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    console.error("Error fetching events:", error);
+    return [];
+  }
+};
+
+export const submitExecution = async (eventId, judgeId, gymnastId, deduction) => {
+  try {
+    const response = await axiosInstance.post('/executions/', { event_id: eventId, judge_id: judgeId, gymnast_id: gymnastId, execution_score: deduction });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    console.error("Error fetching events:", error);
+    return [];
+  }
+};

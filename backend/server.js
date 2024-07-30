@@ -138,6 +138,29 @@ io.on('connection', (socket) => {
     io.to(`group_${groupId}`).emit('groupMessage', message);
   });
 
+  socket.on('submitDeduction', ({ groupId, judgeId, firstName, lastName, deduction, analysis }) => {
+    const headJudgeId = headJudges[groupId];
+    if (headJudgeId) {
+      // Broadcast score to head judge's socket
+      io.to(headJudgeId).emit('receiveDeduction', {
+        judgeId,
+        name: `${firstName} ${lastName}`,
+        deduction,
+        analysis
+      });
+    }
+  });
+
+  socket.on('updateScores', ({ groupId, startScore, penalty }) => {
+    const groupMembers = groupUsers[groupId] || [];
+    groupMembers.forEach(memberSocketId => {
+        if (memberSocketId !== socket.id) { // Exclude head judge
+            io.to(memberSocketId).emit('scoresUpdated', { startScore, penalty });
+        }
+    });
+    console.log(`Scores updated for group ${groupId}: Start Score - ${startScore}, Penalty - ${penalty}`);
+});
+
   socket.on('disconnect', () => {
     console.log('A user disconnected', socket.id);
 

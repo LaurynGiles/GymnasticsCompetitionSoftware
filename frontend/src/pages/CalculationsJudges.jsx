@@ -87,7 +87,7 @@ const CalculationsJudges = () => {
         <div className="flex flex-col w-full h-full items-center gap-[40px] overflow-y-auto pt-[75px] relative">
         <InfoBlock />
           {renderLayout()}
-          <TotalDeductionsBlock total={total}/>
+          <TotalDeductionsBlock total={total} values={values}/>
         </div>
       </div>
     </div>

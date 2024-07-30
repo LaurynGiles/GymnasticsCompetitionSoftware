@@ -32,10 +32,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       allowNull: false,
     },
-    start_score: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
   }, {
     tableName: 'Difficulty',
   });

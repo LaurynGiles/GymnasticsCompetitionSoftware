@@ -14,26 +14,63 @@
     const [buttonClass, setButtonClass] = useState("bg-prussian-blue cursor-pointer");
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const navigate = useNavigate();
+
+    const saveEventBoxStateToLocalStorage = () => {
+      const eventBoxStates = JSON.parse(localStorage.getItem('eventBoxStates') || '{}');
+      console.log("Saving event status");
+      console.log(statusMessage);
+      console.log(buttonClass);
+      console.log(isButtonDisabled);
+        eventBoxStates[group_id] = {
+          statusMessage,
+          buttonClass,
+          isButtonDisabled,
+        };
+        localStorage.setItem('eventBoxStates', JSON.stringify(eventBoxStates));
+    };
   
     useEffect(() => {
-      if (joinStatus && group_id == groupId) {
-        setStatusMessage("Join approved");
-        setButtonClass("bg-prussian-blue-dark");
-        setIsButtonDisabled(true);
-        setNoSelect(true);
-        setJoinStatus("");
-      } else if (joinStatus && group_id != groupId) {
-        setButtonClass("bg-text cursor-not-allowed");
-        setIsButtonDisabled(true);
-        setNoSelect(true);
-        setJoinStatus("");
+      const loadEventBoxStateFromLocalStorage = () => {
+        const eventBoxStates = JSON.parse(localStorage.getItem('eventBoxStates') || '{}');
+        if (eventBoxStates[group_id]) {
+          const state = eventBoxStates[group_id];
+          setStatusMessage(state.statusMessage);
+          setButtonClass(state.buttonClass);
+          setIsButtonDisabled(state.isButtonDisabled);
+        }
+      };
+
+      loadEventBoxStateFromLocalStorage();
+
+      const updateStateBasedOnJoinStatus = () => {
+        if (joinStatus && group_id == groupId) {
+          setStatusMessage("Join approved");
+          setButtonClass("bg-prussian-blue-dark");
+          setIsButtonDisabled(true);
+          setNoSelect(true);
+          // setJoinStatus("");
+          saveEventBoxStateToLocalStorage();
+
+        } else if (joinStatus && group_id != groupId) {
+          setButtonClass("bg-text cursor-not-allowed");
+          setIsButtonDisabled(true);
+          setNoSelect(true);
+          // setJoinStatus("");
+          saveEventBoxStateToLocalStorage();
+          
+        }
       }
-    }, [joinStatus, setJoinStatus, setStatusMessage, group_id, groupId]);
+
+      updateStateBasedOnJoinStatus();
+
+    }, [joinStatus, group_id, groupId, setNoSelect]);
+
+    useEffect(() => {
+      return () => saveEventBoxStateToLocalStorage();
+    }, [statusMessage, buttonClass, isButtonDisabled]);
 
     const handleArrowClick = () => {
       setShowPopup(!showPopup);
-      console.log(showPopup);
-      console.log(gymnasts);
       setRotateArrow(rotateArrow === 0 ? 180 : 0);
     };
 
@@ -46,6 +83,7 @@
             navigate("/lobby");
           } else if (joinResult === 'waitingForApproval') {
             setStatusMessage("Waiting for approval");
+            saveEventBoxStateToLocalStorage();
           }
   
       } catch (error) {
@@ -60,10 +98,7 @@
         socket.emit('joinGroup', { group_id, apparatus, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
           if (response.success) {
             if (response.isHeadJudge) {
-              // console.log(group_id);
               setGroupId(group_id);
-              // console.log(comp);
-              // setSessionId(comp);
               resolve('headJudge');
             } else {
               resolve('waitingForApproval');

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BlueButton from "../components/BlueButton";
 import InputBox from "../components/InputBox";
 import SmallLogo from "../components/SmallLogo";
@@ -11,6 +11,11 @@ const LoginJudges = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { setJudgeInfo, socket } = useNotifications();
+
+  useEffect(() => {
+    localStorage.clear();
+    localStorage.setItem("layout", 0);
+  }, []);
 
   const handleLogin = async () => {
     try {

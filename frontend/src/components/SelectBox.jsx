@@ -5,7 +5,7 @@ import SelectOptions from "./SelectOptions";
 const SelectBox = ({ noSelect, title, option , setOption, setOptionId, allOptions, allOptionsMap, optionType}) => {
 
   const [showPopup, setShowPopup] = useState(false);
-  const [rotateArrow, setRotateArrow] = useState(0);
+  const [rotateArrow, setRotateArrow] = useState(180);
 
   const handleArrowClick = () => {
     setShowPopup(!showPopup);
@@ -21,7 +21,7 @@ const SelectBox = ({ noSelect, title, option , setOption, setOptionId, allOption
       setOptionId(selectedOptionId);
     }
     setShowPopup(false);
-    setRotateArrow(0);
+    setRotateArrow(180);
   };
 
   const renderOption = (option) => {

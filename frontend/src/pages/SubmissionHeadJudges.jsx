@@ -11,11 +11,14 @@ import SmallSelectBox from "../components/SmallSelectBox";
 import Popup from "../components/Popup";
 import ScoreSubmissionBlock from "../components/ScoreSubmissionBlock";
 import BlueButton from "../components/BlueButton";
+import { useNotifications } from "../utils/connection.jsx";
 
 const SubmissionHeadJudges = () => {
-  const [startScore, setStartScore] = useState("0.000");
-  const [penalty, setPenalty] = useState("0.000");
-  const [deductions, setDeductions] = useState("0.000");
+//   const [startScore, setStartScore] = useState("0.000");
+//   const [penalty, setPenalty] = useState("0.000");
+//   const [deductions, setDeductions] = useState("0.000");
+  const { startScore, penalty, receivedDeductions, groupId, judgeInfo, nextGymnast, socket } = useNotifications();
+  const [averageDeduction, setAverageDeduction] = useState(0.0);
   const [visibleAnalysis, setVisibleAnalysis] = useState({});
   const [rotateArrow, setRotateArrow] = useState({});
   const [showRequestPopup, setShowRequestPopup] = useState(false);
@@ -24,10 +27,11 @@ const SubmissionHeadJudges = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setStartScore(localStorage.getItem("startscore"));
-    setPenalty(localStorage.getItem("penalty"));
-    setDeductions(localStorage.getItem("total"));
-  }, []);
+    const total = receivedDeductions.reduce((sum, item) => sum + parseFloat(item.deduction), 0);
+    const average = total / receivedDeductions.length;
+    setAverageDeduction(average);
+    console.log(`Average UPDATED: ${average}`);
+  }, [receivedDeductions]);
 
   const updateAnalysisVisibility = (index) => {
     setVisibleAnalysis((prev) => ({
@@ -43,19 +47,30 @@ const SubmissionHeadJudges = () => {
   const requestOptions = ["All", "Debbie Giles", "John Doe", "Jane Smith", "Michael Brown", "Emily White"];
   const [requestName, setRequestName] = useState(requestOptions[0]);
 
-  const judgeData = [
-    { name: "Debbie Giles", deduction: "2.1", total: "7.0", analysis: "0.1 + 0.1 + 0.3 + 0.3 + 0.5 + 0.1 + 0.2 + 0.1 + 0.1 + 0.1 + 0.3" },
-    { name: "John Doe", deduction: "1.8", total: "7.2", analysis: "0.1 + 0.2 + 0.2 + 0.3 + 0.3 + 0.2 + 0.2 + 0.1 + 0.1 + 0.1" },
-    { name: "Jane Smith", deduction: "2.0", total: "7.1", analysis: "0.2 + 0.1 + 0.3 + 0.2 + 0.2 + 0.3 + 0.3 + 0.1 + 0.1 + 0.1 + 0.1" },
-    { name: "Michael Brown", deduction: "2.2", total: "6.9", analysis: "0.3 + 0.1 + 0.2 + 0.2 + 0.2 + 0.2 + 0.2 + 0.3 + 0.1 + 0.1 + 0.1" },
-    { name: "Emily White", deduction: "1.9", total: "7.3", analysis: "0.1 + 0.2 + 0.3 + 0.2 + 0.2 + 0.1 + 0.1 + 0.2 + 0.2 + 0.1 + 0.2" }
-  ];
-
   const handleSendClick = () => {
     setShowRequestPopup(true);
   };
 
-  const handleSubmitClick = () => {
+  const handleSubmitClick = async () => {
+
+    try {
+      const difficultyResponse = await submitDifficulty(groupId, judgeInfo.judge_id, nextGymnast.gymnast_id, startScore, penalty);
+      console.log("Difficulty submitted:", difficultyResponse);
+    } catch (error) {
+      console.error("Failed to submit difficulty:", error);
+    }
+
+    receivedDeductions.forEach(async (judge) => {
+      try {
+        const executionResponse = await submitExecution(groupId, judge.judge_id, nextGymnast.gymnast_id, judge.deduction, penalty);
+        console.log(`Execution submitted for judge ${judge.judge_id}:`, executionResponse);
+      } catch (error) {
+        console.error(`Failed to submit execution for judge ${judge.judge_id}:`, error);
+      }
+    });
+
+    socket.emit('finalScoreSubmitted', { groupId, finalScore: startScore - penalty - averageDeduction });
+
     setShowSubmitPopup(true);
     setNavigateOnClose(true);
   };
@@ -79,8 +94,8 @@ const SubmissionHeadJudges = () => {
           <div className="inline-flex flex-col items-center gap-[10px] relative flex-[0_0_auto]">
             <Header text={"Starting score and Penalties"}/>
             <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
-              <ScoreBlock title={"Starting score"} score={startScore}/>
-              <ScoreBlock title={"Penalty deductions"} score={penalty}/>
+              <ScoreBlock title={"Starting score"} score={parseFloat(startScore).toFixed(3)}/>
+              <ScoreBlock title={"Penalty deductions"} score={parseFloat(penalty).toFixed(3)}/>
             </div>
           </div>
           
@@ -97,12 +112,12 @@ const SubmissionHeadJudges = () => {
                 Score
               </div>
             </div>
-            {judgeData.map((judge, index) => (
+            {receivedDeductions.map((judge, index) => (
               <React.Fragment key={index}>
                 <JudgeScore
                   name={judge.name}
                   deduction={judge.deduction}
-                  total={judge.total}
+                  total={(startScore - judge.deduction - penalty).toFixed(3)}
                   rotation={rotateArrow[index] || 0}
                   onUpdateAnalysis={() => updateAnalysisVisibility(index)}
                 />
@@ -127,7 +142,7 @@ const SubmissionHeadJudges = () => {
             <Header text={"Final score submission"} />
             <div className="inline-flex flex-col items-center gap-[19px] px-[10px] py-[15px] relative flex-[0_0_auto] bg-periwinkle">
               <div className="inline-flex items-center justify-center gap-[10px] relative">
-                <ScoreSubmissionBlock deductions={deductions} penalties={penalty} startScore={startScore}/>
+                <ScoreSubmissionBlock deductions={averageDeduction} penalties={penalty} startScore={startScore}/>
                 <div className="flex flex-col w-[122px] h-[140px] items-end justify-end gap-[10px] relative" onClick={handleSubmitClick}>
                   <BlueButton title="Submit" />
                 </div>

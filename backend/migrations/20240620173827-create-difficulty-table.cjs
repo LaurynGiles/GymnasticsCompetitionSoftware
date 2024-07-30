@@ -40,10 +40,6 @@ module.exports = {
         type: Sequelize.DOUBLE,
         allowNull: false,
       },
-      start_score: {
-        type: Sequelize.DOUBLE,
-        allowNull: false,
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

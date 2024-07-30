@@ -8,23 +8,38 @@ import Header from "../components/Header";
 import StartButton from "../components/StartButton";
 import EditableScoreBlock from "../components/EditableScoreBlock";
 import Popup from "../components/Popup";
-import ResubmitButton from "../components/ResubmitButton";
+import { useNotifications } from "../utils/connection.jsx";
+import { useNavigate } from "react-router-dom";
 
 const StartingScoreHeadJudges = () => {
 
-  const [deductions, setDeductions] = useState("0.000");
-  const [startScore, setStartScore] = useState("0.000");
-  const [penalty, setPenalty] = useState("0.000");
-  const [showPopup, setShowPopup] = useState(false);
+  const { deductionTotal, setStartScore, setPenalty, groupId, socket } = useNotifications();
+  const [startScoreLocal, setStartScoreLocal] = useState(0.0);
+  const [penaltyLocal, setPenaltyLocal] = useState(0.0);
+  const navigate = useNavigate();
+  // const [showPopup, setShowPopup] = useState(false);
 
-  useEffect(() => {
-    setDeductions(localStorage.getItem("total"));
-  }, []);
+  // useEffect(() => {
+  //   setDeductions(localStorage.getItem("total"));
+  // }, []);
 
-  const handleEnterClick = () => {
-    localStorage.setItem("startscore", startScore);
-    localStorage.setItem("penalty", penalty);
-    setShowPopup(true);
+  // const handleEnterClick = () => {
+  //   localStorage.setItem("startscore", startScore);
+  //   localStorage.setItem("penalty", penalty);
+  //   setShowPopup(true);
+  // };
+
+  const handleContinueClick = () => {
+    setStartScore(startScoreLocal);
+    setPenalty(penaltyLocal);
+
+    socket.emit('updateScores', {
+      groupId,
+      startScore: startScoreLocal,
+      penalty: penaltyLocal
+  });
+    // setShowPopup(true);
+    navigate("/submission");
   };
 
   return (
@@ -41,7 +56,7 @@ const StartingScoreHeadJudges = () => {
               <Header text={"Deductions"}/>
             </div>
             <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
-              <ScoreBlock title="Your deductions" score = {parseFloat(deductions).toFixed(3)}/>
+              <ScoreBlock title="Your deductions" score = {parseFloat(deductionTotal).toFixed(3)}/>
               <Link to="/calculationsjudges">
                 <BlueButton title="Resubmit" />
               </Link>
@@ -52,19 +67,19 @@ const StartingScoreHeadJudges = () => {
               <Header text={"Starting score and penalties"}/>
             </div>
             <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
-              <EditableScoreBlock title="Starting score" score ={startScore} setScore={setStartScore}/>
-              <EditableScoreBlock title="Penalty deductions" score={penalty} setScore={setPenalty}/>
-              <div onClick={handleEnterClick}>
+              <EditableScoreBlock title="Starting score" score ={startScoreLocal} setScore={setStartScoreLocal}/>
+              <EditableScoreBlock title="Penalty deductions" score={penaltyLocal} setScore={setPenaltyLocal}/>
+              {/* <div onClick={handleEnterClick}>
                 <BlueButton title="Enter" />
-              </div>
+              </div> */}
             </div>
           </div>
-          <Link to="/submission">
+          <div onClick={handleContinueClick}>
             <StartButton title={"Continue"}/>
-          </Link>
+          </div>
         </div>
       </div>
-      {showPopup && <Popup message={"Values have been updated"} onClose={() => setShowPopup(false)} />}
+      {/* {showPopup && <Popup message={"Values have been updated"} onClose={() => setShowPopup(false)} />} */}
     </div>
   );
 };
