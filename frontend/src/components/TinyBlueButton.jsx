@@ -1,7 +1,7 @@
 import React from "react";
 import { useNotifications } from "../utils/connection.jsx";
 
-const TinyBlueButton = ({title, group_id, buttonClass, onClick}) => {
+const TinyBlueButton = ({title, buttonClass, onClick}) => {
 
     return (
         <button

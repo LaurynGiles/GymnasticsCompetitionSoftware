@@ -3,8 +3,8 @@ import { Sequelize} from 'sequelize';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = /* @vite-ignore */ fileURLToPath(import.meta.url);
+const __dirname = /* @vite-ignore */ path.dirname(__filename);
 
 const config = JSON.parse(readFileSync(__dirname + '/../config/config.json', 'utf-8'));
 

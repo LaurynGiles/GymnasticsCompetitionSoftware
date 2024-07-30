@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('joinGroup', ({ group_id, judge_id, head_judge, judge_fname, judge_lname }, callback) => {
+  socket.on('joinGroup', ({ group_id, apparatus, judge_id, head_judge, judge_fname, judge_lname }, callback) => {
 
     console.log(`Judge ${judge_id} attempting to join group ${group_id}`);
 
@@ -93,12 +93,12 @@ io.on('connection', (socket) => {
       return;
     }
 
-    io.to(headJudges[group_id]).emit('joinRequest', { group_id, judge_id, judge_fname, judge_lname, socket_id: socket.id });
+    io.to(headJudges[group_id]).emit('joinRequest', { group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id: socket.id });
 
     callback({ success: true, isHeadJudge: false, message: 'Join request sent, waiting for approval.' });
   });
 
-  socket.on('approveJoinRequest', ({ group_id, judge_id, judge_fname, judge_lname, socket_id }) => {
+  socket.on('approveJoinRequest', ({ group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id }) => {
     if (!groupUsers[group_id]) {
       groupUsers[group_id] = [];
     }
@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
     groupUsers[group_id].push(socket_id);
     io.sockets.sockets.get(socket_id).join(`group_${group_id}`);
 
-    io.to(socket_id).emit('joinApproved', { group_id });
+    io.to(socket_id).emit('joinApproved', { group_id, apparatus });
     
     io.to(headJudges[group_id]).emit('judgeJoined', { group_id, judge_id, judge_fname, judge_lname, socket_id: socket.id });
     io.to(`group_${group_id}`).emit('groupMessage', `${judge_fname} ${judge_lname} has joined the judging table`);
@@ -160,6 +160,12 @@ io.on('connection', (socket) => {
       }
     }
   });
+
+  socket.on('judgeGymnast', ({ groupId, gymnast }) => {
+    console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${groupId}`);
+    io.to(`group_${groupId}`).emit('nextGymnast', gymnast);
+  });
+
 });
 
 server.listen(PORT, () => {

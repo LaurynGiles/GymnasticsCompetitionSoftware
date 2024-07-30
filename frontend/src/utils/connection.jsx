@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import app from '../../../backend/app';
 
 const NotificationContext = createContext();
 
@@ -16,8 +17,8 @@ export const NotificationProvider = ({ children }) => {
   const [navigateToCalculations, setNavigateToCalculations] = useState(false);
   const [joinStatus, setJoinStatus] = useState(false);
   const [groupId, setGroupId] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
-  const [gymnastInfo, setGymnastInfo] = useState({});
+  const [nextGymnast, setNextGymnast] = useState(null);
+  const [currApparatus, setCurrApparatus] = useState("");
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -42,11 +43,18 @@ export const NotificationProvider = ({ children }) => {
       setJoinedJudges(prev => [...prev, judge]);
     });
 
-    socketConnection.on("joinApproved", ({ group_id }) => {
+    socketConnection.on("joinApproved", ({ group_id, apparatus }) => {
       console.log(`Join approved for group ${group_id}`);
+      set
       setGroupId(group_id);
+      setCurrApparatus(apparatus);
       setJoinStatus(true);
-      // setNavigateToCalculations(true);
+    });
+
+    socketConnection.on("nextGymnast", (gymnast) => {
+      console.log(`Next gymnast to be judged: ${gymnast.gymnast_id} ${gymnast.first_name} ${gymnast.last_name}`);
+      setNextGymnast(gymnast);
+      setNavigateToCalculations(true);
     });
 
     return () => {
@@ -89,8 +97,10 @@ export const NotificationProvider = ({ children }) => {
       setGroupId,
       joinStatus,
       setJoinStatus,
-      sessionId,
-      setSessionId
+      nextGymnast,
+      setNextGymnast,
+      currApparatus,
+      setCurrApparatus
     }}>
       {children}
     </NotificationContext.Provider>

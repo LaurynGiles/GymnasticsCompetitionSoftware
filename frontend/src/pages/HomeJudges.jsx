@@ -6,10 +6,12 @@ import BlockHeader from "../components/BlockHeader";
 import { useNotifications } from "../utils/connection.jsx";
 import { getActiveTimeSlot, getSessionsByTimeSlot, getEventsBySessionAndApparatus, getAllApps } from "../utils/api.js";
 import EventBox from "../components/EventBox.jsx";
+import { useNavigate } from "react-router-dom";
+import Popup from "../components/Popup.jsx";
 
 const HomeJudges = () => {
 
-  const { judgeInfo } = useNotifications();
+  const { judgeInfo, navigateToCalculations, setNavigateToCalculations } = useNotifications();
 
   const [compOptions, setCompOptions] = useState([]);
   const [apparatusOptions, setApparatusOptions] = useState([]);
@@ -18,13 +20,16 @@ const HomeJudges = () => {
   const [apparatus, setApparatus] = useState("")
   const [apparatusId, setApparatusId] = useState(null);
   const [eventBoxes, setEventBoxes] = useState([]);
+  const navigate = useNavigate();
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState("");
 
-  // useEffect(() => {
-  //   if (navigateToCalculations) {
-  //     navigate("/calculationsjudges");
-  //     setNavigateToCalculations(false);
-  //   }
-  // }, [navigateToCalculations, navigate, setNavigateToCalculations]);
+  useEffect(() => {
+    if (navigateToCalculations) {
+      setNavigateToCalculations(false);
+      navigate("/calculationsjudges");
+    }
+  }, [navigateToCalculations, navigate, setNavigateToCalculations]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,7 +92,7 @@ const HomeJudges = () => {
         <div className="fixed top-0 w-[400px] z-10">
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/homejudges"}/>
         </div>
-        <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] gap-[40px] relative">
+        <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] pb-[50px] gap-[40px] relative">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           <div className="flex flex-col w-[400px] items-center gap-[30px] px-[31px] py-0 relative flex-[0_0_auto]">
             <div className="inline-flex flex-col items-center justify-center w-full gap-[15px] px-[190px] py-[20px] relative flex-[0_0_auto] bg-anti-flash-white">
@@ -109,11 +114,14 @@ const HomeJudges = () => {
                 ages={eventBox.ages}
                 gymnasts={eventBox.gymnasts}
                 comp={comp}
+                setShowError={setShowError}
+                setError={setError}
               />
             ))}
             </div>
           </div>
         </div>
+        {showError && <Popup message={error} onClose={() => setShowError(false)} />}
       </div>
     </div>
   );
