@@ -30,7 +30,7 @@ const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, in
         </div>
       </div>
       {!competed &&
-      <div onClick={() => onSelect(index)} className="cursor-pointer">
+      <div onClick={() => onSelect(number)} className="cursor-pointer">
         {isSelected ? <FilledRadioSelectIcon /> : <RadioSelectIcon />}
         </div>
       }

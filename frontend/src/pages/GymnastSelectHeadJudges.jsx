@@ -30,12 +30,12 @@ const GymnastSelectHeadJudges = () => {
     fetchGymnasts();
   }, [groupId, sessionId]);
 
-  const handleSelectGymnast = (index) => {
-    setSelectedGymnast(index);
+  const handleSelectGymnast = (gymnastId) => {
+    setSelectedGymnast(gymnastId);
     setError(false);
   };
 
-  const selectedGymnastData = selectedGymnast !== null ? gymnastInfo[selectedGymnast] : null;
+  const selectedGymnastData = selectedGymnast !== null ? gymnastInfo.find(gym => gym.gymnast_id === selectedGymnast) : null;
 
   const handleConfirmClick = () => {
     if (error) {
@@ -64,14 +64,13 @@ const GymnastSelectHeadJudges = () => {
             <Header text={"Select the next gymnast"}/>
             {gymnastInfo.filter(gymnast => !gymnast.completed).map((gymnast, index) => (
                 <GymnastBlock
-                  key={index}
-                  index={index}
+                  key={gymnast.gymnast_id}
                   number={gymnast.gymnast_id}
                   name={`${gymnast.first_name} ${gymnast.last_name}`}
                   level={gymnast.level}
                   age={gymnast.age}
                   club={gymnast.club}
-                  isSelected={selectedGymnast === index}
+                  isSelected={selectedGymnast === gymnast.gymnast_id}
                   onSelect={handleSelectGymnast}
                   competed={false}
                 />
@@ -79,14 +78,13 @@ const GymnastSelectHeadJudges = () => {
             <Header text={"Already competed"}/>
             {gymnastInfo.filter(gymnast => gymnast.completed).map((gymnast, index) => (
               <GymnastBlock
-                key={index}
-                index={index}
+                key={gymnast.gymnast_id}
                 number={gymnast.gymnast_id}
                 name={`${gymnast.first_name} ${gymnast.last_name}`}
                 level={gymnast.level}
                 age={gymnast.age}
                 club={gymnast.club}
-                isSelected={selectedGymnast === index}
+                isSelected={selectedGymnast === gymnast.gymnast_id}
                 onSelect={handleSelectGymnast}
                 competed={true}
               />
