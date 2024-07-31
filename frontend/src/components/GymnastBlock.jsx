@@ -2,7 +2,7 @@ import React from "react";
 import RadioSelectIcon from "./RadioSelectIcon";
 import FilledRadioSelectIcon from "./FilledRadioSelectIcon";
 
-const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, index }) => {
+const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, index, competed }) => {
   return (
     <div className="inline-flex items-center gap-[5px] px-[20px] py-[5px] relative bg-anti-flash-white">
       <div className="flex w-[64px] items-center justify-center gap-[10px] px-[9px] py-[20px] relative">
@@ -29,9 +29,12 @@ const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, in
           </div>
         </div>
       </div>
+      {!competed &&
       <div onClick={() => onSelect(index)} className="cursor-pointer">
         {isSelected ? <FilledRadioSelectIcon /> : <RadioSelectIcon />}
-      </div>
+        </div>
+      }
+      
     </div>
   );
 };

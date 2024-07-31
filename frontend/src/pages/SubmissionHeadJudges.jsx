@@ -12,6 +12,7 @@ import Popup from "../components/Popup";
 import ScoreSubmissionBlock from "../components/ScoreSubmissionBlock";
 import BlueButton from "../components/BlueButton";
 import { useNotifications } from "../utils/connection.jsx";
+import { submitDifficulty, submitExecution } from "../utils/api.js";
 
 const SubmissionHeadJudges = () => {
 //   const [startScore, setStartScore] = useState("0.000");
@@ -62,10 +63,10 @@ const SubmissionHeadJudges = () => {
 
     receivedDeductions.forEach(async (judge) => {
       try {
-        const executionResponse = await submitExecution(groupId, judge.judge_id, nextGymnast.gymnast_id, judge.deduction, penalty);
-        console.log(`Execution submitted for judge ${judge.judge_id}:`, executionResponse);
+        const executionResponse = await submitExecution(groupId, judge.judgeId, nextGymnast.gymnast_id, judge.deduction, penalty);
+        console.log(`Execution submitted for judge ${judge.judgeId}:`, executionResponse);
       } catch (error) {
-        console.error(`Failed to submit execution for judge ${judge.judge_id}:`, error);
+        console.error(`Failed to submit execution for judge ${judge.judgeId}:`, error);
       }
     });
 

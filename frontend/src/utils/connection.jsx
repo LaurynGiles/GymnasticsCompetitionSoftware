@@ -22,6 +22,7 @@ export const NotificationProvider = ({ children }) => {
   const [receivedDeductions, setReceivedDeductions] = useState([]);
   const [penalty, setPenalty] = useState(null);
   const [startScore, setStartScore] = useState(null);
+  const [finalScore, setFinalScore] = useState(null);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -68,7 +69,12 @@ export const NotificationProvider = ({ children }) => {
       setStartScore(startScore);
       setPenalty(penalty);
       console.log(`Received updated scores: Start Score - ${startScore}, Penalty - ${penalty}`);
-  });
+    });
+
+    socketConnection.on('updateFinalScore', ({ finalScore }) => {
+      setFinalScore(finalScore);
+      console.log(`Received updated scores: Final score - ${finalScore}`);
+    });
 
     return () => {
       socketConnection.off("errorMessage");
@@ -79,6 +85,7 @@ export const NotificationProvider = ({ children }) => {
       socketConnection.off("nextGymnast");
       socketConnection.off("receiveDeduction");
       socketConnection.off("scoresUpdated");
+      socketConnection.off("updatedFinalScore");
       socketConnection.close();
     };
   }, []);

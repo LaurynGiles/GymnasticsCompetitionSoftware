@@ -73,6 +73,7 @@ const GymnastSelectHeadJudges = () => {
                   club={gymnast.club}
                   isSelected={selectedGymnast === index}
                   onSelect={handleSelectGymnast}
+                  competed={false}
                 />
               ))}
             <Header text={"Already competed"}/>
@@ -87,6 +88,7 @@ const GymnastSelectHeadJudges = () => {
                 club={gymnast.club}
                 isSelected={selectedGymnast === index}
                 onSelect={handleSelectGymnast}
+                competed={true}
               />
             ))}
             <div onClick={handleConfirmClick}>

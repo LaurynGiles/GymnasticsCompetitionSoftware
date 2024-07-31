@@ -159,7 +159,16 @@ io.on('connection', (socket) => {
         }
     });
     console.log(`Scores updated for group ${groupId}: Start Score - ${startScore}, Penalty - ${penalty}`);
-});
+  });
+
+  socket.on('finalScoreSubmitted', ({ groupId, finalScore }) => {
+    console.log(`Final score received from group ${groupId}: ${finalScore}`);
+
+    // Optionally, broadcast this to all clients in the same group
+    socket.to(`group_${groupId}`).emit('updateFinalScore', { finalScore });
+
+  });
+
 
   socket.on('disconnect', () => {
     console.log('A user disconnected', socket.id);

@@ -36,6 +36,7 @@ export async function createExecution(req, res, next) {
         const newExecution = await Execution.create(req.body);
         res.status(201).json(newExecution);
     } catch (error) {
+        console.log(error);
         next(error);
     }
 }

@@ -1,18 +1,54 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import InfoBlock from "../components/InfoBlock";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import ScoreCard from "../components/ScoreCard";
-import Status from "../components/Status";
 import ResubmitButton from "../components/ResubmitButton";
 import { useNotifications } from "../utils/connection.jsx";
+import Popup from "../components/Popup.jsx";
 
 const ScoreCardJudges = () => {
 
   const [showStatus, setShowStatus] = useState(false);
-  const { deductionTotal, startScore, penalty } = useNotifications();
+  const [showNav, setShowNav] = useState(false);
+  const { deductionTotal, startScore, penalty, finalScore, nextGymnast, navigateToCalculations, setNavigateToCalculations } = useNotifications();
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate(); 
+
+  useEffect(() => {
+    if (finalScore) {
+      setMessage(`Final score ${finalScore} for gymnast ${nextGymnast.first_name} ${nextGymnast.last_name} submitted.`)
+      setShowStatus(true);
+    }
+  }, [finalScore]);
+
+  useEffect(() => {
+    if (navigateToCalculations) {
+      setNavigateToCalculations(false);
+      setShowNav(true);
+    }
+  }, [navigateToCalculations, navigate, setNavigateToCalculations]);
+
+  // useEffect(() => {
+  //   if (nextGymnast) {
+  //     setMessage(`The next gymnast selected to compete it ${nextGymnast.first_name} ${nextGymnast.last_name} (${nextGymnast.gymnast_id})`)
+  //     setNavigateToCalculations(true);
+  //     setShowStatus(true);
+  //   }
+  // }, [nextGymnast]);
 
   const handleButtonClick = () => {
-    setShowStatus(!showStatus);
+    setMessage("Waiting for head judge to accept the request.")
+    setShowStatus(true);
+  };
+
+  const closePopup = () => {
+    setShowStatus(false);
+  };
+
+  const closeNav = () => {
+    setShowNav(false);
+    navigate("/calculationsjudges");
   };
 
   return (
@@ -24,7 +60,9 @@ const ScoreCardJudges = () => {
         <div className="flex flex-col w-full h-full items-center gap-[30px] overflow-y-auto pt-[75px] relative">
           <InfoBlock />
           <ScoreCard deductionTotal={deductionTotal} startScore={startScore} penalty={penalty}/>
-          {showStatus && <Status />}
+          {showStatus && <Popup message={"Waiting for head judge to accept the request."} onClose={closePopup} />}
+          {showNav && <Popup message={`The next gymnast selected to compete it ${nextGymnast.first_name} ${nextGymnast.last_name} 
+          (${nextGymnast.gymnast_id})`} onClose={closeNav} />}
           
           <ResubmitButton title="Request resubmission" handleButtonClick={handleButtonClick}/>
         </div>
