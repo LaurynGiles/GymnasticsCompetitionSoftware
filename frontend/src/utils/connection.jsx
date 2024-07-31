@@ -18,7 +18,7 @@ export const NotificationProvider = ({ children }) => {
   const [groupId, setGroupId] = useState(null);
   const [nextGymnast, setNextGymnast] = useState(null);
   const [currApparatus, setCurrApparatus] = useState("");
-  const [deductionTotal, setDeductionTotal] = useState(0.0);
+  const [deductionTotal, setDeductionTotal] = useState(null);
   const [receivedDeductions, setReceivedDeductions] = useState([]);
   const [penalty, setPenalty] = useState(null);
   const [startScore, setStartScore] = useState(null);
@@ -132,7 +132,9 @@ export const NotificationProvider = ({ children }) => {
       penalty,
       setPenalty,
       startScore,
-      setStartScore
+      setStartScore,
+      finalScore,
+      setFinalScore
     }}>
       {children}
     </NotificationContext.Provider>

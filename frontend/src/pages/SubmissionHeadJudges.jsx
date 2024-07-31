@@ -18,7 +18,7 @@ const SubmissionHeadJudges = () => {
 //   const [startScore, setStartScore] = useState("0.000");
 //   const [penalty, setPenalty] = useState("0.000");
 //   const [deductions, setDeductions] = useState("0.000");
-  const { startScore, penalty, receivedDeductions, groupId, judgeInfo, nextGymnast, socket } = useNotifications();
+  const { startScore, penalty, receivedDeductions, groupId, judgeInfo, nextGymnast, socket, setDeductionTotal, setStartScore, setPenalty, setFinalScore, setReceivedDeductions } = useNotifications();
   const [averageDeduction, setAverageDeduction] = useState(0.0);
   const [visibleAnalysis, setVisibleAnalysis] = useState({});
   const [rotateArrow, setRotateArrow] = useState({});
@@ -71,6 +71,12 @@ const SubmissionHeadJudges = () => {
     });
 
     socket.emit('finalScoreSubmitted', { groupId, finalScore: startScore - penalty - averageDeduction });
+    
+    setDeductionTotal(null);
+    setPenalty(null);
+    setFinalScore(null);
+    setStartScore(null);
+    setReceivedDeductions([]);
 
     setShowSubmitPopup(true);
     setNavigateOnClose(true);

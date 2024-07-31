@@ -21,10 +21,12 @@
       console.log(statusMessage);
       console.log(buttonClass);
       console.log(isButtonDisabled);
+      // console.log(joinStatus);
         eventBoxStates[group_id] = {
           statusMessage,
           buttonClass,
           isButtonDisabled,
+          // joinStatus,
         };
         localStorage.setItem('eventBoxStates', JSON.stringify(eventBoxStates));
     };
@@ -48,14 +50,14 @@
           setButtonClass("bg-prussian-blue-dark");
           setIsButtonDisabled(true);
           setNoSelect(true);
-          // setJoinStatus("");
+          // setJoinStatus(false);
           saveEventBoxStateToLocalStorage();
 
         } else if (joinStatus && group_id != groupId) {
           setButtonClass("bg-text cursor-not-allowed");
           setIsButtonDisabled(true);
           setNoSelect(true);
-          // setJoinStatus("");
+          // setJoinStatus(false);
           saveEventBoxStateToLocalStorage();
           
         }
