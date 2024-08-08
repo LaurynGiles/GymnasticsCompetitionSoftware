@@ -1,9 +1,11 @@
 import React, {useState} from "react";
 import SmallBlueButton from "./SmallBlueButton";
+import { useNotifications } from "../utils/connection.jsx"
 
-const SendMessage = () => {
+const SendMessage = ({ setError, setShowError }) => {
 
     const [message, setMessage] = useState("");
+    const { groupId, socket } = useNotifications();
 
     const handleInputChange = (event) => {
         setMessage(event.target.value);
@@ -11,7 +13,13 @@ const SendMessage = () => {
 
 
     const handleSendClick = () => {
-        console.log("Message sent:", message);
+      if (groupId) {
+        socket.emit("headJudgeMessage", {groupId, message});
+      } else {
+        console.log("Setting error");
+        setError("Please start a group before sending messages.");
+        setShowError(true);
+      }
         setMessage("");
     };
 

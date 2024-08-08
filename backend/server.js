@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
       groupUsers[group_id].push(socket.id);
 
       socket.join(`group_${group_id}`);
-      io.to(`group_${group_id}`).emit('groupMessage', `${judge_fname} ${judge_lname} has started the judging table`);
+      io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
       console.log(`Socket ${socket.id} started group ${group_id}`);
       console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
       callback({ success: true, isHeadJudge: true });
@@ -103,19 +103,22 @@ io.on('connection', (socket) => {
       groupUsers[group_id] = [];
     }
 
+    io.to(`group_${group_id}`).emit('serverMessage', `Event ${group_id}, ${apparatus}:\n${judge_fname} ${judge_lname} has joined the judging table.`);
+
     groupUsers[group_id].push(socket_id);
     io.sockets.sockets.get(socket_id).join(`group_${group_id}`);
 
     io.to(socket_id).emit('joinApproved', { group_id, apparatus });
+    io.to(socket_id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou joined the judging table.`);
     
     io.to(headJudges[group_id]).emit('judgeJoined', { group_id, judge_id, judge_fname, judge_lname, socket_id: socket.id });
-    io.to(`group_${group_id}`).emit('groupMessage', `${judge_fname} ${judge_lname} has joined the judging table`);
+
     console.log(`Judge ${judge_id} approved to join group ${group_id}`);
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
   });
 
-  socket.on('rejectJoinRequest', ({ group_id, judge_id, judge_fname, judge_lname, socket_id }) => {
-    io.to(socket_id).emit('errorMessage', { message: 'Your join request was rejected by the head judge.' });
+  socket.on('rejectJoinRequest', ({ group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id }) => {
+    io.to(socket_id).emit('rejectionMessage', `Event ${group_id}, ${apparatus}:\nYour join request was rejected by the head judge.`);
     console.log(`Judge ${judge_id} rejected from joining group ${group_id}`);
   });
 
@@ -128,15 +131,11 @@ io.on('connection', (socket) => {
       delete headJudges[group_id];
     }
 
-    io.to(`group_${group_id}`).emit('groupMessage', `Judge ${judge_id} left group ${group_id}`);
+    io.to(`group_${group_id}`).emit('serverMessage', `Judge ${judge_id} left group ${group_id}`);
     console.log(`Socket left group${group_id}`);
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
   });
 
-  socket.on('sendMessage', ({ groupId, message }) => {
-    console.log("Sending group message");
-    io.to(`group_${groupId}`).emit('groupMessage', message);
-  });
 
   socket.on('submitDeduction', ({ groupId, judgeId, firstName, lastName, deduction, analysis }) => {
     const headJudgeId = headJudges[groupId];
@@ -195,8 +194,15 @@ io.on('connection', (socket) => {
 
   socket.on('judgeGymnast', ({ groupId, gymnast }) => {
     console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${groupId}`);
+    io.to(`group_${groupId}`).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
     io.to(`group_${groupId}`).emit('nextGymnast', gymnast);
   });
+
+  socket.on('headJudgeMessage', ({ groupId, message }) => {
+    console.log(`Head judge sending message to ${groupId}`);
+    io.to(`group_${groupId}`).emit('groupMessage', `Head judge:\n${message}`);
+  });
+
 
 });
 

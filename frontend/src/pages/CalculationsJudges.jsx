@@ -14,9 +14,36 @@ const CalculationsJudges = () => {
   const [layout, setLayout] = useState(0);
 
   useEffect(() => {
+    console.log("Loading calculations page");
+
+    const storedValues = localStorage.getItem("values");
+    const storedTotal = localStorage.getItem("total");
     const storedLayout = localStorage.getItem("layout");
+    
+    if (storedValues) {
+      console.log(`Found stored values ${storedValues}`);
+      setValues(JSON.parse(storedValues));
+    }
+    if (storedTotal) {
+      console.log(`Found stored values ${storedTotal}`);
+      setTotal(Number(storedTotal));
+    }
     setLayout(Number(storedLayout) || 0);
 
+    console.log(values);
+    console.log(total);
+    console.log(layout);
+  }, []);
+
+  useEffect(() => {
+    if (values && total != 0) {
+      console.log(`Setting values to ${values} and total to ${total}`);
+      localStorage.setItem("values", JSON.stringify(values));
+      localStorage.setItem("total", total.toString());
+    }
+  }, [values, total]);
+
+  useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key === "layout") {
         setLayout(Number(e.newValue) || 0);
@@ -29,7 +56,6 @@ const CalculationsJudges = () => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
-
 
   const addValue = (value) => {
     setValues([...values, value]);

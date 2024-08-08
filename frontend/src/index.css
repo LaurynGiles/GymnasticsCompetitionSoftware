@@ -17,9 +17,11 @@
   --light-periwinkle: rgba(211, 215, 255, 1);
   --periwinkle: rgba(177, 184, 255, 1);
   --notification-box: rgba(217, 217, 217, 1);
+  --notification-box-system: rgb(163, 163, 163);
   --prussian-blue: rgba(18, 38, 58, 1);
   --prussian-blue-dark: rgb(14, 30, 46);
   --text: rgba(149, 148, 159, 1);
+  --coral: rgba(255, 154, 123, 0.836);
 
   /* font-family:'Montserrat-Medium',Helvetica; */
 }

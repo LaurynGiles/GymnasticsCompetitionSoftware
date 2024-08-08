@@ -5,12 +5,15 @@ import Header from "../components/Header";
 import Notification from "../components/Notification";
 import SendMessage from "../components/SendMessage";
 import { useNotifications } from "../utils/connection.jsx"
+import Popup from "../components/Popup.jsx";
 
 const NotificationsJudges = () => {
 
   const { notifications, judgeInfo } = useNotifications();
   const location = useLocation();
   const prevPage = location.state?.currPage || "/homejudges";
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState("");
 
   return (
     <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
@@ -19,12 +22,13 @@ const NotificationsJudges = () => {
           <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={prevPage} currPage={"/notificationsjudges"}/>
         </div>
         <div className="inline-flex flex-col items-center w-full gap-[20px] overflow-y-auto pt-[75px] relative">
-          {judgeInfo.head_judge && <SendMessage />}
+          {judgeInfo.head_judge && <SendMessage setError={setError} setShowError={setShowError}/>}
           <Header text="Notifications"/>
           <div className="inline-flex flex-col items-center gap-[15px] relative flex-[0_0_auto]">
             {notifications.map((notification, index) => (
                 <Notification
                   key={index}
+                  type={notification.type}
                   notification={notification.message}
                   time={notification.time}
                   sender={notification.sender}
@@ -33,6 +37,7 @@ const NotificationsJudges = () => {
           </div>
         </div>
       </div>
+      {showError && <Popup message={error} onClose={() => setShowError(false)} />}
     </div>
   );
 };

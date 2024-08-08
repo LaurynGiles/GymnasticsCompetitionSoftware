@@ -15,6 +15,7 @@ export const NotificationProvider = ({ children }) => {
   const [joinedJudges, setJoinedJudges] = useState([]);
   const [navigateToCalculations, setNavigateToCalculations] = useState(false);
   const [joinStatus, setJoinStatus] = useState(false);
+  const [joinRejected, setJoinRejected] = useState(false);
   const [groupId, setGroupId] = useState(null);
   const [nextGymnast, setNextGymnast] = useState(null);
   const [currApparatus, setCurrApparatus] = useState("");
@@ -28,14 +29,21 @@ export const NotificationProvider = ({ children }) => {
     const socketConnection = io("http://localhost:5000");
     setSocket(socketConnection);
 
-    socketConnection.on("errorMessage", (message) => {
-      console.log(`Error message received: ${message}`);
-      addNotification({ message, sender: "system", time: new Date().toLocaleTimeString() });
+    socketConnection.on("rejectionMessage", (message) => {
+      console.log(`Rejection message received: ${message}`);
+      addNotification({ type: "reject", message, sender: "system", time: new Date().toLocaleTimeString() });
+      setJoinRejected(true);
+      setJoinStatus(false);
+    });
+
+    socketConnection.on("serverMessage", (message) => {
+      console.log(`Server message received: ${message}`);
+      addNotification({ type: "server", message, sender: "system", time: new Date().toLocaleTimeString() });
     });
 
     socketConnection.on("groupMessage", (message) => {
       console.log(`Group message received: ${message}`);
-      addNotification({ message, sender: "system", time: new Date().toLocaleTimeString() });
+      addNotification({ type: "group", message, sender: "head", time: new Date().toLocaleTimeString() });
     });
 
     socketConnection.on("joinRequest", (request) => {
@@ -121,6 +129,8 @@ export const NotificationProvider = ({ children }) => {
       setGroupId,
       joinStatus,
       setJoinStatus,
+      joinRejected,
+      setJoinRejected,
       nextGymnast,
       setNextGymnast,
       currApparatus,
