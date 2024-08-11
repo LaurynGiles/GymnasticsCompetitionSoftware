@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ArrowIcon from "./ArrowIcon";
 import SelectOptions from "./SelectOptions";
+import { useNotifications } from "../utils/connection.jsx";
 
-const SmallSelectBox = ({ option , setOption, allOptions}) => {
+const SmallSelectBox = ({ option , setOption }) => {
 
+  const { joinedJudges } = useNotifications();
   const [showPopup, setShowPopup] = useState(false);
   const [rotateArrow, setRotateArrow] = useState(0);
+  const [allOptions, setAllOptions] = useState(["All"]);
+
+  useEffect(() => {
+    const options = ["All"].concat(joinedJudges.map(judge => `${judge.judge_fname} ${judge.judge_lname}`));
+    setAllOptions(options);
+  }, [joinedJudges]);
 
   const handleArrowClick = () => {
     setShowPopup(!showPopup);

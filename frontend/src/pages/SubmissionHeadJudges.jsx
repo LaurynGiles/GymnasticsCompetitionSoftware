@@ -15,9 +15,6 @@ import { useNotifications } from "../utils/connection.jsx";
 import { submitDifficulty, submitExecution } from "../utils/api.js";
 
 const SubmissionHeadJudges = () => {
-//   const [startScore, setStartScore] = useState("0.000");
-//   const [penalty, setPenalty] = useState("0.000");
-//   const [deductions, setDeductions] = useState("0.000");
   const { startScore, penalty, receivedDeductions, groupId, judgeInfo, nextGymnast, socket, setDeductionTotal, setStartScore, setPenalty, setFinalScore, setReceivedDeductions } = useNotifications();
   const [averageDeduction, setAverageDeduction] = useState(0.0);
   const [visibleAnalysis, setVisibleAnalysis] = useState({});
@@ -45,8 +42,7 @@ const SubmissionHeadJudges = () => {
     }));
   };
 
-  const requestOptions = ["All", "Debbie Giles", "John Doe", "Jane Smith", "Michael Brown", "Emily White"];
-  const [requestName, setRequestName] = useState(requestOptions[0]);
+  const [requestName, setRequestName] = useState("All");
 
   const handleSendClick = () => {
     setShowRequestPopup(true);
@@ -123,7 +119,7 @@ const SubmissionHeadJudges = () => {
               <React.Fragment key={index}>
                 <JudgeScore
                   name={judge.name}
-                  deduction={judge.deduction}
+                  deduction={(judge.deduction).toFixed(3)}
                   total={(startScore - judge.deduction - penalty).toFixed(3)}
                   rotation={rotateArrow[index] || 0}
                   onUpdateAnalysis={() => updateAnalysisVisibility(index)}
@@ -137,7 +133,7 @@ const SubmissionHeadJudges = () => {
             <Header text={"Request resubmission"} />
             <div className="inline-flex flex-col items-center justify-center gap-[10px] px-[10px] py-[10px] relative flex-[0_0_auto] bg-anti-flash-white">
               <div className="inline-flex items-start justify-center gap-[30px] relative flex-[0_0_auto]">
-                <SmallSelectBox title={"Judge"} option={requestName} setOption={setRequestName} allOptions={requestOptions}/>
+                <SmallSelectBox title={"Judge"} option={requestName} setOption={setRequestName} />
                 <div onClick={handleSendClick}> 
                   <SmallBlueButton title="Send" />
                 </div>

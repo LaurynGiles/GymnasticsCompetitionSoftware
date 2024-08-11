@@ -7,65 +7,56 @@
 
   const EventBox = ({group_id, apparatus, levels, ages, gymnasts, setShowError, setError, setNoSelect}) => {
 
-    const { judgeInfo, joinStatus, setGroupId, socket, groupId, setCurrApparatus } = useNotifications();
+    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId, setCurrApparatus, setHeadOfGroup, headOfGroup } = useNotifications();
     const [showPopup, setShowPopup] = useState(false);
     const [rotateArrow, setRotateArrow] = useState(180);
     const [statusMessage, setStatusMessage] = useState("");
     const [buttonClass, setButtonClass] = useState("bg-prussian-blue cursor-pointer");
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const navigate = useNavigate();
-
-    const saveEventBoxStateToLocalStorage = () => {
-      const eventBoxStates = JSON.parse(localStorage.getItem('eventBoxStates') || '{}');
-      console.log("Saving event status");
-      console.log(statusMessage);
-      console.log(buttonClass);
-      console.log(isButtonDisabled);
-        eventBoxStates[group_id] = {
-          statusMessage,
-          buttonClass,
-          isButtonDisabled,
-        };
-        localStorage.setItem('eventBoxStates', JSON.stringify(eventBoxStates));
-    };
   
     useEffect(() => {
-      const loadEventBoxStateFromLocalStorage = () => {
-        const eventBoxStates = JSON.parse(localStorage.getItem('eventBoxStates') || '{}');
-        if (eventBoxStates[group_id]) {
-          const state = eventBoxStates[group_id];
-          setStatusMessage(state.statusMessage);
-          setButtonClass(state.buttonClass);
-          setIsButtonDisabled(state.isButtonDisabled);
+
+        if (joinStatus != "") {
+          if (group_id == groupId) {
+            if (joinStatus == "approved") {
+              setStatusMessage("Join approved");
+              console.log(`Setting status message to approved for group ${group_id}`);
+              setButtonClass("bg-prussian-blue-dark");
+              setIsButtonDisabled(true);
+              setNoSelect(true);
+
+            } else if (joinStatus == "rejected") {
+              setStatusMessage("Join rejected");
+              console.log(`Setting status message to rejected for group ${group_id}`);
+              setButtonClass("bg-prussian-blue cursor-pointer");
+              setIsButtonDisabled(false);
+              setNoSelect(false);
+
+            } else if (joinStatus == "waiting") {
+              setStatusMessage("Waiting for approval");
+              console.log(`Setting status message to waiting for group ${group_id}`);
+              setButtonClass("bg-prussian-blue-dark");
+              setIsButtonDisabled(true);
+              setNoSelect(true);
+            }
+  
+          } else if (group_id != groupId) {
+
+            if (joinStatus == "rejected") {
+              setButtonClass("bg-prussian-blue cursor-pointer");
+              setIsButtonDisabled(false);
+              setNoSelect(false);
+            } else {
+              setButtonClass("bg-text cursor-not-allowed");
+              setIsButtonDisabled(true);
+              setNoSelect(true);
+            }
+            
+          }
         }
-      };
 
-      loadEventBoxStateFromLocalStorage();
-
-      const updateStateBasedOnJoinStatus = () => {
-        if (joinStatus && group_id == groupId) {
-          setStatusMessage("Join approved");
-          setButtonClass("bg-prussian-blue-dark");
-          setIsButtonDisabled(true);
-          setNoSelect(true);
-          saveEventBoxStateToLocalStorage();
-
-        } else if (joinStatus && group_id != groupId) {
-          setButtonClass("bg-text cursor-not-allowed");
-          setIsButtonDisabled(true);
-          setNoSelect(true);
-          saveEventBoxStateToLocalStorage();
-          
-        }
-      }
-
-      updateStateBasedOnJoinStatus();
-
-    }, [joinStatus, group_id, groupId, setNoSelect]);
-
-    useEffect(() => {
-      return () => saveEventBoxStateToLocalStorage();
-    }, [statusMessage, buttonClass, isButtonDisabled]);
+    }, [joinStatus, group_id, groupId]);
 
     const handleArrowClick = () => {
       setShowPopup(!showPopup);
@@ -79,9 +70,6 @@
           if (joinResult === 'headJudge') {
             setCurrApparatus(apparatus);
             navigate("/lobby");
-          } else if (joinResult === 'waitingForApproval') {
-            setStatusMessage("Waiting for approval");
-            saveEventBoxStateToLocalStorage();
           }
   
       } catch (error) {
@@ -93,12 +81,15 @@
 
     const handleJoinGroup = (group_id) => {
       return new Promise((resolve, reject) => {
-        socket.emit('joinGroup', { group_id, apparatus, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
+        socket.emit('joinGroup', { headOfGroup, group_id, apparatus, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
           if (response.success) {
+            setGroupId(group_id);
             if (response.isHeadJudge) {
-              setGroupId(group_id);
+              setHeadOfGroup(true);
               resolve('headJudge');
             } else {
+              setJoinStatus("waiting");
+              console.log(`New join status ${joinStatus}`);
               resolve('waitingForApproval');
             }
           } else {

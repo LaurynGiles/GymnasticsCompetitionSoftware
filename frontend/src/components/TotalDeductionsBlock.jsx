@@ -6,7 +6,7 @@ import { useNotifications } from "../utils/connection.jsx";
 const TotalDeductionsBlock = ({ total, values }) => {
 
   const navigate = useNavigate();
-  const { judgeInfo, groupId, setDeductionTotal, socket } = useNotifications();
+  const { judgeInfo, groupId, setDeductionTotal, socket, headOfGroup } = useNotifications();
 
   const handleSubmitClick = () => {
     console.log(total);
@@ -22,7 +22,7 @@ const TotalDeductionsBlock = ({ total, values }) => {
       analysis: values
     });
 
-    if (!judgeInfo.head_judge) {
+    if (!headOfGroup) {
       navigate("/scorecardjudges");
     } else {
       navigate("/startingscore");

@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('joinGroup', ({ group_id, apparatus, judge_id, head_judge, judge_fname, judge_lname }, callback) => {
+  socket.on('joinGroup', ({ headOfGroup, group_id, apparatus, judge_id, head_judge, judge_fname, judge_lname }, callback) => {
 
     console.log(`Judge ${judge_id} attempting to join group ${group_id}`);
 
@@ -140,7 +140,6 @@ io.on('connection', (socket) => {
   socket.on('submitDeduction', ({ groupId, judgeId, firstName, lastName, deduction, analysis }) => {
     const headJudgeId = headJudges[groupId];
     if (headJudgeId) {
-      // Broadcast score to head judge's socket
       io.to(headJudgeId).emit('receiveDeduction', {
         judgeId,
         name: `${firstName} ${lastName}`,
