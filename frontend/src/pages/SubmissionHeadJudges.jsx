@@ -15,13 +15,15 @@ import { useNotifications } from "../utils/connection.jsx";
 import { submitDifficulty, submitExecution } from "../utils/api.js";
 
 const SubmissionHeadJudges = () => {
-  const { startScore, penalty, receivedDeductions, groupId, judgeInfo, nextGymnast, socket, setDeductionTotal, setStartScore, setPenalty, setFinalScore, setReceivedDeductions } = useNotifications();
+  const { startScore, penalty, receivedDeductions, groupId, currApparatus, judgeInfo, joinedJudges, nextGymnast, socket, setDeductionTotal, setStartScore, setPenalty, setFinalScore, setReceivedDeductions } = useNotifications();
   const [averageDeduction, setAverageDeduction] = useState(0.0);
   const [visibleAnalysis, setVisibleAnalysis] = useState({});
   const [rotateArrow, setRotateArrow] = useState({});
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showSubmitPopup, setShowSubmitPopup] = useState(false);
   const [navigateOnClose, setNavigateOnClose] = useState(false);
+  const [requestName, setRequestName] = useState("All");
+  const [judgeId, setJudgeId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,9 +44,22 @@ const SubmissionHeadJudges = () => {
     }));
   };
 
-  const [requestName, setRequestName] = useState("All");
-
   const handleSendClick = () => {
+
+    console.log("Send request for judge ID:", judgeId);
+
+    const judge = joinedJudges.find(j => j.judge_id === judgeId);
+    console.log(judge)
+    const socketIdToSend = judge ? judge.socket_id : null; 
+    console.log(socketIdToSend)
+
+      socket.emit('headRequestResubmission', {
+        groupId, 
+        apparatus: currApparatus,
+        judgeId, 
+        socketId: socketIdToSend,
+      });
+
     setShowRequestPopup(true);
   };
 
@@ -133,7 +148,7 @@ const SubmissionHeadJudges = () => {
             <Header text={"Request resubmission"} />
             <div className="inline-flex flex-col items-center justify-center gap-[10px] px-[10px] py-[10px] relative flex-[0_0_auto] bg-anti-flash-white">
               <div className="inline-flex items-start justify-center gap-[30px] relative flex-[0_0_auto]">
-                <SmallSelectBox title={"Judge"} option={requestName} setOption={setRequestName} />
+                <SmallSelectBox option={requestName} setOption={setRequestName} setJudgeId={setJudgeId} />
                 <div onClick={handleSendClick}> 
                   <SmallBlueButton title="Send" />
                 </div>

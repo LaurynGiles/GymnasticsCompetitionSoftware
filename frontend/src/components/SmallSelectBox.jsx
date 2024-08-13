@@ -3,16 +3,22 @@ import ArrowIcon from "./ArrowIcon";
 import SelectOptions from "./SelectOptions";
 import { useNotifications } from "../utils/connection.jsx";
 
-const SmallSelectBox = ({ option , setOption }) => {
+const SmallSelectBox = ({ option , setOption, setJudgeId }) => {
 
   const { joinedJudges } = useNotifications();
   const [showPopup, setShowPopup] = useState(false);
   const [rotateArrow, setRotateArrow] = useState(0);
   const [allOptions, setAllOptions] = useState(["All"]);
+  const [judgeMap, setJudgeMap] = useState({});
 
   useEffect(() => {
-    const options = ["All"].concat(joinedJudges.map(judge => `${judge.judge_fname} ${judge.judge_lname}`));
-    setAllOptions(options);
+    const newJudgeMap = {};
+    joinedJudges.forEach(judge => {
+      const name = `${judge.judge_fname} ${judge.judge_lname}`;
+      newJudgeMap[name] = judge.judge_id;
+    });
+    setAllOptions(["All", ...Object.keys(newJudgeMap)]);
+    setJudgeMap({"All": null, ...newJudgeMap});
   }, [joinedJudges]);
 
   const handleArrowClick = () => {
@@ -22,6 +28,9 @@ const SmallSelectBox = ({ option , setOption }) => {
 
   const handleOptionClick = (selectedOption) => {
     setOption(selectedOption);
+    if (setJudgeId) {
+      setJudgeId(judgeMap[selectedOption]); // Set the judge ID in the parent component
+    }
     setShowPopup(false);
     setRotateArrow(0);
   };

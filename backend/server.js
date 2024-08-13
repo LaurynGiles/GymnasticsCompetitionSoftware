@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
     io.to(socket_id).emit('joinApproved', { group_id, apparatus });
     io.to(socket_id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou joined the judging table.`);
     
-    io.to(headJudges[group_id]).emit('judgeJoined', { group_id, judge_id, judge_fname, judge_lname, socket_id: socket.id });
+    io.to(headJudges[group_id]).emit('judgeJoined', { group_id, judge_id, judge_fname, judge_lname, socket_id });
 
     console.log(`Judge ${judge_id} approved to join group ${group_id}`);
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
@@ -202,6 +202,13 @@ io.on('connection', (socket) => {
     io.to(`group_${groupId}`).emit('groupMessage', `Head judge:\n${message}`);
   });
 
+  socket.on('headRequestResubmission', ({ groupId, apparatus, judgeId, socketId, message }) => {
+    if (socketId) {
+      io.to(socketId).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge had requested that you resubmit your score.`);
+    } else {
+      io.to(`group_${groupId}`).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge had requested that all judges resubmit their scores.`);
+    }
+  });
 
 });
 

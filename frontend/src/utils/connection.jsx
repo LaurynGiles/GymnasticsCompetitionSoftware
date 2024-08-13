@@ -24,6 +24,7 @@ export const NotificationProvider = ({ children }) => {
   const [penalty, setPenalty] = useState(null);
   const [startScore, setStartScore] = useState(null);
   const [finalScore, setFinalScore] = useState(null);
+  const [showResubmissionPopup, setShowResubmissionPopup] = useState(false);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -75,9 +76,7 @@ export const NotificationProvider = ({ children }) => {
       setReceivedDeductions(prev => {
         const existingIndex = prev.findIndex(item => item.judgeId === scoreData.judgeId);
         if (existingIndex !== -1) {
-          // Create a new array to ensure immutability
           const updatedDeductions = [...prev];
-          // Update the existing item with the new data
           updatedDeductions[existingIndex] = {
             ...updatedDeductions[existingIndex],
             deduction: scoreData.deduction,
@@ -85,7 +84,6 @@ export const NotificationProvider = ({ children }) => {
           };
           return updatedDeductions;
         } else {
-          // If the judge's ID is not found, add the new score data
           return [...prev, scoreData];
         }
       });
@@ -102,6 +100,12 @@ export const NotificationProvider = ({ children }) => {
       console.log(`Received updated scores: Final score - ${finalScore}`);
     });
 
+    socketConnection.on("resubmissionRequest", (message) => {
+      console.log(`Resubmission request received: ${message}`);
+      addNotification({ type: "resubmission", message: message, sender: "head", time: new Date().toLocaleTimeString() });
+      setShowResubmissionPopup(true);
+    });
+
     /** SET HEAD OF GROUP and GROUP ID back to normal when leaving a group */
 
     return () => {
@@ -114,6 +118,7 @@ export const NotificationProvider = ({ children }) => {
       socketConnection.off("receiveDeduction");
       socketConnection.off("scoresUpdated");
       socketConnection.off("updatedFinalScore");
+      socketConnection.off("resubmissionRequest");
       socketConnection.close();
     };
   }, []);
@@ -164,7 +169,9 @@ export const NotificationProvider = ({ children }) => {
       finalScore,
       setFinalScore,
       headOfGroup,
-      setHeadOfGroup
+      setHeadOfGroup,
+      showResubmissionPopup,
+      setShowResubmissionPopup
     }}>
       {children}
     </NotificationContext.Provider>

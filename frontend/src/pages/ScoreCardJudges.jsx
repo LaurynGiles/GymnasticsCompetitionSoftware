@@ -9,10 +9,7 @@ import Popup from "../components/Popup.jsx";
 
 const ScoreCardJudges = () => {
 
-  const [showStatus, setShowStatus] = useState(false);
-  const [showNav, setShowNav] = useState(false);
-  const { deductionTotal, startScore, penalty, finalScore, nextGymnast, navigateToCalculations, setNavigateToCalculations } = useNotifications();
-  const [message, setMessage] = useState("");
+  const { deductionTotal, startScore, penalty, finalScore, nextGymnast, navigateToCalculations, setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup } = useNotifications();
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -22,32 +19,17 @@ const ScoreCardJudges = () => {
     }
   }, [finalScore]);
 
-  useEffect(() => {
-    if (navigateToCalculations) {
-      setNavigateToCalculations(false);
-      setShowNav(true);
-    }
-  }, [navigateToCalculations, navigate, setNavigateToCalculations]);
-
-  // useEffect(() => {
-  //   if (nextGymnast) {
-  //     setMessage(`The next gymnast selected to compete it ${nextGymnast.first_name} ${nextGymnast.last_name} (${nextGymnast.gymnast_id})`)
-  //     setNavigateToCalculations(true);
-  //     setShowStatus(true);
-  //   }
-  // }, [nextGymnast]);
-
   const handleButtonClick = () => {
-    setMessage("Waiting for head judge to accept the request.")
-    setShowStatus(true);
+    // Resubmission
   };
 
-  const closePopup = () => {
-    setShowStatus(false);
+  const closeNavPop = () => {
+    setNavigateToCalculations(false);
+    navigate("/calculationsjudges");
   };
 
-  const closeNav = () => {
-    setShowNav(false);
+  const closeResubmitPop = () => {
+    setShowResubmissionPopup(false);
     navigate("/calculationsjudges");
   };
 
@@ -60,10 +42,13 @@ const ScoreCardJudges = () => {
         <div className="flex flex-col w-full h-full items-center gap-[30px] overflow-y-auto pt-[75px] relative">
           <InfoBlock />
           <ScoreCard deductionTotal={deductionTotal} startScore={startScore} penalty={penalty}/>
-          {showStatus && <Popup message={"Waiting for head judge to accept the request."} onClose={closePopup} />}
-          {showNav && <Popup message={`The next gymnast selected to compete it ${nextGymnast.first_name} ${nextGymnast.last_name} 
-          (${nextGymnast.gymnast_id})`} onClose={closeNav} />}
-          
+          {finalScore && (
+            <Popup message={`Final score ${finalScore} for gymnast ${nextGymnast.first_name} ${nextGymnast.last_name} submitted.`} onClose={() => {}} />
+          )}
+          {navigateToCalculations && (
+            <Popup message={`The next gymnast selected to compete is ${nextGymnast.first_name} ${nextGymnast.last_name} (${nextGymnast.gymnast_id})`} onClose={closeNavPop} />
+          )}
+          {showResubmissionPopup && <Popup message="A resubmission request has been received." onClose={closeResubmitPop} />}
           <ResubmitButton title="Request resubmission" handleButtonClick={handleButtonClick}/>
         </div>
       </div>

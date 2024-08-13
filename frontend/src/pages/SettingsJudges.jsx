@@ -91,7 +91,7 @@ export const SettingsJudges = () => {
         </div>
         <div className="inline-flex w-full h-full flex-col items-center gap-[30px] overflow-y-auto pt-[75px] pb-[50px] relative">
           <Header text={"User information"} />
-          <UserInfo number={"548657"} name={"Debbie Giles"} email={"deb@gmail.com"} license={"Category A"} />
+          <UserInfo number={"548657"} name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`} email={"deb@gmail.com"} license={"Category A"} />
           <Header text={"Layout Settings"} />
           <div className="items-center justify-center gap-[54px] inline-flex relative flex-[0_0_auto]">
             <div className="flex-col items-start gap-[25px] inline-flex relative flex-[0_0_auto]">
