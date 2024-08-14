@@ -11,6 +11,7 @@ import SmallSelectBox from "../components/SmallSelectBox";
 import Popup from "../components/Popup";
 import ScoreSubmissionBlock from "../components/ScoreSubmissionBlock";
 import BlueButton from "../components/BlueButton";
+import ResubmitRequest from "../components/ResubmitRequest.jsx";
 import { useNotifications } from "../utils/connection.jsx";
 import { submitDifficulty, submitExecution } from "../utils/api.js";
 
@@ -146,13 +147,14 @@ const SubmissionHeadJudges = () => {
           
           <div className="inline-flex flex-col items-center justify-center gap-[10px] relative flex-[0_0_auto]">
             <Header text={"Request resubmission"} />
-            <div className="inline-flex flex-col items-center justify-center gap-[10px] px-[10px] py-[10px] relative flex-[0_0_auto] bg-anti-flash-white">
+            <div className="inline-flex flex-col items-center justify-center gap-[20px] px-[10px] py-[10px] relative flex-[0_0_auto] bg-anti-flash-white">
               <div className="inline-flex items-start justify-center gap-[30px] relative flex-[0_0_auto]">
                 <SmallSelectBox option={requestName} setOption={setRequestName} setJudgeId={setJudgeId} />
                 <div onClick={handleSendClick}> 
                   <SmallBlueButton title="Send" />
                 </div>
               </div>
+              <ResubmitRequest name={"Lauryn Giles"}/>
             </div>
           </div>
           

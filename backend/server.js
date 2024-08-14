@@ -202,11 +202,32 @@ io.on('connection', (socket) => {
     io.to(`group_${groupId}`).emit('groupMessage', `Head judge:\n${message}`);
   });
 
-  socket.on('headRequestResubmission', ({ groupId, apparatus, judgeId, socketId, message }) => {
+  socket.on('headRequestResubmission', ({ groupId, apparatus, judgeId, socketId }) => {
     if (socketId) {
       io.to(socketId).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge had requested that you resubmit your score.`);
     } else {
       io.to(`group_${groupId}`).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge had requested that all judges resubmit their scores.`);
+    }
+  });
+
+  socket.on('judgeRequestResubmission', ({ groupId, judgeId, judge_fname, judge_lname }) => {
+    const socketId = headJudges[groupId]
+
+    io.to(socketId).emit('judgeResubmission', {groupId, judgeId, judge_fname, judge_lname, socketId: socket.id});
+  });
+
+  socket.on('approveResubmissionRequest', ({ groupId, judgeId, socketId }) => {
+    if (socketId) {
+      io.to(socketId).emit('resubmissionApproved', { groupId });
+      console.log(`Resubmission request approved for judge ${judgeId} in group ${groupId}`);
+    }
+  });
+  
+  // Server-side rejection of a resubmission request
+  socket.on('rejectResubmissionRequest', ({ groupId, judgeId, socketId }) => {
+    if (socketId) {
+      io.to(socketId).emit('resubmissionRejected', { groupId });
+      console.log(`Resubmission request rejected for judge ${judgeId} in group ${groupId}`);
     }
   });
 
