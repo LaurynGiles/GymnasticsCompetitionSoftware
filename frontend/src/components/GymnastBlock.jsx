@@ -7,7 +7,7 @@ const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, in
     <div className="inline-flex items-center gap-[5px] px-[20px] py-[5px] relative bg-anti-flash-white">
       <div className="flex w-[64px] items-center justify-center gap-[10px] px-[9px] py-[20px] relative">
         <div className="relative w-[50px] h-[50px] ml-[-2.00px] mr-[-2.00px] bg-glaucous rounded-[25px]">
-          <div className="absolute w-[34px] h-[32px] top-[8px] left-[8px] font-montserrat font-medium text-anti-flash-white text-[20px] text-center tracking-[0] leading-[normal]">
+          <div className="absolute mt-[5.00px] w-[34px] h-[32px] top-[8px] left-[8px] font-montserrat font-medium text-anti-flash-white text-[20px] text-center tracking-[0] leading-[normal]">
             {number}
           </div>
         </div>

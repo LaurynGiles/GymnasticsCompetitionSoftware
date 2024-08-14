@@ -17,17 +17,29 @@ const StartingScoreHeadJudges = () => {
   const [startScoreLocal, setStartScoreLocal] = useState(0.0);
   const [penaltyLocal, setPenaltyLocal] = useState(0.0);
   const navigate = useNavigate();
-  // const [showPopup, setShowPopup] = useState(false);
 
-  // useEffect(() => {
-  //   setDeductions(localStorage.getItem("total"));
-  // }, []);
+  useEffect(() => {
+    const storedStartScore = localStorage.getItem("startScore");
+    const storedPenalty = localStorage.getItem("penalty");
+    
+    if (storedStartScore) {
+      console.log(`Found stored start score ${storedStartScore}`);
+      setStartScoreLocal(storedStartScore);
+    }
+    if (storedPenalty) {
+      console.log(`Found stored penalty ${storedPenalty}`);
+      setPenaltyLocal(storedPenalty);
+    }
 
-  // const handleEnterClick = () => {
-  //   localStorage.setItem("startscore", startScore);
-  //   localStorage.setItem("penalty", penalty);
-  //   setShowPopup(true);
-  // };
+  }, []);
+
+  useEffect(() => {
+    if (startScoreLocal != 0 | penaltyLocal != 0) {
+      console.log(`Setting start score to ${startScoreLocal} and penalty to ${penaltyLocal}`);
+      localStorage.setItem("startScore", startScoreLocal.toString());
+      localStorage.setItem("penalty", penaltyLocal.toString());
+    }
+  }, [startScoreLocal, penaltyLocal]);
 
   const handleContinueClick = () => {
     setStartScore(startScoreLocal);
@@ -69,9 +81,6 @@ const StartingScoreHeadJudges = () => {
             <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
               <EditableScoreBlock title="Starting score" score ={startScoreLocal} setScore={setStartScoreLocal}/>
               <EditableScoreBlock title="Penalty deductions" score={penaltyLocal} setScore={setPenaltyLocal}/>
-              {/* <div onClick={handleEnterClick}>
-                <BlueButton title="Enter" />
-              </div> */}
             </div>
           </div>
           <div onClick={handleContinueClick}>

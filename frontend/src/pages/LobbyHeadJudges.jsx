@@ -10,7 +10,7 @@ import { useNotifications } from "../utils/connection.jsx";
 
 const LobbyHeadJudges = () => {
 
-  const { joinRequests, joinedJudges, approveJoinRequest, rejectJoinRequest } = useNotifications();
+  const { joinRequests, joinedJudges, approveJoinRequest, rejectJoinRequest, judgeInfo } = useNotifications();
   const navigate = useNavigate();
 
   const handleApprove = (request) => {
@@ -50,6 +50,7 @@ const LobbyHeadJudges = () => {
           <div className="inline-flex flex-col items-center gap-[10px] relative flex-[0_0_auto] bg-bright-white">
             <Header text={"Judges at the table"}/>
             <div className="flex-col w-[344px] p-[10px] gap-[10px] bg-anti-flash-white flex items-center justify-center relative flex-[0_0_auto]">
+            <RemoveRequest name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`}/>
             {joinedJudges.map((judge, index) => (
                 <RemoveRequest 
                   key={index} 

@@ -30,9 +30,6 @@ const CalculationsJudges = () => {
     }
     setLayout(Number(storedLayout) || 0);
 
-    console.log(values);
-    console.log(total);
-    console.log(layout);
   }, []);
 
   useEffect(() => {

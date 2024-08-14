@@ -26,6 +26,7 @@ export const NotificationProvider = ({ children }) => {
   const [startScore, setStartScore] = useState(null);
   const [finalScore, setFinalScore] = useState(null);
   const [showResubmissionPopup, setShowResubmissionPopup] = useState(false);
+  const [resubmissionApproved, setResubmissionApproved] = useState(false);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -69,6 +70,9 @@ export const NotificationProvider = ({ children }) => {
     socketConnection.on("nextGymnast", (gymnast) => {
       console.log(`Next gymnast to be judged: ${gymnast.gymnast_id} ${gymnast.first_name} ${gymnast.last_name}`);
       setNextGymnast(gymnast);
+      setFinalScore(null);
+      setStartScore(null);
+      setPenalty(null);
       setNavigateToCalculations(true);
     });
 
@@ -107,28 +111,21 @@ export const NotificationProvider = ({ children }) => {
       setShowResubmissionPopup(true);
     });
 
-    socketConnection.on("judgeRequestResubmission", (judgeData) => {
+    socketConnection.on("judgeResubmission", (judgeData) => {
+      console.log(`Received judge request for resubmission from ${judgeData.socketId}`);
       setResubmissionRequests(prev => [...prev, judgeData]);
       console.log(`Resubmission request received from ${judgeData.judge_fname} ${judgeData.judge_lname} with socketId ${judgeData.socketId}`);
     });
-    
-    const approveResubmissionRequest = (judgeData) => {
-      socket.emit('approveResubmissionRequest', {
-        groupId: judgeData.groupId,
-        judgeId: judgeData.judgeId,
-        socketId: judgeData.socketId
-      });
-      setResubmissionRequests(prev => prev.filter(judge => judge.judgeId !== judgeData.judgeId));
-    };
-    
-    const rejectResubmissionRequest = (judgeData) => {
-      socket.emit('rejectResubmissionRequest', {
-        groupId: judgeData.groupId,
-        judgeId: judgeData.judgeId,
-        socketId: judgeData.socketId
-      });
-      setResubmissionRequests(prev => prev.filter(judge => judge.judgeId !== judgeData.judgeId));
-    };
+
+    socketConnection.on("resubmissionApproved", (message) => {
+      addNotification({ type: "server", message, sender: "system", time: new Date().toLocaleTimeString() });
+      setResubmissionApproved(true);
+    });
+
+    socketConnection.on("resubmissionRejected", (message) => {
+      addNotification({ type: "reject", message, sender: "system", time: new Date().toLocaleTimeString() });
+      setResubmissionApproved(false);
+    });
 
     /** SET HEAD OF GROUP and GROUP ID back to normal when leaving a group */
 
@@ -159,6 +156,22 @@ export const NotificationProvider = ({ children }) => {
   const rejectJoinRequest = (judge) => {
     setJoinRequests(prev => prev.filter(req => req.judge_id !== judge.judge_id));
     socket.emit("rejectJoinRequest", judge);
+  };
+
+  const approveResubmissionRequest = (judgeData) => {
+    socket.emit('approveResubmissionRequest', {
+      groupId: judgeData.groupId,
+      socketId: judgeData.socketId
+    });
+    setResubmissionRequests(prev => prev.filter(judge => judge.judgeId !== judgeData.judgeId));
+  };
+  
+  const rejectResubmissionRequest = (judgeData) => {
+    socket.emit('rejectResubmissionRequest', {
+      groupId: judgeData.groupId,
+      socketId: judgeData.socketId
+    });
+    setResubmissionRequests(prev => prev.filter(judge => judge.judgeId !== judgeData.judgeId));
   };
 
   return (
@@ -195,7 +208,12 @@ export const NotificationProvider = ({ children }) => {
       headOfGroup,
       setHeadOfGroup,
       showResubmissionPopup,
-      setShowResubmissionPopup
+      setShowResubmissionPopup,
+      approveResubmissionRequest,
+      rejectResubmissionRequest,
+      resubmissionRequests,
+      resubmissionApproved,
+      setResubmissionApproved
     }}>
       {children}
     </NotificationContext.Provider>

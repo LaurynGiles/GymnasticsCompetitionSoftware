@@ -16,7 +16,9 @@ import { useNotifications } from "../utils/connection.jsx";
 import { submitDifficulty, submitExecution } from "../utils/api.js";
 
 const SubmissionHeadJudges = () => {
-  const { startScore, penalty, receivedDeductions, groupId, currApparatus, judgeInfo, joinedJudges, nextGymnast, socket, setDeductionTotal, setStartScore, setPenalty, setFinalScore, setReceivedDeductions } = useNotifications();
+  const { startScore, penalty, receivedDeductions, groupId, currApparatus, judgeInfo, joinedJudges, nextGymnast, 
+    socket, setDeductionTotal, setStartScore, setPenalty, setFinalScore, setReceivedDeductions, resubmissionRequests, 
+    approveResubmissionRequest, rejectResubmissionRequest, } = useNotifications();
   const [averageDeduction, setAverageDeduction] = useState(0.0);
   const [visibleAnalysis, setVisibleAnalysis] = useState({});
   const [rotateArrow, setRotateArrow] = useState({});
@@ -90,6 +92,11 @@ const SubmissionHeadJudges = () => {
     setStartScore(null);
     setReceivedDeductions([]);
 
+    localStorage.setItem("values", []);
+    localStorage.setItem("total", 0.0);
+    localStorage.setItem("startScore", 0.0);
+    localStorage.setItem("penalty", 0.0);
+
     setShowSubmitPopup(true);
     setNavigateOnClose(true);
   };
@@ -154,7 +161,15 @@ const SubmissionHeadJudges = () => {
                   <SmallBlueButton title="Send" />
                 </div>
               </div>
-              <ResubmitRequest name={"Lauryn Giles"}/>
+              {/* <ResubmitRequest name={"Lauryn Giles"}/> */}
+              {resubmissionRequests.map((request, index) => (
+                <ResubmitRequest
+                  key={index}
+                  name={`${request.judge_fname} ${request.judge_lname}`}
+                  onApprove={() => approveResubmissionRequest(request)}
+                  onReject={() => rejectResubmissionRequest(request)}
+                />
+              ))}
             </div>
           </div>
           

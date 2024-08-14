@@ -204,29 +204,29 @@ io.on('connection', (socket) => {
 
   socket.on('headRequestResubmission', ({ groupId, apparatus, judgeId, socketId }) => {
     if (socketId) {
-      io.to(socketId).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge had requested that you resubmit your score.`);
+      io.to(socketId).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge has requested that you resubmit your score.`);
     } else {
-      io.to(`group_${groupId}`).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge had requested that all judges resubmit their scores.`);
+      io.to(`group_${groupId}`).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge has requested that all judges resubmit their scores.`);
     }
   });
 
   socket.on('judgeRequestResubmission', ({ groupId, judgeId, judge_fname, judge_lname }) => {
     const socketId = headJudges[groupId]
+    console.log(`Sending resubmission request to head judge ${socketId}`);
 
     io.to(socketId).emit('judgeResubmission', {groupId, judgeId, judge_fname, judge_lname, socketId: socket.id});
   });
 
-  socket.on('approveResubmissionRequest', ({ groupId, judgeId, socketId }) => {
+  socket.on('approveResubmissionRequest', ({ groupId, socketId }) => {
     if (socketId) {
-      io.to(socketId).emit('resubmissionApproved', { groupId });
-      console.log(`Resubmission request approved for judge ${judgeId} in group ${groupId}`);
+      io.to(socketId).emit('resubmissionApproved', 'Your resubmission request was approved by the head judge.');
+      console.log(`Resubmission request approved for judge ${socketId}`);
     }
   });
   
-  // Server-side rejection of a resubmission request
-  socket.on('rejectResubmissionRequest', ({ groupId, judgeId, socketId }) => {
+  socket.on('rejectResubmissionRequest', ({ groupId, socketId }) => {
     if (socketId) {
-      io.to(socketId).emit('resubmissionRejected', { groupId });
+      io.to(socketId).emit('resubmissionRejected', 'Your resubmission request was rejected by the head judge.');
       console.log(`Resubmission request rejected for judge ${judgeId} in group ${groupId}`);
     }
   });

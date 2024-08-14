@@ -9,27 +9,36 @@ import Popup from "../components/Popup.jsx";
 
 const ScoreCardJudges = () => {
 
-  const { deductionTotal, startScore, penalty, finalScore, nextGymnast, navigateToCalculations, setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup } = useNotifications();
+  const { socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, nextGymnast, navigateToCalculations,
+     setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup, resubmissionApproved, setResubmissionApproved } = useNotifications();
   const navigate = useNavigate(); 
+  const [showFinalScorePopup, setShowFinalScorePopup] = useState(false);
 
   useEffect(() => {
-    if (finalScore) {
-      setMessage(`Final score ${finalScore} for gymnast ${nextGymnast.first_name} ${nextGymnast.last_name} submitted.`)
-      setShowStatus(true);
+    if (finalScore !== null) {
+      setShowFinalScorePopup(true);
     }
   }, [finalScore]);
 
   const handleButtonClick = () => {
-    // Resubmission
+    socket.emit("judgeRequestResubmission", {groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname })
+    console.log("Sending resubmit request to server");
   };
 
   const closeNavPop = () => {
     setNavigateToCalculations(false);
+    localStorage.setItem("values", []);
+    localStorage.setItem("total", 0.0);
     navigate("/calculationsjudges");
   };
 
   const closeResubmitPop = () => {
     setShowResubmissionPopup(false);
+    navigate("/calculationsjudges");
+  };
+
+  const closeApprovedPop = () => {
+    setResubmissionApproved(false);
     navigate("/calculationsjudges");
   };
 
@@ -42,13 +51,18 @@ const ScoreCardJudges = () => {
         <div className="flex flex-col w-full h-full items-center gap-[30px] overflow-y-auto pt-[75px] relative">
           <InfoBlock />
           <ScoreCard deductionTotal={deductionTotal} startScore={startScore} penalty={penalty}/>
-          {finalScore && (
-            <Popup message={`Final score ${finalScore} for gymnast ${nextGymnast.first_name} ${nextGymnast.last_name} submitted.`} onClose={() => {}} />
+          {showFinalScorePopup && (
+            <Popup message={`Final score ${finalScore} for gymnast ${nextGymnast.first_name} ${nextGymnast.last_name} submitted.`} onClose={() => {setShowFinalScorePopup(false)}} />
           )}
           {navigateToCalculations && (
             <Popup message={`The next gymnast selected to compete is ${nextGymnast.first_name} ${nextGymnast.last_name} (${nextGymnast.gymnast_id})`} onClose={closeNavPop} />
           )}
-          {showResubmissionPopup && <Popup message="A resubmission request has been received." onClose={closeResubmitPop} />}
+          {showResubmissionPopup &&  (
+            <Popup message="The head judge is requesting a resubmission of your deductions." onClose={closeResubmitPop} />
+          )}
+          {resubmissionApproved &&  (
+            <Popup message="The head judge had approved your score resubmission." onClose={closeApprovedPop} />
+          )}
           <ResubmitButton title="Request resubmission" handleButtonClick={handleButtonClick}/>
         </div>
       </div>
