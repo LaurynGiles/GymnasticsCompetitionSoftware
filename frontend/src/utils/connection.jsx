@@ -124,6 +124,7 @@ export const NotificationProvider = ({ children }) => {
 
     socketConnection.on("resubmissionRejected", (message) => {
       addNotification({ type: "reject", message, sender: "system", time: new Date().toLocaleTimeString() });
+      localStorage.setItem("resubmitButtonClicked", false)
       setResubmissionApproved(false);
     });
 

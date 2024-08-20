@@ -29,6 +29,7 @@ const ScoreCardJudges = () => {
     setNavigateToCalculations(false);
     localStorage.setItem("values", []);
     localStorage.setItem("total", 0.0);
+    localStorage.setItem("resubmitButtonClicked", false)
     navigate("/calculationsjudges");
   };
 
@@ -38,6 +39,7 @@ const ScoreCardJudges = () => {
   };
 
   const closeApprovedPop = () => {
+    localStorage.setItem("resubmitButtonClicked", false)
     setResubmissionApproved(false);
     navigate("/calculationsjudges");
   };

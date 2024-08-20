@@ -114,18 +114,18 @@ const HomeJudges = () => {
 
   return (
     <div>
-      <div className="bg-bright-white w-full h-full">
-        <div className="fixed top-0 w-[400px] z-10">
+      <div className="bg-bright-white w-full min-h-screen">
+        <div className="w-full fixed top-0 left-0 z-10 bg-bright-white">
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/homejudges"}/>
         </div>
-        <div className="inline-flex flex-col h-full w-full items-center overflow-y-auto pt-[75px] pb-[50px] gap-[40px] relative">
+        <div className="flex flex-col w-full items-center overflow-y-auto pt-20 pb-12 gap-10">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
-          <div className="flex flex-col w-[400px] items-center gap-[30px] px-[31px] py-0 relative flex-[0_0_auto]">
-            <div className="inline-flex flex-col items-center justify-center w-full gap-[15px] px-[190px] py-[20px] relative flex-[0_0_auto] bg-anti-flash-white">
+          <div className="flex flex-col w-full items-center px-8 gap-8">
+          <div className="flex flex-col md:flex-row items-center md:justify-center w-full md:w-3/5 bg-anti-flash-white py-5 px-4 gap-4 md:gap-24 rounded-[10px]">
               <SelectBox noSelect={noSelect} title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
               <SelectBox noSelect={noSelect} title="Apparatus" option={apparatus} setOption={setApparatus} setOptionId={setApparatusId} allOptions={apparatusOptions} allOptionsMap={apparatusMap} optionType={"Apparatus"}/>
             </div>
-            <div className="inline-flex flex-col items-center justify-center w-full gap-[15px] relative flex-[0_0_auto]">
+            <div className="flex flex-col items-center w-full gap-4">
               {!judgeInfo.head_judge ? (
                 <Header text="Join a judging table"/>
               ) : (

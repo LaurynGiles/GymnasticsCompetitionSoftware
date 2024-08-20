@@ -52,22 +52,20 @@ const LoginJudges = () => {
   };
 
   return (
-    <div className="bg-glaucous flex justify-center w-full h-screen">
-      <div className="bg-glaucous overflow-hidden w-full h-full">
-        <div className="relative w-[446px] h-[769px] top-[-162px] left-[-23px]">
-          <SmallLogo />
-          <div className="inline-flex flex-col items-center gap-[30px] px-[50px] py-[70px] absolute top-[500px] left-[34px]">
-            <div className="flex flex-col items-center w-[284px]">
+    <div className="bg-glaucous flex flex-col items-center w-full min-h-screen">
+      <div className="w-full flex justify-center pt-4 pb-8"> {/* Top padding for logo */}
+        <SmallLogo />
+      </div>
+      <div className="flex-grow flex items-center justify-center w-full">
+          <div className="flex flex-col items-center bg-glaucous w-full max-w-md px-4 gap-10">
+            <div className="flex flex-col items-center gap-8">
               {errorMessage && (
-                <div className="text-red-500 mb-2">{errorMessage}</div>
+                <div className="text-red-500 text-center w-full">{errorMessage}</div>
               )}
               <InputBox number={number} setNumber={setNumber} hasError={!!errorMessage} />
             </div>
-            <div onClick={handleLogin}>
-              <BlueButton title="Login" />
-            </div>
+              <BlueButton title="Login" onClick={handleLogin}/>
           </div>
-        </div>
       </div>
     </div>
   );
