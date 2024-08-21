@@ -33,11 +33,11 @@ const SelectBox = ({ noSelect, title, option , setOption, setOptionId, allOption
 };
 
   return (
-    <div className="inline-flex flex-col items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-      <div className="relative w-[200px] h-[25px] mt-[3.00px] font-montserrat font-medium text-prussian-blue text-[20px] text-center tracking-[0] leading-[normal]">
+    <div className="flex flex-col items-center justify-center gap-2 relative">
+      <div className="w-full md:w-auto text-center font-montserrat font-medium text-prussian-blue text-lg md:text-xl px-4">
         {title}
       </div>
-      <div className="flex w-[255px] items-center justify-center gap-[20px] px-[15px] py-[8px] relative flex-[0_0_auto] bg-bright-white rounded-[20px] overflow-hidden border-2 border-solid border-[#6279b8]">
+      <div className="flex w-[90%] items-center justify-center gap-2 px-3 py-2 bg-bright-white rounded-3xl border-2 border-glaucous">
         <div className="relative w-[185px] mt-[3.00px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
           {option != "" && renderOption(option)}
         </div>

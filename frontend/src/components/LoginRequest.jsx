@@ -3,18 +3,17 @@ import TickIcon from "../components/TickIcon";
 import XIcon from "../components/XIcon";
 
 const LoginRequest = ({ name, onApprove, onReject }) => {
-
   return (
-    <div className="flex items-center justify-center w-[345px]">
-      <div className="flex items-center gap-[70px]">
-        <div className="font-montserrat font-normal text-prussian-blue w-[200px] text-[18px] text-center">
+    <div className="flex items-center justify-center w-full pl-14">
+      <div className="flex items-center w-full">
+        <div className="font-montserrat font-normal text-prussian-blue text-center text-lg md:text-xl truncate w-full">
           {name}
         </div>
-        <div className="flex items-center gap-[15px]">
-          <div className="group" onClick={onApprove}>
+        <div className="flex items-center gap-3 md:gap-4 lg:gap-5">
+          <div className="group cursor-pointer" onClick={onApprove}>
             <TickIcon />
           </div>
-          <div className="group" onClick={onReject}>
+          <div className="group cursor-pointer" onClick={onReject}>
             <XIcon />
           </div>
         </div>

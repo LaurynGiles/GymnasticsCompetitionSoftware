@@ -36,7 +36,7 @@ const LobbyHeadJudges = () => {
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           <div className="flex flex-col items-center w-full px-4 md:px-8 gap-10">
             <Header text={"Accept join requests"}/>
-              <div className="flex flex-col items-center w-full max-w-md px-4 py-14 md:py-20 bg-anti-flash-white rounded-lg">
+              <div className="flex flex-col items-center w-[95%] md:w-[70%] lg:w-[45%] pl-4 pr-4 md:pr-10 pt-4 pb-14  md:pb-20 bg-anti-flash-white rounded-lg">
                 {joinRequests.map((request, index) => (
                   <LoginRequest 
                     key={index} 
@@ -47,7 +47,7 @@ const LobbyHeadJudges = () => {
                 ))}
               </div>
             <Header text={"Judges at the table"}/>
-              <div className="flex flex-col items-center w-full max-w-md px-4 py-14 md:py-20 bg-anti-flash-white rounded-lg">
+              <div className="flex flex-col items-center w-[95%] md:w-[70%] lg:w-[45%] pl-4 pr-4 md:pr-10 pt-4 pb-14 md:pb-20 bg-anti-flash-white rounded-lg">
                 <RemoveRequest name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`}/>
                 {joinedJudges.map((judge, index) => (
                   <RemoveRequest 
