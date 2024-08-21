@@ -9,7 +9,7 @@ const SettingsIcon = ({onClick}) => {
         viewBox="0 0 24 24" 
         strokeWidth="1.5" 
         stroke="currentColor" 
-        className="w-8 h-8 text-prussian-blue cursor-pointer">
+        className="w-8 h-8 md:w-10 md:h-10 text-prussian-blue cursor-pointer">
             
         <path 
             strokeLinecap="round" 

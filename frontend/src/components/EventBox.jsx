@@ -102,29 +102,27 @@
     };
 
     return (
-      <div className="relative inline-flex flex-col items-center gap-[0px] py-[0px]">
-        <div className="relative inline-flex flex-col items-center gap-[5px] px-[15px] py-[0px] bg-anti-flash-white rounded-[10px] overflow-hidden">
-          <div className="flex w-full items-center gap-[20px] px-[5px] py-[10px] relative flex-[0_0_auto]">
-            <div className="relative inline-flex items-center h-[30px] bg-periwinkle rounded-[10px] px-[18px]">
-              <div className="font-montserrat font-medium text-prussian-blue text-[18px] text-center">
-                {apparatus}
-              </div>
+      <div className="flex flex-col items-center gap-0 py-0 md:w-[50%] w-[90%]">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-2 md:gap-14 px-4 py-4 md:py-8 bg-anti-flash-white rounded-lg overflow-hidden w-full">
+          <div className="flex items-center justify-center h-10 md:h-20 bg-periwinkle rounded-lg md:rounded-xl px-4 md:px-10 w-[30%] md:w-[30%]">
+            <div className="font-montserrat font-medium text-prussian-blue text-lg md:text-xl text-center">
+              {apparatus}
             </div>
-          </div>  
-          <div className="flex-col w-[337px] items-center pl-[15px] pr-[21px] py-[0px] relative flex-[0_0_auto]">
-            <div className="relative w-[297px] mt-[4.00px] font-montserrat font-medium text-prussian-blue text-base tracking-[0] leading-[normal]">
+          </div>
+          <div className="flex flex-col w-full px-4 py-1 ">
+            <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl">
               Levels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{levels.join(", ")}
             </div>
-            <div className="relative w-[297px] mt-[4.00px] font-montserrat font-medium text-prussian-blue text-base tracking-[0] leading-[normal]">
+            <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl">
               Age groups:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ages.join(" yrs, ")} yrs
             </div>
             {statusMessage && 
-            <div className="relative w-[297px] mt-[20.00px] font-montserrat font-medium text-dark-prussian-blue text-base tracking-[0] leading-[normal] text-center">
+            <div className="text-dark-prussian-blue font-montserrat font-medium text-base text-center mt-2 md:text-xl">
               {statusMessage}
             </div>
             }
           </div>
-          <div className="flex w-[337px] items-center gap-[220px] pl-[15px] pr-[13px] py-[15px] relative flex-[0_0_auto]">
+          <div className="flex items-center justify-between md:justify-end md:gap-14 md:w-[40%] px-4 py-3">
               <div onClick={!isButtonDisabled ? handleJudgeHome : null}>
                 {!judgeInfo.head_judge ? (
                   <TinyBlueButton title={"Join"} group_id={group_id} buttonClass={buttonClass}/>
@@ -137,11 +135,9 @@
             </div>
           </div>   
         </div>
-         {showPopup && (
-        <div className="flex justify-center w-full">
+        {showPopup && (
           <GymnastList allOptions={gymnasts} />
-        </div>
-      )}
+          )}
       </div>
     );
   };

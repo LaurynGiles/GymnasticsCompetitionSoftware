@@ -113,25 +113,28 @@ const HomeJudges = () => {
   }, [comp, apparatus, apparatusId]);
 
   return (
-    <div>
       <div className="bg-bright-white w-full min-h-screen">
         <div className="w-full fixed top-0 left-0 z-10 bg-bright-white">
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/homejudges"}/>
         </div>
-        <div className="flex flex-col w-full items-center overflow-y-auto pt-20 pb-12 gap-10">
+        <div className="flex flex-col items-center overflow-y-auto w-full pt-20 pb-12 gap-10">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
-          <div className="flex flex-col w-full items-center px-8 gap-8">
-          <div className="flex flex-col md:flex-row items-center md:justify-center w-full md:w-3/5 bg-anti-flash-white py-5 px-4 gap-4 md:gap-24 rounded-[10px]">
-              <SelectBox noSelect={noSelect} title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
-              <SelectBox noSelect={noSelect} title="Apparatus" option={apparatus} setOption={setApparatus} setOptionId={setApparatusId} allOptions={apparatusOptions} allOptionsMap={apparatusMap} optionType={"Apparatus"}/>
-            </div>
-            <div className="flex flex-col items-center w-full gap-4">
-              {!judgeInfo.head_judge ? (
-                <Header text="Join a judging table"/>
-              ) : (
-                <Header text="Start a judging table"/>
-              )}
-              {eventBoxes.map(eventBox => (
+          
+          <div className="flex flex-col md:flex-row items-center md:justify-center w-[90%] md:w-[60%] bg-anti-flash-white py-6 px-4 gap-4 md:gap-[15%] rounded-[10px]">
+            <SelectBox noSelect={noSelect} title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
+            <SelectBox noSelect={noSelect} title="Apparatus" option={apparatus} setOption={setApparatus} setOptionId={setApparatusId} allOptions={apparatusOptions} allOptionsMap={apparatusMap} optionType={"Apparatus"}/>
+          </div>
+          
+          <div className="w-full md:px-[20%] px-4 text-left">
+            {!judgeInfo.head_judge ? (
+              <Header text="Join a judging table"/>
+            ) : (
+              <Header text="Start a judging table"/>
+            )}
+          </div>
+  
+          <div className="flex flex-col items-center w-full gap-4 px-4 md:px-8">
+            {eventBoxes.map(eventBox => (
               <EventBox
                 key={eventBox.eventId}
                 group_id={eventBox.eventId}
@@ -145,12 +148,10 @@ const HomeJudges = () => {
                 setNoSelect={setNoSelect}
               />
             ))}
-            </div>
           </div>
         </div>
         {showError && <Popup message={error} onClose={() => setShowError(false)} />}
       </div>
-    </div>
   );
 };
 

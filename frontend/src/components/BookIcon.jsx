@@ -7,7 +7,7 @@ const BookIcon = () => {
         fill="none" viewBox="0 0 24 24" 
         strokeWidth="1.5" 
         stroke="currentColor" 
-        className="w-8 h-8 text-prussian-blue">
+        className="w-8 h-8 md:w-10 md:h-10 text-prussian-blue">
         <path 
             strokeLinecap="round" 
             strokeLinejoin="round" 

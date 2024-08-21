@@ -9,7 +9,7 @@ import BookIcon from "./BookIcon"
 const NavigationBarDefault = ({ showBackIcon, showBookIcon, prevPage, currPage }) => {
 
   return (
-    <div className="flex items-center w-full justify-center px-[13px] py-[12px] relative bg-glaucous">
+    <div className="flex items-center w-full justify-between md:px-20 px-4 py-[12px] relative bg-glaucous">
       <LeftHeader showBackIcon={showBackIcon} showBookIcon={showBookIcon} prevPage={prevPage}/>
       <RightHeader currPage={currPage}/>
     </div>
