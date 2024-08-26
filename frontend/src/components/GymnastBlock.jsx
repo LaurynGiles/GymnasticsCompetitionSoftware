@@ -2,39 +2,49 @@ import React from "react";
 import RadioSelectIcon from "./RadioSelectIcon";
 import FilledRadioSelectIcon from "./FilledRadioSelectIcon";
 
-const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, index, competed }) => {
+const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, competed }) => {
+
+  const details = [
+    `Level ${level}`,
+    `${age} yrs`,
+    club
+  ];
+
   return (
-    <div className="inline-flex items-center gap-[5px] px-[20px] py-[5px] relative bg-anti-flash-white">
-      <div className="flex w-[64px] items-center justify-center gap-[10px] px-[9px] py-[20px] relative">
-        <div className="relative w-[50px] h-[50px] ml-[-2.00px] mr-[-2.00px] bg-glaucous rounded-[25px]">
-          <div className="absolute mt-[5.00px] w-[34px] h-[32px] top-[8px] left-[8px] font-montserrat font-medium text-anti-flash-white text-[20px] text-center tracking-[0] leading-[normal]">
-            {number}
-          </div>
+    <div className="w-[90%] md:w-[60%] lg:w-[40%] h-auto md:h-[120px] lg:h-[120px] flex flex-row items-center md:justify-center gap-4 md:gap-12 lg:gap-24 p-4 bg-anti-flash-white rounded-lg shadow-md"
+    onClick={() => onSelect(number)}
+    >
+      {/* Circle with number */}
+      <div className="flex items-center justify-center w-16 h-16 bg-glaucous rounded-full text-anti-flash-white text-lg font-montserrat font-medium">
+        {number}
+      </div>
+
+      <div className="flex-1 flex flex-col gap-2 md:gap-4">
+        {/* Name at the top for medium and above */}
+        <div className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-montserrat font-medium">
+          {name}
+        </div>
+
+        {/* Dynamically render details */}
+        <div className="flex flex-col md:flex-row md:gap-4 lg:gap-16 md:items-center">
+          {details.map((detail, index) => (
+            <div
+              key={index}
+              className="text-prussian-blue text-sm md:text-md lg:text-lg font-montserrat font-medium"
+            >
+              {detail}
+            </div>
+          ))}
         </div>
       </div>
-      <div className="inline-flex flex-col items-start justify-center gap-[5px] pt-[12px] pb-[13px] px-0 relative flex-[0_0_auto]">
-        <div className="flex w-[202px] items-center gap-[10px] relative flex-[0_0_auto]">
-          <div className="relative w-[202px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
-            {name}
-          </div>
+
+      {!competed && (
+        <div
+          className="cursor-pointer flex items-center justify-center"
+        >
+          {isSelected ? <FilledRadioSelectIcon /> : <RadioSelectIcon />}
         </div>
-        <div className="flex w-[202px] items-center gap-[10px] relative flex-[0_0_auto]">
-          <div className="relative w-[202px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[14px] tracking-[0] leading-[normal]">
-            Level {level}&nbsp;&nbsp;{age} yrs
-          </div>
-        </div>
-        <div className="flex w-[202px] items-center gap-[10px] relative flex-[0_0_auto]">
-          <div className="relative w-[202px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[14px] tracking-[0] leading-[normal]">
-            {club}
-          </div>
-        </div>
-      </div>
-      {!competed &&
-      <div onClick={() => onSelect(number)} className="cursor-pointer">
-        {isSelected ? <FilledRadioSelectIcon /> : <RadioSelectIcon />}
-        </div>
-      }
-      
+      )}
     </div>
   );
 };

@@ -1,14 +1,16 @@
 import React from "react";
 
-const BlueButton = ({title, onClick}) => {
-    return (
-      <button className="all-[unset] box-border bg-prussian-blue hover:bg-prussian-blue-dark cursor-pointer flex w-[120px] items-center justify-center gap-[px] px-[20px] py-[10px] relative rounded-[20px] shadow-[0px_4px_4px_#00000040]"
-              onClick={onClick} >
-        <div className="relative w-fit mt-[1.00px] font-montserrat font-medium text-bright-white text-[20px] text-center tracking-[0] leading-[normal]">
-          {title}
-        </div>
-      </button>
-    );
+const BlueButton = ({ title, onClick }) => {
+  return (
+    <button
+      className="all-[unset] box-border bg-prussian-blue hover:bg-prussian-blue-dark cursor-pointer flex items-center justify-center gap-2 px-4 py-4 md:px-8 md:py-3 lg:px-16 lg:py-4 rounded-full shadow-md text-white font-montserrat font-medium text-base md:text-lg lg:text-xl"
+      onClick={onClick}
+    >
+      <div className="relative text-center">
+        {title}
+      </div>
+    </button>
+  );
 };
 
 export default BlueButton;

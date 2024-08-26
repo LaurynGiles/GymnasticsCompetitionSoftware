@@ -17,6 +17,8 @@ const GymnastSelectHeadJudges = () => {
   const { groupId, sessionId, socket } = useNotifications();
   const navigate = useNavigate();
 
+  const completedGymnasts = gymnastInfo.filter(gymnast => gymnast.completed);
+
   useEffect(() => {
     const fetchGymnasts = async () => {
       try {
@@ -52,14 +54,14 @@ const GymnastSelectHeadJudges = () => {
   };
 
   return (
-    <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
-      <div className="bg-bright-white w-full h-full">
+    <div className="bg-[#feffff] flex flex-col w-full min-h-screen">
+      <div className="bg-bright-white flex-1 flex flex-col">
         <div className="fixed top-0 w-full z-10">
           <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/gymnastselect"}/>
         </div>
-        <div className="inline-flex flex-col w-full h-full items-center overflow-y-auto pt-[75px] pb-[60px] gap-[40px] relative">
+        <div className="flex-1 flex flex-col items-center pt-[75px] pb-[60px] px-4 gap-[20px] md:gap-[30px] lg:gap-[40px] overflow-y-auto">
           
-          <div className="inline-flex flex-col items-center gap-[15px] px-0 py-[6px] relative flex-[0_0_auto]">
+          <div className="flex flex-col items-center gap-[15px] w-full">
             <BlockHeader text={"District MAG Trials Levels 1-3"}/>
             <Header text={"Select the next gymnast"}/>
             {gymnastInfo.filter(gymnast => !gymnast.completed).map((gymnast, index) => (
@@ -75,24 +77,30 @@ const GymnastSelectHeadJudges = () => {
                   competed={false}
                 />
               ))}
-            <Header text={"Already competed"}/>
-            {gymnastInfo.filter(gymnast => gymnast.completed).map((gymnast, index) => (
-              <GymnastBlock
-                key={gymnast.gymnast_id}
-                number={gymnast.gymnast_id}
-                name={`${gymnast.first_name} ${gymnast.last_name}`}
-                level={gymnast.level}
-                age={gymnast.age}
-                club={gymnast.club}
-                isSelected={selectedGymnast === gymnast.gymnast_id}
-                onSelect={handleSelectGymnast}
-                competed={true}
-              />
-            ))}
-            <div onClick={handleConfirmClick}>
-              <BlueButton title="Confirm" />
-            </div>
+            {completedGymnasts.length > 0 && (
+              <>
+                <Header text={"Already competed"} />
+                {completedGymnasts.map((gymnast) => (
+                  <GymnastBlock
+                    key={gymnast.gymnast_id}
+                    number={gymnast.gymnast_id}
+                    name={`${gymnast.first_name} ${gymnast.last_name}`}
+                    level={gymnast.level}
+                    age={gymnast.age}
+                    club={gymnast.club}
+                    isSelected={selectedGymnast === gymnast.gymnast_id}
+                    onSelect={handleSelectGymnast}
+                    competed={true}
+                  />
+                ))}
+              </>
+            )}
           </div>
+            <div className="w-full flex justify-center">
+                <div onClick={handleConfirmClick}>
+                  <BlueButton title="Confirm" />
+                </div>
+              </div>
         </div>
       </div>
       {showPopup && <Popup message={"No gymnast selected"} onClose={() => setShowPopup(false)} />}

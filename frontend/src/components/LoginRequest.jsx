@@ -4,7 +4,7 @@ import XIcon from "../components/XIcon";
 
 const LoginRequest = ({ name, onApprove, onReject }) => {
   return (
-    <div className="flex items-center justify-center w-full pl-14">
+    <div className="flex items-center justify-center w-full pl-14 border-b border-gray-300 pb-2 mb-2">
       <div className="flex items-center w-full">
         <div className="font-montserrat font-normal text-prussian-blue text-center text-lg md:text-xl truncate w-full">
           {name}
