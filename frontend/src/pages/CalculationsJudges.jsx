@@ -79,38 +79,42 @@ const CalculationsJudges = () => {
     console.log(layout);
     if (layout === 1) {
       return (
-        <div className="inline-flex items-center justify-center gap-[15px] relative flex-[0_0_auto]">
-            <DeductionButtonsGroup addValue={addValue}/>
-            <DeductionBlock values={values} removeValue={removeValue}/>
+        <div className="w-full h-full flex flex-row items-center justify-center gap-4">
+          <DeductionButtonsGroup addValue={addValue} />
+          <DeductionBlock values={values} removeValue={removeValue} />
         </div>
       );
     } else if (layout === 2) {
       return (
-        <div className="inline-flex items-center justify-center gap-[15px] relative flex-[0_0_auto]">
-          <DeductionBlock values={values} removeValue={removeValue}/>
-          <DeductionButtonsGroup addValue={addValue}/>
+        <div className="w-full h-full flex flex-row items-center justify-center gap-4">
+          <DeductionBlock values={values} removeValue={removeValue} />
+          <DeductionButtonsGroup addValue={addValue} />
         </div>
       );
     } else if (layout === 0) {
       return (
-        <div className="inline-flex flex-col items-center justify-center gap-[15px] relative flex-[0_0_auto]">
-          <DeductionButtonsSquare addValue={addValue}/>
-          <DeductionBlockSquare values={values} removeValue={removeValue}/>
+        <div className="w-full h-full flex flex-col items-center justify-center gap-4">
+          <DeductionButtonsSquare addValue={addValue} />
+          <DeductionBlockSquare values={values} removeValue={removeValue} />
         </div>
       );
     }
   };
 
   return (
-    <div className="bg-[#feffff] flex justify-center w-full h-screen">
-      <div className="bg-bright-white overflow-hidden w-full h-full">
-        <div className="fixed top-0 w-[400px] z-10">
+    <div className="bg-white flex flex-col md:flex-row w-full h-screen">
+      <div className="bg-bright-white flex-1 overflow-hidden w-full h-full">
+        <div className="fixed top-0 left-0 w-full z-10 bg-white shadow-md">
           <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/calculationsjudges"}/>
         </div>
-        <div className="flex flex-col w-full h-full items-center gap-[40px] overflow-y-auto pt-[75px] relative">
-        <InfoBlock />
-          {renderLayout()}
-          <TotalDeductionsBlock total={total} values={values}/>
+        <div className="w-full h-full flex-1 flex flex-col items-center justify-start pt-[75px] md:pt-[90px] md:pb-[20px] gap-4 md:gap-10 relative px-4 md:px-8 lg:px-16 overflow-y-auto">
+          <div className="w-full flex flex-col items-center gap-8 md:gap-12">
+            <InfoBlock />
+          </div>
+          <div className="w-full h-[80%] flex flex-col items-center justify-center gap-6 md:gap-16">
+            {renderLayout()}
+            <TotalDeductionsBlock total={total} values={values} />
+          </div>
         </div>
       </div>
     </div>

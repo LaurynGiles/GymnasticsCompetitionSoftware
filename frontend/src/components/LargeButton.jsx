@@ -2,10 +2,10 @@ import React from "react";
 
 const LargeButton = ({ value }) => {
   return (
-    <div className="flex w-[128px] h-[89px] items-center justify-center cursor-pointer gap-[10px] px-[30px] py-[25px] relative bg-notification-box rounded-[20px] shadow-[0px_4px_4px_#00000040]">
-        <div className="relative w-[68px] h-[39px] mt-[0.00px] font-montserrat font-semibold text-prussian-blue text-[35px] text-center tracking-[0] leading-[normal] whitespace-nowrap">
-            {value}
-        </div>
+    <div className="flex w-full h-full items-center justify-center cursor-pointer gap-2 py-2 bg-notification-box rounded-3xl shadow-md">
+      <div className="text-prussian-blue font-montserrat font-semibold text-3xl md:text-4xl lg:text-4xl text-center">
+        {value}
+      </div>
     </div>
   );
 }

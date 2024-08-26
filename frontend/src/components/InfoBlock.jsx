@@ -20,25 +20,30 @@ const InfoBlock = () => {
         }
     }, [nextGymnast, currApparatus]);
 
-  return (
-<div className="flex flex-col w-[365.35px] items-center gap-[3px] px-[3px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle rounded-[10px]">
-    <div className="flex w-[328px] items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-        <p className="relative w-[319px] mt-[0.00px] font-montserrat font-semibold text-prussian-blue text-[20px] text-center tracking-[0] leading-[normal]">
-            {apparatus} {level}
-        </p>
-    </div>
-    <div className="flex w-[328px] items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-        <div className="relative w-[319px] mt-[0.00px] font-montserrat font-medium text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]">
-            {age}
+    return (
+        <div className="flex flex-col items-center gap-2 px-4 py-4 bg-light-periwinkle rounded-xl w-[90%] md:w-[80%] lg:w-[50%]">
+          {/* Apparatus and Level */}
+          <div className="flex w-full items-center justify-center">
+            <p className="font-montserrat font-semibold text-prussian-blue text-lg md:text-xl lg:text-2xl text-center">
+              {apparatus} {level}
+            </p>
+          </div>
+      
+          {/* Age */}
+          <div className="flex w-full items-center justify-center">
+            <div className="font-montserrat font-medium text-prussian-blue text-base md:text-lg lg:text-xl text-center">
+              {age}
+            </div>
+          </div>
+      
+          {/* Number and Name */}
+          <div className="flex w-full items-center justify-center">
+            <div className="font-montserrat font-medium text-prussian-blue text-base md:text-lg lg:text-xl text-center">
+              {number} {name}
+            </div>
+          </div>
         </div>
-    </div>
-    <div className="flex w-[328px] items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-        <div className="relative w-[319px] mt-[0.00px] font-montserrat font-medium text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]">
-        {number} {name}
-        </div>
-    </div>
-</div>
-  );
+      );
 };
 
 export default InfoBlock;

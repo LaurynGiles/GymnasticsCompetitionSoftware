@@ -15,7 +15,7 @@ const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, co
     onClick={() => onSelect(number)}
     >
       {/* Circle with number */}
-      <div className="flex items-center justify-center w-16 h-16 bg-glaucous rounded-full text-anti-flash-white text-lg font-montserrat font-medium">
+      <div className="flex items-center justify-center w-16 h-16 lg:h-20 lg:w-20 bg-glaucous rounded-full text-anti-flash-white text-lg md:text-xl lg:text-2xl font-montserrat font-medium">
         {number}
       </div>
 

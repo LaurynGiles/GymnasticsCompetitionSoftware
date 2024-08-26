@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
-import BlueButton from "../components/BlueButton";
+import SmallBlueButton from "../components/SmallBlueButton";
 import InfoBlock from "../components/InfoBlock";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import ScoreBlock from "../components/ScoreBlock";
@@ -55,40 +55,46 @@ const StartingScoreHeadJudges = () => {
   };
 
   return (
-    <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
+    <div className="bg-[#feffff] flex flex-col lg:flex-row justify-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
-        <div className="fixed top-0 w-[400px] z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/startingscore"}/>
+        <div className="fixed top-0 left-0 w-full z-10">
+          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/startingscore"} />
         </div>
-        <div className="inline-flex flex-col h-[800px] items-center overflow-y-auto pt-[75px] gap-[30px] relative">
-          <InfoBlock />
+        
+        <div className="pt-[75px] lg:pt-[100px] px-4 lg:px-8 flex flex-col items-center gap-0 md:gap-6 overflow-y-auto h-full">
           
-          <div className="inline-flex flex-col w-full items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-            <div className="flex w-[400px] items-center justify-center gap-[10px] px-[40px] py-0 relative flex-[0_0_auto]">
-              <Header text={"Deductions"}/>
-            </div>
-            <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
-              <ScoreBlock title="Your deductions" score = {parseFloat(deductionTotal).toFixed(3)}/>
+          {/* InfoBlock Section */}
+          <div className="w-full flex items-center justify-center mb-6">
+            <InfoBlock />
+          </div>
+          
+          {/* Deductions Section */}
+          <div className="w-full md:w-[80%] lg:w-[55%] flex flex-col items-center gap-6">
+            <Header text={"Deductions"} />
+            <div className="w-full bg-light-periwinkle flex flex-col items-center gap-4 px-4 py-6 rounded-lg">
+              <ScoreBlock title="Your deductions" score={parseFloat(deductionTotal).toFixed(3)} />
               <Link to="/calculationsjudges">
-                <BlueButton title="Resubmit" />
+                <SmallBlueButton title="Resubmit" />
               </Link>
             </div>
           </div>
-          <div className="inline-flex flex-col w-full items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-            <div className="flex w-[400px] items-center justify-center gap-[10px] px-[40px] py-0 relative flex-[0_0_auto]">
-              <Header text={"Starting score and penalties"}/>
-            </div>
-            <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
-              <EditableScoreBlock title="Starting score" score ={startScoreLocal} setScore={setStartScoreLocal}/>
-              <EditableScoreBlock title="Penalty deductions" score={penaltyLocal} setScore={setPenaltyLocal}/>
+          
+          {/* Starting Score and Penalties Section */}
+          <div className="w-full md:w-[80%] lg:w-[55%] flex flex-col items-center gap-6">
+            <Header text={"Starting score and penalties"} />
+            <div className="w-full bg-light-periwinkle flex flex-col items-center gap-4 px-4 py-6 rounded-lg">
+              <EditableScoreBlock title="Starting score" score={startScoreLocal} setScore={setStartScoreLocal} />
+              <EditableScoreBlock title="Penalty deductions" score={penaltyLocal} setScore={setPenaltyLocal} />
             </div>
           </div>
-          <div onClick={handleContinueClick}>
-            <StartButton title={"Continue"}/>
+          
+          {/* Centered StartButton */}
+          <div className="w-full flex items-center justify-center mt-6">
+            <StartButton title={"Continue"} onClick={handleContinueClick} />
           </div>
+          
         </div>
       </div>
-      {/* {showPopup && <Popup message={"Values have been updated"} onClose={() => setShowPopup(false)} />} */}
     </div>
   );
 };

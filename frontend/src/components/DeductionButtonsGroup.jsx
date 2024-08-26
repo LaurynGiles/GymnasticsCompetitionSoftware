@@ -8,7 +8,7 @@ const DeductionButtonsGroup = ({ addValue }) => {
   };
 
   return (
-    <div className="flex-col inline-flex items-center justify-center gap-[20px] relative flex-[0_0_auto]">
+    <div className="flex flex-col gap-4 md:gap-6 justify-center">
       <div onClick={() => handleButtonClick(0.100)}>
         <LargeButton value={0.1} />
       </div>
