@@ -8,22 +8,12 @@ const DeductionButtonsGroup = ({ addValue }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 md:gap-6 justify-center">
-      <div onClick={() => handleButtonClick(0.100)}>
-        <LargeButton value={0.1} />
-      </div>
-
-      <div onClick={() => handleButtonClick(0.300)}>
-        <LargeButton value={0.3} />
-      </div>
-
-      <div onClick={() => handleButtonClick(0.500)}>
-        <LargeButton value={0.5} />
-      </div>
-
-      <div onClick={() => handleButtonClick(1.000)}>
-        <LargeButton value={1} />
-      </div>
+    <div className="flex flex-col gap-2 w-[50%] md:w-[30%] lg:w-[15%] items-center">
+      {[0.1, 0.3, 0.5, 1.0].map((value) => (
+        <div key={value} className="w-[90%] h-[100px]" onClick={() => handleButtonClick(value)}>
+          <LargeButton value={value} />
+        </div>
+      ))}
     </div>
   );
 };

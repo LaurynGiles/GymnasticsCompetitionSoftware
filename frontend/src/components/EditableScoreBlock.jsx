@@ -13,24 +13,22 @@ const EditableScoreBlock = ({ title, score, setScore }) => {
     };
 
     return (
-      <div className="relative w-[331px] h-[47px] flex items-center">
-        <div className="w-[200px] flex items-center justify-end pr-[30px]">
-          <div className="font-montserrat font-semibold text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
-            {title}
+      <div className="flex flex-col items-center gap-2 w-[90%] md:w-[45%] px-4">
+          <div className="font-montserrat font-semibold text-prussian-blue text-lg md:text-xl text-center">
+              {title}
           </div>
-        </div>
-        <div className="w-[122px] h-[46px] bg-bright-white rounded-[10px] flex items-center justify-center">
-            <input
-            type="text"
-            value={score}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder="0.000"
-            className="w-full font-montserrat font-semibold text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]"
-            />
-        </div>
+          <div className="w-full bg-bright-white rounded-lg flex items-center justify-center">
+              <input
+                  type="text"
+                  value={score}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="0.000"
+                  className="w-full font-montserrat font-semibold text-prussian-blue text-lg md:text-2xl text-center p-2 md:p-4 rounded-lg"
+              />
+          </div>
       </div>
-    );
+  );
   };    
 
 export default EditableScoreBlock;

@@ -55,23 +55,23 @@ const StartingScoreHeadJudges = () => {
   };
 
   return (
-    <div className="bg-[#feffff] flex flex-col lg:flex-row justify-center w-full h-screen">
+    <div className="bg-bright-white flex flex-col justify-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
         <div className="fixed top-0 left-0 w-full z-10">
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/startingscore"} />
         </div>
         
-        <div className="pt-[75px] lg:pt-[100px] px-4 lg:px-8 flex flex-col items-center gap-0 md:gap-6 overflow-y-auto h-full">
+        <div className="pt-[75px] pb-[20px] lg:pb-[0px] lg:pt-[90px] px-4 lg:px-8 flex flex-col items-center gap-4 md:gap-6 overflow-y-auto h-full">
           
           {/* InfoBlock Section */}
-          <div className="w-full flex items-center justify-center mb-6">
+          <div className="w-full flex items-center justify-center">
             <InfoBlock />
           </div>
           
+          <Header text={"Deductions"} />
           {/* Deductions Section */}
-          <div className="w-full md:w-[80%] lg:w-[55%] flex flex-col items-center gap-6">
-            <Header text={"Deductions"} />
-            <div className="w-full bg-light-periwinkle flex flex-col items-center gap-4 px-4 py-6 rounded-lg">
+          <div className="w-full md:w-[80%] lg:w-[55%] flex flex-col items-center gap-2">
+            <div className="w-full bg-light-periwinkle flex flex-col items-center lg:gap-4 px-4 py-6 rounded-lg">
               <ScoreBlock title="Your deductions" score={parseFloat(deductionTotal).toFixed(3)} />
               <Link to="/calculationsjudges">
                 <SmallBlueButton title="Resubmit" />
@@ -79,17 +79,17 @@ const StartingScoreHeadJudges = () => {
             </div>
           </div>
           
+          <Header text={"Starting score and penalties"} />
           {/* Starting Score and Penalties Section */}
-          <div className="w-full md:w-[80%] lg:w-[55%] flex flex-col items-center gap-6">
-            <Header text={"Starting score and penalties"} />
-            <div className="w-full bg-light-periwinkle flex flex-col items-center gap-4 px-4 py-6 rounded-lg">
+          <div className="w-full md:w-[80%] lg:w-[55%] flex flex-col items-center">
+            <div className="w-full bg-light-periwinkle flex flex-col md:flex-row items-center md:justify-center gap-8 px-4 py-6 md:py-10 rounded-lg">
               <EditableScoreBlock title="Starting score" score={startScoreLocal} setScore={setStartScoreLocal} />
               <EditableScoreBlock title="Penalty deductions" score={penaltyLocal} setScore={setPenaltyLocal} />
             </div>
           </div>
           
           {/* Centered StartButton */}
-          <div className="w-full flex items-center justify-center mt-6">
+          <div className="w-full flex items-center justify-center lg:mt-4">
             <StartButton title={"Continue"} onClick={handleContinueClick} />
           </div>
           

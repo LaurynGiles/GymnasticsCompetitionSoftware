@@ -109,59 +109,56 @@ const SubmissionHeadJudges = () => {
   };
 
   return (
-    <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
+    <div className="bg-[#feffff] flex flex-col items-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
-        <div className="fixed top-0 w-[400px] z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/submission"}/>
+        <div className="fixed top-0 left-0 w-full z-10">
+          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/submission"} />
         </div>
-        <div className="inline-flex flex-col w-full h-full items-center overflow-y-auto pt-[75px] pb-[50px] gap-[30px] relative overflow-hidden">
+        <div className="flex flex-col items-center w-full h-full pt-[75px] pb-[50px] gap-8 relative overflow-y-auto">
           <InfoBlock />
           
-          <div className="inline-flex flex-col items-center gap-[10px] relative flex-[0_0_auto]">
-            <Header text={"Starting score and Penalties"}/>
-            <div className="inline-flex flex-col items-center gap-[19px] px-[20px] py-[15px] relative flex-[0_0_auto] bg-light-periwinkle">
-              <ScoreBlock title={"Starting score"} score={parseFloat(startScore).toFixed(3)}/>
-              <ScoreBlock title={"Penalty deductions"} score={parseFloat(penalty).toFixed(3)}/>
+          <Header text={"Starting score and Penalties"} />
+          <div className="flex flex-col items-center gap-[10px] w-full md:w-[95%] lg:w-[60%] px-4">
+            <div className="flex flex-col md:flex-row items-center md:justify-center gap-4 md:gap-24 px-4 py-3 bg-light-periwinkle w-full">
+              <ScoreBlock title={"Starting score"} score={parseFloat(startScore).toFixed(3)} />
+              <ScoreBlock title={"Penalty deductions"} score={parseFloat(penalty).toFixed(3)} />
             </div>
           </div>
           
-          <div className="inline-flex flex-col items-center gap-[10px] px-0 py-[10px] relative flex-[0_0_auto]">
-            <Header text={"Execution scores"} />
-            <div className="w-[360px] flex items-center relative flex-[0_0_auto]">
-              <div className="relative w-[150px] h-[26px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]">
-                Judge
+          <Header text={"Execution scores"} />
+          <div className="flex flex-col items-center gap-[10px] w-full lg:w-[45%] px-4">
+
+            <div className="flex flex-col gap-2 w-full">
+              <div className="flex justify-between text-prussian-blue text-base md:text-lg lg:text-xl font-medium">
+                <div className="w-full text-center">Judge</div>
+                <div className="w-full text-center">Deduction</div>
+                <div className="w-full text-center">Score</div>
+                <div className="w-28 md:w-32 text-center"></div>
               </div>
-              <div className="relative w-[106px] h-[26px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]">
-                Deduction
-              </div>
-              <div className="relative w-[78px] h-[26px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]">
-                Score
-              </div>
+              {receivedDeductions.map((judge, index) => (
+                <React.Fragment key={index}>
+                  <JudgeScore
+                    name={judge.name}
+                    deduction={(judge.deduction).toFixed(3)}
+                    total={(startScore - judge.deduction - penalty).toFixed(3)}
+                    rotation={rotateArrow[index] || 0}
+                    onUpdateAnalysis={() => updateAnalysisVisibility(index)}
+                  />
+                  {visibleAnalysis[index] && <JudgeAnalysis deductions={judge.analysis} />}
+                </React.Fragment>
+              ))}
             </div>
-            {receivedDeductions.map((judge, index) => (
-              <React.Fragment key={index}>
-                <JudgeScore
-                  name={judge.name}
-                  deduction={(judge.deduction).toFixed(3)}
-                  total={(startScore - judge.deduction - penalty).toFixed(3)}
-                  rotation={rotateArrow[index] || 0}
-                  onUpdateAnalysis={() => updateAnalysisVisibility(index)}
-                />
-                {visibleAnalysis[index] && <JudgeAnalysis deductions={judge.analysis} />}
-              </React.Fragment>
-            ))}
           </div>
           
-          <div className="inline-flex flex-col items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-            <Header text={"Request resubmission"} />
-            <div className="inline-flex flex-col items-center justify-center gap-[20px] px-[10px] py-[10px] relative flex-[0_0_auto] bg-anti-flash-white">
-              <div className="inline-flex items-start justify-center gap-[30px] relative flex-[0_0_auto]">
+          <Header text={"Request resubmission"} />
+          <div className="flex flex-col items-center gap-[10px] w-[80%] md:w-[60%] lg:w-[50%]">
+            <div className="flex flex-col items-center gap-[20px] px-4 py-3 bg-anti-flash-white w-full p-4 md:p-6">
+              <div className="flex items-center gap-[30px] justify-center w-full">
                 <SmallSelectBox option={requestName} setOption={setRequestName} setJudgeId={setJudgeId} />
-                <div onClick={handleSendClick}> 
+                <div onClick={handleSendClick}>
                   <SmallBlueButton title="Send" />
                 </div>
               </div>
-              {/* <ResubmitRequest name={"Lauryn Giles"}/> */}
               {resubmissionRequests.map((request, index) => (
                 <ResubmitRequest
                   key={index}
@@ -173,18 +170,17 @@ const SubmissionHeadJudges = () => {
             </div>
           </div>
           
-          <div className="inline-flex flex-col items-center gap-[10px] relative flex-[0_0_auto]">
+          <div className="flex flex-col items-center gap-[10px] w-full max-w-[360px] px-4">
             <Header text={"Final score submission"} />
-            <div className="inline-flex flex-col items-center gap-[19px] px-[10px] py-[15px] relative flex-[0_0_auto] bg-periwinkle">
-              <div className="inline-flex items-center justify-center gap-[10px] relative">
-                <ScoreSubmissionBlock deductions={averageDeduction} penalties={penalty} startScore={startScore}/>
-                <div className="flex flex-col w-[122px] h-[140px] items-end justify-end gap-[10px] relative" onClick={handleSubmitClick}>
+            <div className="flex flex-col items-center gap-[19px] px-4 py-3 bg-periwinkle w-full">
+              <div className="flex flex-col items-center gap-[10px] w-full">
+                <ScoreSubmissionBlock deductions={averageDeduction} penalties={penalty} startScore={startScore} />
+                <div className="flex flex-col items-end gap-[10px]" onClick={handleSubmitClick}>
                   <BlueButton title="Submit" />
                 </div>
               </div>
             </div>
           </div>
-
           
         </div>
       </div>

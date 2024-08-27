@@ -1,20 +1,19 @@
 import React from "react";
-
 const ScoreBlock = ({ title, score }) => {
-    return (
-      <div className="relative w-[331px] h-[47px] flex items-center">
-        <div className="w-[200px] flex items-center justify-end pr-[30px]">
-          <div className="font-montserrat font-semibold text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
-            {title}
-          </div>
-        </div>
-        <div className="w-[122px] h-[46px] bg-bright-white rounded-[10px] flex items-center justify-center">
-          <div className="font-montserrat font-semibold text-prussian-blue text-[18px] text-center tracking-[0] leading-[normal]">
-            {parseFloat(score).toFixed(3)}
-          </div>
+  return (
+    <div className="relative flex flex-col items-center gap-2 md:gap-4 p-4 bg-light-periwinkle rounded-lg">
+      <div className="flex-1 flex items-center justify-end">
+        <div className="font-montserrat font-semibold text-prussian-blue text-lg md:text-xl leading-normal">
+          {title}
         </div>
       </div>
-    );
-  };    
+      <div className="flex items-center justify-center bg-bright-white rounded-lg py-4 px-16 md:py-6 md:px-24">
+        <div className="font-montserrat font-semibold text-prussian-blue text-lg md:text-2xl text-center leading-normal">
+          {parseFloat(score).toFixed(3)}
+        </div>
+      </div>
+    </div>
+  );
+}; 
 
 export default ScoreBlock;

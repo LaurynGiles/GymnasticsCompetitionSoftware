@@ -1,14 +1,14 @@
 import React from "react";
 
-const Deduction = ({index, value, removeValue}) => {
+const Deduction = ({ index, value, removeValue }) => {
   return (
     <div
-      className="flex w-[53px] items-center justify-center gap-[10px] p-[10px] relative bg-notification-box rounded-[10px] cursor-pointer"
+      className="flex w-16 h-16 md:w-24 md:h-24 items-center justify-center gap-2 p-2 bg-notification-box rounded-lg cursor-pointer"
       onClick={() => removeValue(index)}
     >
-        <div className="relative w-[33px] h-[28px] mt-[3.00px] font-montserrat font-semibold text-prussian-blue text-[20px] text-center tracking-[0] leading-[normal]">
-            {value}
-        </div>
+      <div className="w-8 h-7 font-montserrat font-semibold text-prussian-blue text-lg text-center">
+        {value}
+      </div>
     </div>
   );
 };

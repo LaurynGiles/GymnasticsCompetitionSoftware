@@ -5,12 +5,12 @@ const JudgeAnalysis = ({ deductions }) => {
   const formattedDeductions = Array.isArray(deductions) ? deductions.join(' + ') : deductions;
 
   return (
-    <div className="flex-col w-[380px] gap-[15px] p-[10px] bg-anti-flash-white flex items-center relative flex-[0_0_auto]">
-        <div className="flex w-[360px] items-center px-[15px] py-0 relative flex-[0_0_auto]">
-            <p className="w-[333px] mr-[-3.00px] font-montserrat font-medium relative mt-[-1.00px] text-prussian-blue text-[16px] tracking-[0] leading-[normal]">
-                {formattedDeductions}
-            </p>
-        </div>
+    <div className="flex flex-col w-full gap-4 p-2 bg-anti-flash-white items-center">
+      <div className="flex w-full px-4 py-0">
+        <p className="w-full text-prussian-blue text-base md:text-lg lg:text-xl font-montserrat font-medium">
+          {formattedDeductions}
+        </p>
+      </div>
     </div>
   );
 };
