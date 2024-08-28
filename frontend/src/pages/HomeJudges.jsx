@@ -113,14 +113,14 @@ const HomeJudges = () => {
   }, [comp, apparatus, apparatusId]);
 
   return (
-      <div className="bg-bright-white w-full min-h-screen">
+      <div className="bg-bright-white w-full">
         <div className="w-full fixed top-0 left-0 z-10 bg-bright-white">
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/homejudges"}/>
         </div>
         <div className="flex flex-col items-center overflow-y-auto w-full pt-20 pb-12 gap-10">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           
-          <div className="flex flex-col md:flex-row lg:flex-row items-center md:justify-center lg:justify-center w-[90%] md:w-[80%] lg:w-[60%] bg-anti-flash-white py-6 px-4 gap-4 md:gap-6 lg:gap-16 rounded-[10px]">
+          <div className="flex flex-col md:flex-row lg:flex-row items-center md:justify-center lg:justify-center w-[90%] md:w-[80%] lg:w-[70%] bg-anti-flash-white py-6 px-4 gap-4 md:gap-6 lg:gap-16 rounded-[10px]">
             <SelectBox noSelect={noSelect} title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
             <SelectBox noSelect={noSelect} title="Apparatus" option={apparatus} setOption={setApparatus} setOptionId={setApparatusId} allOptions={apparatusOptions} allOptionsMap={apparatusMap} optionType={"Apparatus"}/>
           </div>

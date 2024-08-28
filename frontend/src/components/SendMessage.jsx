@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import SmallBlueButton from "./SmallBlueButton";
+import TinyBlueButton from "./TinyBlueButton";
 import { useNotifications } from "../utils/connection.jsx"
 
 const SendMessage = ({ setError, setShowError }) => {
@@ -34,7 +34,7 @@ const SendMessage = ({ setError, setShowError }) => {
               className="w-[291px] p-2 font-montserrat font-normal text-prussian-blue text-[16px] tracking-[0] leading-[normal] border border-gray-300 rounded"
             />
           </div>
-          <SmallBlueButton title={"Send"} onClick={handleSendClick} />
+          <TinyBlueButton title={"Send"} buttonClass={"bg-prussian-blue"} onClick={handleSendClick} />
         </div>
       );
   };    

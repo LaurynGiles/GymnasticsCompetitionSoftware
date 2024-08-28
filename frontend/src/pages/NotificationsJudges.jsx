@@ -16,16 +16,27 @@ const NotificationsJudges = () => {
   const [error, setError] = useState("");
 
   return (
-    <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
-      <div className="bg-bright-white w-full h-full">
-        <div className="fixed top-0 w-[400px] z-10">
-          <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={prevPage} currPage={"/notificationsjudges"}/>
+    <div className="bg-[#feffff] flex flex-col w-full h-screen">
+      <div className="bg-bright-white w-full h-full flex flex-col">
+        {/* Navigation Bar Fixed at the Top */}
+        <div className="fixed top-0 w-full z-10">
+          <NavigationBarDefault
+            showBackIcon={true}
+            showBookIcon={false}
+            prevPage={prevPage}
+            currPage={"/notificationsjudges"}
+          />
         </div>
-        <div className="inline-flex flex-col items-center w-full gap-[20px] overflow-y-auto pt-[75px] relative">
-          {judgeInfo.head_judge && <SendMessage setError={setError} setShowError={setShowError}/>}
-          <Header text="Notifications"/>
-          <div className="inline-flex flex-col items-center gap-[15px] relative flex-[0_0_auto]">
-            {notifications.map((notification, index) => (
+  
+        {/* Main Content */}
+        <div className="pt-[75px] overflow-y-auto flex-1">
+          <div className="inline-flex flex-col items-center w-full gap-[20px]">
+            {judgeInfo.head_judge && (
+              <SendMessage setError={setError} setShowError={setShowError} />
+            )}
+            <Header text="Notifications" />
+            <div className="inline-flex flex-col items-center gap-[15px]">
+              {notifications.map((notification, index) => (
                 <Notification
                   key={index}
                   type={notification.type}
@@ -34,12 +45,17 @@ const NotificationsJudges = () => {
                   sender={notification.sender}
                 />
               ))}
+            </div>
           </div>
         </div>
       </div>
-      {showError && <Popup message={error} onClose={() => setShowError(false)} />}
+      {showError && (
+        <Popup message={error} onClose={() => setShowError(false)} />
+      )}
     </div>
   );
+  
+  
 };
 
 export default NotificationsJudges;

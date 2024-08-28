@@ -37,7 +37,7 @@ const SmallSelectBox = ({ option , setOption, setJudgeId }) => {
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-4 md:gap-6 relative">
-      <div className="flex w-full md:w-[80%] lg:w-[50%] h-auto items-center justify-between gap-4 px-4 lg:px-12 py-2 bg-bright-white rounded-3xl border-2 border-glaucous overflow-hidden">
+      <div className="flex w-full md:w-[80%] lg:w-[70%] xl:w-[40%] h-auto items-center justify-between gap-4 px-4 lg:px-12 py-2 bg-bright-white rounded-3xl border-2 border-glaucous overflow-hidden">
         <div className="flex-1 text-left font-montserrat font-medium text-prussian-blue text-base md:text-lg lg:text-xl">
           {option}
         </div>

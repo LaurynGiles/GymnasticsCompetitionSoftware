@@ -77,21 +77,21 @@ const CalculationsJudges = () => {
     console.log(layout);
     if (layout === 1) {
       return (
-        <div className="flex flex-row w-full justify-center gap-2">
+        <div className="flex flex-row w-full justify-center gap-4 md:gap-8">
           <DeductionButtonsGroup addValue={addValue} />
           <DeductionBlock values={values} removeValue={removeValue} />
         </div>
       );
     } else if (layout === 2) {
       return (
-        <div className="flex flex-row w-full justify-center gap-2">
+        <div className="flex flex-row w-full justify-center gap-4 md:gap-8">
           <DeductionBlock values={values} removeValue={removeValue} />
           <DeductionButtonsGroup addValue={addValue} />
         </div>
       );
     } else if (layout === 0) {
       return (
-        <div className="flex flex-col items-center justify-center gap-4">
+        <div className="flex flex-col w-[90%] md:w-[70%] lg:w-[50%] items-center justify-center gap-4">
           <DeductionButtonsSquare addValue={addValue} />
           <DeductionBlockSquare values={values} removeValue={removeValue} />
         </div>

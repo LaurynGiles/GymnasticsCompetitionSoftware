@@ -102,8 +102,8 @@
     };
 
     return (
-      <div className="flex flex-col items-center gap-0 py-0 lg:w-[50%] md:w-[80%] w-[90%]">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-2 md:gap-14 px-4 py-4 md:py-8 bg-anti-flash-white rounded-lg overflow-hidden w-full">
+      <div className="flex flex-col items-center gap-0 py-0 lg:w-[60%] md:w-[80%] w-[90%]">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-2 md:gap-14 px-4 py-4 md:py-8 bg-anti-flash-white rounded-lg w-full">
           <div className="flex items-center justify-center h-10 md:h-20 bg-periwinkle rounded-xl md:rounded-3xl px-4 md:px-4 w-[30%] md:w-[30%]">
             <div className="font-montserrat font-medium text-prussian-blue text-lg md:text-xl text-center">
               {apparatus}

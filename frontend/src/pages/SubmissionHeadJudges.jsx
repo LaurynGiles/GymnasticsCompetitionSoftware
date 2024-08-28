@@ -117,7 +117,7 @@ const SubmissionHeadJudges = () => {
           <InfoBlock />
           
           <Header text={"Starting score and Penalties"} />
-          <div className="flex flex-col items-center gap-[10px] w-full md:w-[95%] lg:w-[60%] px-4">
+          <div className="flex flex-col items-center gap-[10px] w-full md:w-[95%] lg:w-[70%] px-4">
             <div className="flex flex-col md:flex-row items-center md:justify-center gap-4 md:gap-24 px-4 py-3 bg-light-periwinkle w-full">
               <ScoreBlock title={"Starting score"} score={parseFloat(startScore).toFixed(3)} />
               <ScoreBlock title={"Penalty deductions"} score={parseFloat(penalty).toFixed(3)} />
@@ -125,7 +125,7 @@ const SubmissionHeadJudges = () => {
           </div>
           
           <Header text={"Execution scores"} />
-          <div className="flex flex-col items-center gap-[10px] w-full lg:w-[45%] px-4">
+          <div className="flex flex-col items-center gap-[10px] w-full lg:w-[60%] px-4">
 
             <div className="flex flex-col gap-2 w-full">
               <div className="flex justify-between text-prussian-blue text-base md:text-lg lg:text-xl font-medium">
@@ -150,7 +150,7 @@ const SubmissionHeadJudges = () => {
           </div>
           
           <Header text={"Request resubmission"} />
-          <div className="flex flex-col items-center gap-[10px] w-[80%] md:w-[70%] lg:w-[50%]">
+          <div className="flex flex-col items-center gap-[10px] w-[80%] md:w-[70%] lg:w-[60%]">
             <div className="flex flex-col items-center gap-[20px] px-4 py-3 bg-anti-flash-white w-full p-4 md:p-6">
               <div className="flex items-center gap-[30px] justify-center w-full">
                 <SmallSelectBox option={requestName} setOption={setRequestName} setJudgeId={setJudgeId} />
@@ -170,7 +170,7 @@ const SubmissionHeadJudges = () => {
           </div>
           
           <Header text={"Final score submission"} />
-          <div className="flex flex-col items-center gap-2 w-full md:w-[70%] lg:w-[30%] px-4">
+          <div className="flex flex-col items-center gap-2 w-full md:w-[70%] lg:w-[50%] px-4">
             <div className="flex flex-col items-center gap-4 px-4 py-3 bg-periwinkle w-full">
               <div className="flex flex-col items-center gap-2 w-full">
                 <ScoreSubmissionBlock deductions={averageDeduction} penalties={penalty} startScore={startScore} />
