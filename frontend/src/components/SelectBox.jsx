@@ -32,22 +32,28 @@ const SelectBox = ({ noSelect, title, option , setOption, setOptionId, allOption
     }
 };
 
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 relative">
-      <div className="w-full md:w-auto text-center font-montserrat font-medium text-prussian-blue text-lg md:text-xl px-4">
-        {title}
-      </div>
-      <div className="flex w-[90%] items-center justify-center gap-2 px-3 py-2 bg-bright-white rounded-3xl border-2 border-glaucous">
-        <div className="relative w-[185px] mt-[3.00px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
-          {option != "" && renderOption(option)}
-        </div>
-        <div onClick={!noSelect ? handleArrowClick : null}>
-          <ArrowIcon rotation={rotateArrow} noSelect={noSelect}/>
-        </div>
-      </div>
-      {showPopup && <SelectOptions allOptions={allOptions} handleOptionClick={handleOptionClick} optionType={optionType}/>}
+return (
+  <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-6 relative">
+    <div className="text-center font-montserrat font-medium text-prussian-blue text-lg md:text-xl lg:text-2xl px-4">
+      {title}
     </div>
-  );
+    <div className="flex flex-row w-[250px] lg:w-[300px] items-center justify-between px-6 lg:px-8 py-2 bg-bright-white rounded-3xl border-2 border-glaucous">
+      <div className="relative flex-1 font-montserrat font-medium text-prussian-blue text-base md:text-lg lg:text-xl">
+        {option !== "" && renderOption(option)}
+      </div>
+      <div onClick={!noSelect ? handleArrowClick : null} className="cursor-pointer">
+        <ArrowIcon rotation={rotateArrow} noSelect={noSelect} />
+      </div>
+    </div>
+    {showPopup && (
+      <SelectOptions
+        allOptions={allOptions}
+        handleOptionClick={handleOptionClick}
+        optionType={optionType}
+      />
+    )}
+  </div>
+);
 };
 
 export default SelectBox;

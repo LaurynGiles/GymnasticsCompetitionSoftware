@@ -10,7 +10,6 @@ import JudgeAnalysis from "../components/JudgeAnalysis";
 import SmallSelectBox from "../components/SmallSelectBox";
 import Popup from "../components/Popup";
 import ScoreSubmissionBlock from "../components/ScoreSubmissionBlock";
-import BlueButton from "../components/BlueButton";
 import ResubmitRequest from "../components/ResubmitRequest.jsx";
 import { useNotifications } from "../utils/connection.jsx";
 import { submitDifficulty, submitExecution } from "../utils/api.js";
@@ -151,7 +150,7 @@ const SubmissionHeadJudges = () => {
           </div>
           
           <Header text={"Request resubmission"} />
-          <div className="flex flex-col items-center gap-[10px] w-[80%] md:w-[60%] lg:w-[50%]">
+          <div className="flex flex-col items-center gap-[10px] w-[80%] md:w-[70%] lg:w-[50%]">
             <div className="flex flex-col items-center gap-[20px] px-4 py-3 bg-anti-flash-white w-full p-4 md:p-6">
               <div className="flex items-center gap-[30px] justify-center w-full">
                 <SmallSelectBox option={requestName} setOption={setRequestName} setJudgeId={setJudgeId} />
@@ -170,13 +169,13 @@ const SubmissionHeadJudges = () => {
             </div>
           </div>
           
-          <div className="flex flex-col items-center gap-[10px] w-full max-w-[360px] px-4">
-            <Header text={"Final score submission"} />
-            <div className="flex flex-col items-center gap-[19px] px-4 py-3 bg-periwinkle w-full">
-              <div className="flex flex-col items-center gap-[10px] w-full">
+          <Header text={"Final score submission"} />
+          <div className="flex flex-col items-center gap-2 w-full md:w-[70%] lg:w-[30%] px-4">
+            <div className="flex flex-col items-center gap-4 px-4 py-3 bg-periwinkle w-full">
+              <div className="flex flex-col items-center gap-2 w-full">
                 <ScoreSubmissionBlock deductions={averageDeduction} penalties={penalty} startScore={startScore} />
-                <div className="flex flex-col items-end gap-[10px]" onClick={handleSubmitClick}>
-                  <BlueButton title="Submit" />
+                <div className="flex flex-col items-end gap-2" onClick={handleSubmitClick}>
+                  <SmallBlueButton title="Submit" />
                 </div>
               </div>
             </div>

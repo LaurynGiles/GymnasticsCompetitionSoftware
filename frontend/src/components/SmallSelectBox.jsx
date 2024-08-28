@@ -36,16 +36,21 @@ const SmallSelectBox = ({ option , setOption, setJudgeId }) => {
   };
 
   return (
-    <div className="inline-flex flex-col items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-      <div className="flex w-[230px] h-[40px] items-center justify-center gap-[20px] px-[15px] py-[8px] relative flex-[0_0_auto] bg-bright-white rounded-[20px] overflow-hidden border-2 border-solid border-[#6279b8]">
-        <div className="relative w-[185px] mt-[1.00px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
+    <div className="w-full flex flex-col items-center justify-center gap-4 md:gap-6 relative">
+      <div className="flex w-full md:w-[80%] lg:w-[50%] h-auto items-center justify-between gap-4 px-4 lg:px-12 py-2 bg-bright-white rounded-3xl border-2 border-glaucous overflow-hidden">
+        <div className="flex-1 text-left font-montserrat font-medium text-prussian-blue text-base md:text-lg lg:text-xl">
           {option}
         </div>
-        <div onClick={handleArrowClick}>
-          <ArrowIcon rotation={rotateArrow}/>
+        <div onClick={handleArrowClick} className="cursor-pointer">
+          <ArrowIcon rotation={rotateArrow} />
         </div>
       </div>
-      {showPopup && <SelectOptions allOptions={allOptions} handleOptionClick={handleOptionClick} />}
+      {showPopup && (
+        <SelectOptions
+          allOptions={allOptions}
+          handleOptionClick={handleOptionClick}
+        />
+      )}
     </div>
   );
 };

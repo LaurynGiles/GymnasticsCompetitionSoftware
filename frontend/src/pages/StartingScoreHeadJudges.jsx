@@ -61,7 +61,7 @@ const StartingScoreHeadJudges = () => {
           <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/startingscore"} />
         </div>
         
-        <div className="pt-[75px] pb-[20px] lg:pb-[0px] lg:pt-[90px] px-4 lg:px-8 flex flex-col items-center gap-4 md:gap-6 overflow-y-auto h-full">
+        <div className="pt-[75px] pb-[20px] lg:pt-[90px] px-4 lg:px-8 flex flex-col items-center gap-4 md:gap-6 overflow-y-auto h-full">
           
           {/* InfoBlock Section */}
           <div className="w-full flex items-center justify-center">

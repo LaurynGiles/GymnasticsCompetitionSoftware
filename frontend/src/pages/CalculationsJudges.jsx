@@ -91,7 +91,7 @@ const CalculationsJudges = () => {
       );
     } else if (layout === 0) {
       return (
-        <div className="flex flex-col items-center w-full gap-4">
+        <div className="flex flex-col items-center justify-center gap-4">
           <DeductionButtonsSquare addValue={addValue} />
           <DeductionBlockSquare values={values} removeValue={removeValue} />
         </div>
@@ -105,7 +105,7 @@ const CalculationsJudges = () => {
         <div className="fixed top-0 left-0 w-full z-10 bg-white shadow-md">
           <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/calculationsjudges"}/>
         </div>
-        <div className="w-full flex flex-col items-center pt-[75px] md:pt-[90px] md:pb-[20px] gap-4 md:gap-10 px-4 md:px-8 lg:px-16 overflow-y-auto">
+        <div className="w-full flex flex-col items-center pt-[75px] pb-[20px] md:pt-[90px] gap-4 md:gap-10 px-4 md:px-8 lg:px-16 overflow-y-auto">
           <div className="w-full flex flex-col items-center gap-8 md:gap-12">
             <InfoBlock />
           </div>

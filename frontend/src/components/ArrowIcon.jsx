@@ -7,7 +7,7 @@ const ArrowIcon = ({ rotation = 0, noSelect, onClick}) => {
         style={{ cursor: noSelect ? "default" : "pointer", transform: `rotate(${rotation}deg)` }}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 15 13"
-        className="w-6 h-6 text-prussian-blue"
+        className="w-4 h-4 md:w-6 md:h-6 text-prussian-blue"
         fill="none"
       >
         <path

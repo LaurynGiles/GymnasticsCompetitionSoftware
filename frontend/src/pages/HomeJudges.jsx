@@ -120,7 +120,7 @@ const HomeJudges = () => {
         <div className="flex flex-col items-center overflow-y-auto w-full pt-20 pb-12 gap-10">
           <BlockHeader text="District MAG Trials Levels 1-3"/>
           
-          <div className="flex flex-col md:flex-row lg:flex-row items-center md:justify-center lg:justify-center w-[90%] md:w-[80%] lg:w-[60%] bg-anti-flash-white py-6 px-4 gap-4 md:gap-[15%] rounded-[10px]">
+          <div className="flex flex-col md:flex-row lg:flex-row items-center md:justify-center lg:justify-center w-[90%] md:w-[80%] lg:w-[60%] bg-anti-flash-white py-6 px-4 gap-4 md:gap-6 lg:gap-16 rounded-[10px]">
             <SelectBox noSelect={noSelect} title="Competition" option={comp} setOption={setComp} allOptions={compOptions} optionType={"Competition"}/>
             <SelectBox noSelect={noSelect} title="Apparatus" option={apparatus} setOption={setApparatus} setOptionId={setApparatusId} allOptions={apparatusOptions} allOptionsMap={apparatusMap} optionType={"Apparatus"}/>
           </div>
