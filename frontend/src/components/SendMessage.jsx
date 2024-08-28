@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import TinyBlueButton from "./TinyBlueButton";
+import SmallBlueButton from "./SmallBlueButton.jsx"
 import { useNotifications } from "../utils/connection.jsx"
 
 const SendMessage = ({ setError, setShowError }) => {
@@ -22,21 +23,20 @@ const SendMessage = ({ setError, setShowError }) => {
       }
         setMessage("");
     };
-
     return (
-        <div className="inline-flex flex-col items-end justify-center gap-[15px] p-[10px] relative flex-[0_0_auto]">
-          <div className="inline-flex items-end justify-center gap-[10px] px-[14px] py-[20px] relative flex-[0_0_auto] bg-anti-flash-white">
-            <input
-              type="text"
-              value={message}
-              onChange={handleInputChange}
-              placeholder="Type your message here"
-              className="w-[291px] p-2 font-montserrat font-normal text-prussian-blue text-[16px] tracking-[0] leading-[normal] border border-gray-300 rounded"
-            />
-          </div>
-          <TinyBlueButton title={"Send"} buttonClass={"bg-prussian-blue"} onClick={handleSendClick} />
+      <div className="w-[80%] md:w-[60%] lg:w-[50%] flex flex-col items-center justify-center gap-4 p-4 md:p-6 lg:p-8">
+        <div className="flex w-full items-center justify-center gap-4 px-4 py-3 bg-anti-flash-white rounded-lg shadow-md">
+          <textarea
+            value={message}
+            onChange={handleInputChange}
+            placeholder="Type your message here"
+            className="w-full p-2 font-montserrat font-normal text-prussian-blue text-base md:text-lg tracking-normal leading-normal border border-gray-300 rounded-md resize-none"
+            rows="3"
+          />
         </div>
-      );
+        <TinyBlueButton title={"Send"} buttonClass={"bg-prussian-blue"} onClick={handleSendClick} />
+      </div>
+    );
   };    
 
 export default SendMessage;

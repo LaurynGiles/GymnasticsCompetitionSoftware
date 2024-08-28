@@ -1,50 +1,40 @@
 import React from "react";
 
 const UserInfo = ({ number, name, email, license}) => {
-    return (
-        <div className="inline-flex flex-col items-end gap-[15px] px-[10px] py-[20px] relative flex-[0_0_auto] bg-light-periwinkle">
-        <div className="flex w-[326px] items-center justify-center gap-[20px] relative flex-[0_0_auto]">
-          <div className="relative w-[132px] h-[24px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
-            GSA number:
+  return (
+    <div className="w-[80%] md:w-[70%] lg-[40%] bg-light-periwinkle py-4 px-4 md:px-8 lg:px-16 xl:px-24 rounded-lg">
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full">
+          <div className="flex items-center justify-between text-prussian-blue font-medium text-lg md:text-xl">
+            <span>GSA number:</span>
+            <div className="flex items-center justify-center px-2 py-1 bg-bright-white rounded-md w-[60%]">
+              <span className="text-black font-medium text-lg">{number}</span>
+            </div>
           </div>
-          <div className="flex w-[173px] items-center justify-center gap-[10px] px-[6px] py-[5px] relative bg-bright-white rounded-[10px] overflow-hidden">
-            <div className="relative w-[161px] mt-[-1.00px] font-montserrat font-medium text-black text-[18px] tracking-[0] leading-[normal]">
-              {number}
+          <div className="flex items-center justify-between text-prussian-blue font-medium text-lg md:text-xl">
+            <span>Name:</span>
+            <div className="flex items-center justify-center px-2 py-1 bg-bright-white rounded-md w-[60%]">
+              <span className="text-black font-medium text-lg">{name}</span>
             </div>
           </div>
         </div>
-        <div className="flex w-[326px] items-center justify-center gap-[20px] relative flex-[0_0_auto]">
-          <div className="relative w-[132px] h-[24px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
-            Name:
-          </div>
-          <div className="flex w-[173px] items-center justify-center gap-[10px] px-[6px] py-[5px] relative bg-bright-white rounded-[10px] overflow-hidden">
-            <div className="relative w-[161px] mt-[-1.00px] font-montserrat font-medium text-black text-[18px] tracking-[0] leading-[normal]">
-              {name}
+        <div className="flex flex-col gap-2 w-full">
+          <div className="flex items-center justify-between text-prussian-blue font-medium text-lg md:text-xl">
+            <span>Email:</span>
+            <div className="flex items-center justify-center px-2 py-1 bg-bright-white rounded-md w-[60%]">
+              <span className="text-black font-medium text-lg">{email}</span>
             </div>
           </div>
-        </div>
-        <div className="flex w-[326px] items-center justify-center gap-[20px] relative flex-[0_0_auto]">
-          <div className="relative w-[132px] h-[24px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
-            Email:
-          </div>
-          <div className="flex w-[173px] items-center justify-center gap-[10px] px-[6px] py-[5px] relative bg-bright-white rounded-[10px] overflow-hidden">
-            <div className="relative w-[161px] mt-[-1.00px] font-montserrat font-medium text-black text-[18px] tracking-[0] leading-[normal]">
-              {email}
-            </div>
-          </div>
-        </div>
-        <div className="flex w-[326px] items-center justify-center gap-[20px] relative flex-[0_0_auto]">
-          <div className="relative w-[132px] h-[24px] font-montserrat font-medium text-prussian-blue text-[18px] tracking-[0] leading-[normal]">
-            License:
-          </div>
-          <div className="flex w-[173px] items-center justify-center gap-[10px] px-[6px] py-[5px] relative bg-bright-white rounded-[10px] overflow-hidden">
-            <div className="relative w-[161px] mt-[-1.00px] font-montserrat font-medium text-black text-[18px] tracking-[0] leading-[normal]">
-              {license}
+          <div className="flex items-center justify-between text-prussian-blue font-medium text-lg md:text-xl">
+            <span>License:</span>
+            <div className="flex items-center justify-center px-2 py-1 bg-bright-white rounded-md w-[60%]">
+              <span className="text-black font-medium text-lg">{license}</span>
             </div>
           </div>
         </div>
       </div>
-    );
+    </div>
+  );
 };
 
 export default UserInfo;

@@ -102,24 +102,34 @@
     };
 
     return (
-      <div className="flex flex-col items-center gap-0 py-0 lg:w-[60%] md:w-[80%] w-[90%]">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-2 md:gap-14 px-4 py-4 md:py-8 bg-anti-flash-white rounded-lg w-full">
-          <div className="flex items-center justify-center h-10 md:h-20 bg-periwinkle rounded-xl md:rounded-3xl px-4 md:px-4 w-[30%] md:w-[30%]">
+      <div className="flex flex-col items-center gap-0 py-0 lg:w-[60%] md:w-[85%] w-[90%]">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-2 md:gap-6 px-4 py-4 md:py-8 bg-anti-flash-white rounded-lg w-full">
+          <div className="flex items-center justify-center h-10 md:h-20 bg-periwinkle rounded-xl md:rounded-3xl px-4 md:px-4">
             <div className="font-montserrat font-medium text-prussian-blue text-lg md:text-xl text-center">
               {apparatus}
             </div>
           </div>
-          <div className="flex flex-col w-full px-4 py-1 ">
-            <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl">
-              Levels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{levels.join(", ")}
+          <div className="flex flex-col w-full py-2 md:py-4 lg:gap-2">
+            <div className="flex justify-between items-center mb-2">
+              <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl">
+                <span className="font-bold">Levels:</span>
+              </div>
+              <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl text-right">
+                {levels.join(", ")}
+              </div>
             </div>
-            <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl">
-              Age groups:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ages.join(" yrs, ")} yrs
+            <div className="flex justify-between items-center mb-2">
+              <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl">
+                <span className="font-bold">Ages:</span>
+              </div>
+              <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl text-right">
+                {ages.join(" yrs, ")} yrs
+              </div>
             </div>
             {statusMessage && 
-            <div className="text-dark-prussian-blue font-montserrat font-medium text-base text-center mt-2 md:text-xl">
-              {statusMessage}
-            </div>
+              <div className="text-dark-prussian-blue font-montserrat font-medium text-base md:text-xl text-center mt-2">
+                {statusMessage}
+              </div>
             }
           </div>
           <div className="flex items-center justify-between md:justify-end md:gap-14 md:w-[40%] px-4 py-3">

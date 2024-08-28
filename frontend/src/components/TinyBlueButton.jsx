@@ -1,19 +1,18 @@
 import React from "react";
 import { useNotifications } from "../utils/connection.jsx";
 
-const TinyBlueButton = ({title, buttonClass, onClick}) => {
-
+const TinyBlueButton = ({ title, buttonClass, onClick }) => {
     return (
-        <button
-            className={`all-[unset] box-border flex w-[70px] items-center justify-center gap-2.5 px-5 py-2.5 relative mr-[-3.61px] ${buttonClass} rounded-[20px] shadow-[0px_4px_4px_#00000040]`}
-            onClick={onClick}
-            disabled={buttonClass.includes('cursor-not-allowed')}
-        >
-            <div className="relative w-fit mt-[3.00px] font-montserrat font-medium text-bright-white text-center tracking-[0] leading-[normal]">
-                {title}
-            </div>
-        </button>
+      <button
+        className={`box-border flex items-center justify-center gap-2 px-4 md:px-5 lg:px-6 py-2 md:py-3 lg:py-4 rounded-3xl shadow-md ${buttonClass} text-bright-white text-sm md:text-md lg:text-lg`}
+        onClick={onClick}
+        disabled={buttonClass.includes('cursor-not-allowed')}
+      >
+        <div className="font-montserrat font-medium text-center">
+          {title}
+        </div>
+      </button>
     );
-};
+  };
 
 export default TinyBlueButton;

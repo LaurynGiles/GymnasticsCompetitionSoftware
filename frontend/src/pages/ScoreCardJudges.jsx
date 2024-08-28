@@ -45,12 +45,12 @@ const ScoreCardJudges = () => {
   };
 
   return (
-    <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
-      <div className="bg-bright-white overflow-hidden w-full h-full">
-        <div className="fixed top-0 w-[400px] z-10">
+    <div className="bg-bright-white flex flex-row justify-center w-full h-screen">
+      <div className="bg-bright-white overflow-hidden flex-1">
+        <div className="fixed top-0 left-0 w-full z-10">
           <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/scorecardjudges"}/>
         </div>
-        <div className="flex flex-col w-full h-full items-center gap-[30px] overflow-y-auto pt-[75px] relative">
+        <div className="flex flex-col w-full h-full items-center gap-12 overflow-y-auto pt-[75px] pb-[20px] relative">
           <InfoBlock />
           <ScoreCard deductionTotal={deductionTotal} startScore={startScore} penalty={penalty}/>
           {showFinalScorePopup && (

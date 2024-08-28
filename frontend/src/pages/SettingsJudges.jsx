@@ -5,7 +5,7 @@ import RadioSelectIcon from "../components/RadioSelectIcon";
 import Header from "../components/Header";
 import UserInfo from "../components/UserInfo";
 import FilledRadioSelectIcon from "../components/FilledRadioSelectIcon";
-import BlueButton from "../components/BlueButton";
+import SmallBlueButton from "../components/SmallBlueButton";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../utils/connection.jsx";
 
@@ -49,110 +49,108 @@ export const SettingsJudges = () => {
     );
   };
 
+  const renderHorizontalSection = () => (
+    <div className="w-[50%] md:w-[40%] lg:w-[30%] flex flex-col items-center gap-4 bg-light-periwinkle p-4 rounded-xl">
+      <div className="text-prussian-blue text-center text-xl font-medium">Horizontal</div>
+      <div className="flex items-center gap-4 cursor-pointer" onClick={() => handleSelectOption(0)}>
+        {renderRadioIcon(0)}
+        <div className="text-prussian-blue text-lg">Top</div>
+      </div>
+    </div>
+  );
+  
+  const renderVerticalSection = () => (
+    <div className="w-[50%] md:w-[40%] lg:w-[30%] flex flex-col items-center gap-4 bg-light-periwinkle p-4 rounded-xl">
+      <div className="text-prussian-blue text-center text-xl font-medium">Vertical</div>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-4 cursor-pointer" onClick={() => handleSelectOption(1)}>
+          {renderRadioIcon(1)}
+          <div className="text-prussian-blue text-lg">Left-handed</div>
+        </div>
+        <div className="flex items-center gap-4 cursor-pointer" onClick={() => handleSelectOption(2)}>
+          {renderRadioIcon(2)}
+          <div className="text-prussian-blue text-lg">Right-handed</div>
+        </div>
+      </div>
+    </div>
+  );
+  
   const renderConditionalLayoutV = () => {
     if (selectedOption === 2) {
       return (
-        <div className="inline-flex items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-          <div className="w-[40px] h-[21px] relative bg-glaucous" />
-                <div className="inline-flex flex-col items-center justify-center gap-[5px] relative flex-[0_0_auto]">
-                  <div className="w-[15px] h-[15px] relative bg-glaucous" />
-                  <div className="w-[15px] h-[15px] relative bg-glaucous" />
-                  <div className="w-[15px] h-[15px] relative bg-glaucous" />
-                  <div className="w-[15px] h-[15px] relative bg-glaucous" />
-                </div>
+        <div className="flex items-center justify-center gap-4">
+          <div className="w-10 h-5 bg-glaucous" />
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-4 h-4 bg-glaucous" />
+            <div className="w-4 h-4 bg-glaucous" />
+            <div className="w-4 h-4 bg-glaucous" />
+            <div className="w-4 h-4 bg-glaucous" />
+          </div>
         </div>
       );
     } else {
       return (
-        <div className="inline-flex items-center justify-center gap-[10px] relative flex-[0_0_auto]">
-                <div className="inline-flex flex-col items-center justify-center gap-[5px] relative flex-[0_0_auto]">
-                  <div className="w-[15px] h-[15px] relative bg-glaucous" />
-                  <div className="w-[15px] h-[15px] relative bg-glaucous" />
-                  <div className="w-[15px] h-[15px] relative bg-glaucous" />
-                  <div className="w-[15px] h-[15px] relative bg-glaucous" />
-                </div>
-                <div className="w-[40px] h-[21px] relative bg-glaucous" />
+        <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-4 h-4 bg-glaucous" />
+            <div className="w-4 h-4 bg-glaucous" />
+            <div className="w-4 h-4 bg-glaucous" />
+            <div className="w-4 h-4 bg-glaucous" />
+          </div>
+          <div className="w-10 h-5 bg-glaucous" />
         </div>
       );
     }
   };
-
+  
+  const renderLayoutSettings = () => (
+    <div className="w-full flex flex-col items-center justif-center gap-8">
+      <div className="w-full flex flex-row items-center justify-center gap-16">
+        {renderHorizontalSection()}
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex gap-2">
+            <div className="w-4 h-4 bg-glaucous rounded-sm" />
+            <div className="w-4 h-4 bg-glaucous rounded-sm" />
+          </div>
+          <div className="flex gap-2">
+            <div className="w-4 h-4 bg-glaucous rounded-sm" />
+            <div className="w-4 h-4 bg-glaucous rounded-sm" />
+          </div>
+          <div className="w-10 h-5 bg-glaucous rounded-sm" />
+        </div>
+        
+      </div>
+      <div className="w-full flex flex-row items-center justify-center gap-10">
+        {renderVerticalSection()}
+        {renderConditionalLayoutV()}
+      </div>
+    </div>
+  );
+  
   const handleLogout = async () => {
     socket.emit('logout', { judge_id: judgeInfo.judge_id });
     navigate('/login');
   };
-
-
+  
   return (
-    <div className="bg-[#feffff] flex flex-row justify-center w-full h-screen">
-      <div className="bg-bright-white w-[400px] h-[800px]">
-        <div className="fixed top-0 w-[400px] z-10">
+    <div className="bg-bright-white flex flex-row justify-center w-full">
+      <div className="bg-bright-white w-full h-full">
+        <div className="fixed top-0 left-0 w-full z-10">
           <NavigationBarDefault showBackIcon={true} showBookIcon={false} prevPage={prevPage}/>
         </div>
-        <div className="inline-flex w-full h-full flex-col items-center gap-[30px] overflow-y-auto pt-[75px] pb-[50px] relative">
-          <Header text={"User information"} />
-          <UserInfo number={"548657"} name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`} email={"deb@gmail.com"} license={"Category A"} />
-          <Header text={"Layout Settings"} />
-          <div className="items-center justify-center gap-[54px] inline-flex relative flex-[0_0_auto]">
-            <div className="flex-col items-start gap-[25px] inline-flex relative flex-[0_0_auto]">
-              <div className="flex w-[210px] gap-[9px] px-[20px] py-[20px] bg-light-periwinkle rounded-[20px] overflow-hidden flex-col items-center relative flex-[0_0_auto]">
-                <div className="relative w-[118px] h-[27px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[22px] text-center tracking-[0] leading-[normal]">
-                  Horizontal
-                </div>
-                <div className="flex-col items-start gap-[9px] ml-[-1.00px] mr-[-1.00px] inline-flex relative flex-[0_0_auto]">
-                  <div className="flex w-[190px] cursor-pointer items-center gap-[14px] px-[5px] py-0 relative flex-[0_0_auto]" onClick={() => handleSelectOption(0)}>
-                  {renderRadioIcon(0)}
-                    <div className="relative w-[85px] h-[27px] mt-[3.00px] font-montserrat font-medium text-prussian-blue text-[20px] tracking-[0] leading-[normal]">
-                      Top
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex w-[210px] gap-[9px] px-[20px] py-[20px] bg-light-periwinkle rounded-[20px] overflow-hidden flex-col items-center relative flex-[0_0_auto]">
-                <div className="relative w-[118px] h-[27px] mt-[-1.00px] font-montserrat font-medium text-prussian-blue text-[22px] text-center tracking-[0] leading-[normal]">
-                  Vertical
-                </div>
-                <div className="flex flex-col w-[190px] items-start gap-[9px] relative flex-[0_0_auto] ml-[-1.00px] mr-[-1.00px]">
-                  <div className="flex w-[190px] cursor-pointer items-center gap-[14px] px-[5px] py-0 relative flex-[0_0_auto]" onClick={() => handleSelectOption(1)}>
-                    {renderRadioIcon(1)}
-                    <div className="relative w-[145px] h-[27px] mt-[3.00px] mr-[-3.00px] font-montserrat font-medium text-prussian-blue text-[20px] tracking-[0] leading-[normal]">
-                      Left-handed
-                    </div>
-                  </div>
-                  <div className="flex w-[190px] cursor-pointer items-center gap-[14px] px-[5px] py-0 relative flex-[0_0_auto]" onClick={() => handleSelectOption(2)}>
-                    {renderRadioIcon(2)}
-                    <div className="relative w-[145px] h-[27px] mt-[3.00px] mr-[-3.00px] font-montserrat font-medium text-prussian-blue text-[20px] tracking-[0] leading-[normal]">
-                      Right-handed
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex-col items-start gap-[86px] inline-flex relative flex-[0_0_auto]">
-            <div className="inline-flex justify-center gap-[10px] flex-col items-center relative flex-[0_0_auto]">
-          <div className="inline-flex flex-col items-center justify-center gap-[5px] relative flex-[0_0_auto]">
-            <div className="inline-flex items-center justify-center gap-[5px] relative flex-[0_0_auto]">
-              <div className="w-[15px] h-[15px] relative bg-glaucous" />
-              <div className="w-[15px] h-[15px] relative bg-glaucous" />
-            </div>
-            <div className="inline-flex items-center justify-center gap-[5px] relative flex-[0_0_auto]">
-              <div className="w-[15px] h-[15px] relative bg-glaucous" />
-              <div className="w-[15px] h-[15px] relative bg-glaucous" />
-            </div>
-          </div>
-          <div className="w-[40px] h-[21px] relative bg-glaucous" />
-            </div>
-            {renderConditionalLayoutV()}
-            </div>
-          </div>
-          <Header text={"Logout"} />
-          <div onClick={handleLogout}>
-            <BlueButton title={"Logout"} />
+        <div className="w-full pt-[75px] pb-[50px] px-4 md:px-8 h-full overflow-y-auto">
+          <div className="w-full flex flex-col items-center gap-8">
+            <Header text={"User information"} />
+            <UserInfo number={"548657"} name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`} email={"deb@gmail.com"} license={"Category A"} />
+            <Header text={"Layout Settings"} />
+            {renderLayoutSettings()}
+            <Header text={"Logout"} />
+            <SmallBlueButton title={"Logout"} onClick={handleLogout} />
           </div>
         </div>
       </div>
     </div>
   );
-};
+  };
 
 export default SettingsJudges

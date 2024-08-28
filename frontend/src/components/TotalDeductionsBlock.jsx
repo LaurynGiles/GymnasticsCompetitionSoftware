@@ -30,7 +30,7 @@ const TotalDeductionsBlock = ({ total, values }) => {
   };
 
   return (
-    <div className="flex flex-row items-center justify-center py-4 md:py-6 bg-light-periwinkle w-[95%] lg:w-[40%] md:w-[70%]">
+    <div className="flex flex-row items-center justify-center py-4 md:py-6 bg-light-periwinkle w-[95%] lg:w-[50%] md:w-[70%]">
       <div className="flex flex-row items-center justify-center gap-8 md:gap-16 lg:gap-32">
         <div className="flex flex-row items-center justify-center gap-2">
           <div className="font-montserrat font-medium text-prussian-blue text-lg md:text-xl lg:text-2xl text-center">

@@ -10,19 +10,21 @@ const Notification = ({type, notification, time, sender}) => {
     }
 
     return (
-        <div className="inline-flex flex-col items-end justify-center gap-[5px] p-[10px] relative flex-[0_0_auto]">
-            <div className={`inline-flex items-end justify-center gap-[10px] px-[14px] py-[20px] relative flex-[0_0_auto] ${bgColorClass} rounded-[20px] overflow-hidden`}>
-                <p className="relative w-[291px] mt-[3.00px] font-montserrat font-normal text-prussian-blue text-[16px] tracking-[0] leading-[normal] white-space-pre-wrap" style={{ whiteSpace: 'pre-wrap' }}>
-                    {notification}
-                </p>
+        <div className="w-full flex flex-col items-start gap-2 p-2 md:p-4 lg:p-6 w-full">
+          <div
+            className={`w-full flex flex-col items-start gap-2 p-3 ${bgColorClass} rounded-xl overflow-hidden w-full`}
+          >
+            <p className="text-prussian-blue text-base md:text-lg lg:text-xl font-montserrat font-normal whitespace-pre-wrap">
+              {notification}
+            </p>
+          </div>
+          <div className="w-full flex justify-end">
+            <div className="text-prussian-blue text-sm md:text-md lg:text-lg font-montserrat font-normal whitespace-nowrap">
+              {time}
             </div>
-            <div className="relative w-[90.47px] h-[14.18px]">
-                <div className="text-prussian-blue absolute w-[90px] h-[14px] -top-px left-0 font-montserrat font-normal text-[16px] tracking-[0] leading-[normal] whitespace-nowrap">
-                    {time}
-                </div>
-            </div>
+          </div>
         </div>
-    );
+      );
   };
 
 

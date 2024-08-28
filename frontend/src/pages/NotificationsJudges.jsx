@@ -30,12 +30,12 @@ const NotificationsJudges = () => {
   
         {/* Main Content */}
         <div className="pt-[75px] overflow-y-auto flex-1">
-          <div className="inline-flex flex-col items-center w-full gap-[20px]">
+          <div className="inline-flex flex-col items-center w-full gap-6">
             {judgeInfo.head_judge && (
               <SendMessage setError={setError} setShowError={setShowError} />
             )}
             <Header text="Notifications" />
-            <div className="inline-flex flex-col items-center gap-[15px]">
+            <div className="w-[90%] md:w-[70%] lg:w-[50%] inline-flex flex-col items-center">
               {notifications.map((notification, index) => (
                 <Notification
                   key={index}
