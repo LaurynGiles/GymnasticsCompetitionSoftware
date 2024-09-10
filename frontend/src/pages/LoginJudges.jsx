@@ -52,12 +52,12 @@ const LoginJudges = () => {
   };
 
   return (
-    <div className="bg-glaucous flex flex-col items-center w-full min-h-screen">
-      <div className="w-full flex justify-center pt-4 pb-8"> {/* Top padding for logo */}
+    <div className="bg-glaucous flex flex-col items-center w-full h-screen">
+      <div className="w-full h-[40%] flex"> {/* Top padding for logo */}
         <SmallLogo />
       </div>
-      <div className="flex-grow flex items-center justify-center w-full">
-          <div className="flex flex-col items-center bg-glaucous w-full max-w-md px-4 gap-10">
+      <div className="flex-grow flex items-center justify-center w-full h-[100%]">
+          <div className="flex flex-col items-center bg-glaucous w-full px-4 gap-10">
             <div className="flex flex-col items-center gap-8">
               {errorMessage && (
                 <div className="text-red-500 text-center w-full">{errorMessage}</div>

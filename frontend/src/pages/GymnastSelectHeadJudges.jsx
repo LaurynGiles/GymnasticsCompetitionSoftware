@@ -57,7 +57,7 @@ const GymnastSelectHeadJudges = () => {
     <div className="bg-[#feffff] flex flex-col w-full min-h-screen">
       <div className="bg-bright-white flex-1 flex flex-col">
         <div className="fixed top-0 w-full z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/gymnastselect"}/>
+          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} currPage={"/gymnastselect"}/>
         </div>
         <div className="flex-1 flex flex-col items-center pt-[75px] pb-[60px] px-4 gap-[20px] md:gap-[30px] lg:gap-[40px] overflow-y-auto">
           

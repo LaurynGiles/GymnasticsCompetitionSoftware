@@ -103,7 +103,7 @@ const CalculationsJudges = () => {
     <div className="bg-white flex flex-col w-full h-screen">
       <div className="bg-bright-white flex-1 w-full">
         <div className="fixed top-0 left-0 w-full z-10 bg-white shadow-md">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/calculationsjudges"}/>
+          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} currPage={"/calculationsjudges"}/>
         </div>
         <div className="w-full flex flex-col items-center pt-[75px] pb-[20px] md:pt-[90px] gap-4 md:gap-10 px-4 md:px-8 lg:px-16 overflow-y-auto">
           <div className="w-full flex flex-col items-center gap-8 md:gap-12">

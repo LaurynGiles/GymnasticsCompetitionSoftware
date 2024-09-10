@@ -5,28 +5,38 @@ import BellIcon from "./BellIcon"
 import SettingsIcon from "./SettingsIcon"
 import BackIcon from "./BackIcon";
 import BookIcon from "./BookIcon"
+import PeopleIcon from "./PeopleIcon";
 
-const NavigationBarDefault = ({ showBackIcon, showBookIcon, prevPage, currPage }) => {
+const NavigationBarDefault = ({ showBackIcon, showPeopleIcon, showBookIcon, prevPage, currPage }) => {
 
   return (
     <div className="flex items-center w-full justify-between px-4 py-[12px] relative bg-glaucous">
-      <LeftHeader showBackIcon={showBackIcon} showBookIcon={showBookIcon} prevPage={prevPage}/>
+      <LeftHeader showBackIcon={showBackIcon} showBookIcon={showBookIcon} showPeopleIcon={showPeopleIcon} prevPage={prevPage} currPage={currPage}/>
       <RightHeader currPage={currPage}/>
     </div>
   );
 };
 
-const LeftHeader = ({ showBackIcon, showBookIcon, prevPage }) => {
+const LeftHeader = ({ showBackIcon, showBookIcon, showPeopleIcon, prevPage, currPage }) => {
   const navigate = useNavigate();
 
-  const handleNavigation = (path) => {
+  const handleBackNavigation = (path) => {
     navigate(path);
   };
+
+  const handleLobbyNavigation = () => {
+    console.log(currPage)
+    navigate("/lobby", { state: { currPage } });
+  };
+
 
   return (
     <div className="flex w-[180px] items-center relative">
       {showBackIcon && 
-        <BackIcon onClick={() => handleNavigation(prevPage)} />
+        <BackIcon onClick={() => handleBackNavigation(prevPage)} />
+      }
+      {showPeopleIcon && 
+        <PeopleIcon onClick={() => handleLobbyNavigation()}/>
       }
       {showBookIcon && <BookIcon />}
     </div>

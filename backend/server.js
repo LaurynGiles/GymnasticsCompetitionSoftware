@@ -98,7 +98,10 @@ io.on('connection', (socket) => {
     callback({ success: true, isHeadJudge: false, message: 'Join request sent, waiting for approval.' });
   });
 
-  socket.on('approveJoinRequest', ({ group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id }) => {
+  socket.on('approveJoinRequest', ({ judge, gymnast, judgingStarted}) => {
+    const { group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id } = judge;
+    const { gymnast } = nextGymnast;
+
     if (!groupUsers[group_id]) {
       groupUsers[group_id] = [];
     }
@@ -115,6 +118,12 @@ io.on('connection', (socket) => {
 
     console.log(`Judge ${judge_id} approved to join group ${group_id}`);
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
+
+    if (judgingStarted) {
+      console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${groupId}`);
+      io.to(socket_id).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
+      io.to(socket_id).emit('nextGymnast', gymnast);
+    }
   });
 
   socket.on('rejectJoinRequest', ({ group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id }) => {
@@ -196,6 +205,13 @@ io.on('connection', (socket) => {
     io.to(`group_${groupId}`).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
     io.to(`group_${groupId}`).emit('nextGymnast', gymnast);
   });
+
+  // socket.on('judgeGymnastSingle', ({ socketId, groupId, gymnast }) => {
+  //   console.log(gymnast)
+  //   console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${groupId}`);
+  //   io.to(socketId).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
+  //   io.to(socketId).emit('nextGymnast', gymnast);
+  // });
 
   socket.on('headJudgeMessage', ({ groupId, message }) => {
     console.log(`Head judge sending message to ${groupId}`);

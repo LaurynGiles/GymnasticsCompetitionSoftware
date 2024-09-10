@@ -27,6 +27,7 @@ export const NotificationProvider = ({ children }) => {
   const [finalScore, setFinalScore] = useState(null);
   const [showResubmissionPopup, setShowResubmissionPopup] = useState(false);
   const [resubmissionApproved, setResubmissionApproved] = useState(false);
+  const [judgingStarted, setJudgingStarted] = useState(false);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -151,7 +152,7 @@ export const NotificationProvider = ({ children }) => {
 
   const approveJoinRequest = (judge) => {
     setJoinRequests(prev => prev.filter(req => req.judge_id !== judge.judge_id));
-    socket.emit("approveJoinRequest", judge);
+    socket.emit("approveJoinRequest", {judge, gymnast: nextGymnast, judgingStarted});
   };
 
   const rejectJoinRequest = (judge) => {
@@ -214,7 +215,9 @@ export const NotificationProvider = ({ children }) => {
       rejectResubmissionRequest,
       resubmissionRequests,
       resubmissionApproved,
-      setResubmissionApproved
+      setResubmissionApproved,
+      judgingStarted,
+      setJudgingStarted
     }}>
       {children}
     </NotificationContext.Provider>
