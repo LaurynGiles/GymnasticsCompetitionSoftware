@@ -48,7 +48,7 @@ const ScoreCardJudges = () => {
     <div className="bg-bright-white flex flex-row justify-center w-full h-screen">
       <div className="bg-bright-white overflow-hidden flex-1">
         <div className="fixed top-0 left-0 w-full z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={true} currPage={"/scorecardjudges"}/>
+          <NavigationBarDefault showBackIcon={false} currPage={"/scorecardjudges"}/>
         </div>
         <div className="flex flex-col w-full h-full items-center gap-12 overflow-y-auto pt-[75px] pb-[20px] relative">
           <InfoBlock />

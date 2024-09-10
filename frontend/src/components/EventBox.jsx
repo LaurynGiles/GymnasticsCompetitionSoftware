@@ -69,6 +69,7 @@
   
           if (joinResult === 'headJudge') {
             setCurrApparatus(apparatus);
+            console.log(headOfGroup);
             navigate("/lobby");
           }
   
@@ -81,9 +82,11 @@
 
     const handleJoinGroup = (group_id) => {
       return new Promise((resolve, reject) => {
-        socket.emit('joinGroup', { headOfGroup, group_id, apparatus, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
+        socket.emit('joinGroup', {group_id, apparatus, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
           if (response.success) {
             setGroupId(group_id);
+
+            console.log(`Head judge? ${response.isHeadJudge}`);
             if (response.isHeadJudge) {
               setHeadOfGroup(true);
               resolve('headJudge');

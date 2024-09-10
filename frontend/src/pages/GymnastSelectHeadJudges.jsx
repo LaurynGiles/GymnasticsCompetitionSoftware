@@ -5,7 +5,7 @@ import NavigationBarDefault from "../components/NavigationBarDefault";
 import Header from "../components/Header";
 import GymnastBlock from "../components/GymnastBlock";
 import BlockHeader from "../components/BlockHeader";
-import Popup from "../components/Popup";
+import LeavePopup from "../components/LeavePopup";
 import { getGymnastsByEvent } from "../utils/api.js";
 import { useNotifications } from "../utils/connection.jsx";
 
@@ -14,13 +14,15 @@ const GymnastSelectHeadJudges = () => {
   const [selectedGymnast, setSelectedGymnast] = useState(null);
   const [error, setError] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const { groupId, sessionId, socket } = useNotifications();
+  const { groupId, sessionId, socket, headOfGroup, setHeadOfGroup, setNextGymnast, setCurrApparatus, setPenalty, setDeductionTotal, setStartScore, setFinalScore, judgeInfo } = useNotifications();
+  const [leaveGroup, setLeaveGroup] = useState(false);
   const navigate = useNavigate();
 
   const completedGymnasts = gymnastInfo.filter(gymnast => gymnast.completed);
 
   useEffect(() => {
     const fetchGymnasts = async () => {
+      console.log(`HEAD: ${headOfGroup}`);
       try {
         const data = await getGymnastsByEvent(groupId);
         setGymnastInfo(data);
@@ -51,6 +53,19 @@ const GymnastSelectHeadJudges = () => {
       }
       navigate("/calculationsjudges");
     }
+  };
+
+  const handleLeaveGroup = () => {
+    setLeaveGroup(false);
+    socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
+    setHeadOfGroup(false);
+    setNextGymnast(null);
+    setCurrApparatus(null);
+    setPenalty(null);
+    setDeductionTotal(null);
+    setStartScore(null);
+    setFinalScore(null);
+    handleNavigation('/homejudges');
   };
 
   return (
@@ -104,6 +119,7 @@ const GymnastSelectHeadJudges = () => {
         </div>
       </div>
       {showPopup && <Popup message={"No gymnast selected"} onClose={() => setShowPopup(false)} />}
+      {leaveGroup && <LeavePopup message={error} onYes={() => handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}
     </div>
   );
 };

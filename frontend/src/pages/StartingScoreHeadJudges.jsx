@@ -58,7 +58,7 @@ const StartingScoreHeadJudges = () => {
     <div className="bg-bright-white flex flex-col justify-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
         <div className="fixed top-0 left-0 w-full z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/startingscore"} />
+          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} currPage={"/startingscore"} />
         </div>
         
         <div className="pt-[75px] pb-[20px] lg:pt-[90px] px-4 lg:px-8 flex flex-col items-center gap-4 md:gap-6 overflow-y-auto h-full">

@@ -14,6 +14,7 @@ const io = new Server(server, {
 });
 
 const loggedInJudges = new Map();
+const judgeDetails = new Map(); 
 const groupUsers = {};
 const headJudges = {};
 
@@ -27,6 +28,7 @@ io.on('connection', (socket) => {
       callback({ success: false, message: `${judge_fname} ${judge_lname} is already logged in from another device.` });
     } else {
       loggedInJudges.set(judge_id, socket.id);
+      judgeDetails.set(judge_id, { judge_fname, judge_lname });
       
       console.log(`Judge ${judge_id} (${judge_fname} ${judge_lname}) logged in.`);
       callback({ success: true, judge_id, judge_fname, judge_lname });
@@ -36,6 +38,7 @@ io.on('connection', (socket) => {
   socket.on('logout', ({ judge_id }) => {
     if (loggedInJudges.has(judge_id)) {
       loggedInJudges.delete(judge_id);
+      judgeDetails.delete(judge_id);
       console.log(`Judge ${judge_id} logged out.`);
 
       for (const groupId in groupUsers) {
@@ -55,7 +58,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('joinGroup', ({ headOfGroup, group_id, apparatus, judge_id, head_judge, judge_fname, judge_lname }, callback) => {
+  socket.on('joinGroup', ({group_id, apparatus, judge_id, head_judge, judge_fname, judge_lname }, callback) => {
 
     console.log(`Judge ${judge_id} attempting to join group ${group_id}`);
 
@@ -98,9 +101,8 @@ io.on('connection', (socket) => {
     callback({ success: true, isHeadJudge: false, message: 'Join request sent, waiting for approval.' });
   });
 
-  socket.on('approveJoinRequest', ({ judge, gymnast, judgingStarted}) => {
+  socket.on('approveJoinRequest', ({ judge, gymnast, judgingStarted, startScore, penalty}) => {
     const { group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id } = judge;
-    const { gymnast } = nextGymnast;
 
     if (!groupUsers[group_id]) {
       groupUsers[group_id] = [];
@@ -120,9 +122,10 @@ io.on('connection', (socket) => {
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
 
     if (judgingStarted) {
-      console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${groupId}`);
+      console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${group_id}`);
       io.to(socket_id).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
       io.to(socket_id).emit('nextGymnast', gymnast);
+      io.to(socket_id).emit('scoresUpdated', { startScore, penalty });
     }
   });
 
@@ -131,7 +134,7 @@ io.on('connection', (socket) => {
     console.log(`Judge ${judge_id} rejected from joining group ${group_id}`);
   });
 
-  socket.on('leaveGroup', ({ group_id, judge_id }) => {
+  socket.on('leaveGroup', ({ group_id, judge_id, judge_fname, judge_lname}) => {
     socket.leave(`group_${group_id}`);
     groupUsers[group_id] = groupUsers[group_id].filter(id => id !== socket.id);
 
@@ -140,11 +143,17 @@ io.on('connection', (socket) => {
       delete headJudges[group_id];
     }
 
-    io.to(`group_${group_id}`).emit('serverMessage', `Judge ${judge_id} left group ${group_id}`);
+    io.to(`group_${group_id}`).emit('serverMessage', `${judge_fname} ${judge_lname} left the group`);
+    io.to(`group_${group_id}`).emit('judgeLeaveGroup', {judge_id, group_id});
     console.log(`Socket left group${group_id}`);
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
   });
 
+  socket.on('judgeGymnast', ({ groupId, gymnast }) => {
+    console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${groupId}`);
+    io.to(`group_${groupId}`).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
+    io.to(`group_${groupId}`).emit('nextGymnast', gymnast);
+  });
 
   socket.on('submitDeduction', ({ groupId, judgeId, firstName, lastName, deduction, analysis }) => {
     const headJudgeId = headJudges[groupId];
@@ -176,42 +185,60 @@ io.on('connection', (socket) => {
 
   });
 
-
   socket.on('disconnect', () => {
     console.log('A user disconnected', socket.id);
 
+    let disconnectedJudgeId = null;
+    let groupIdToNotify = null;
+    let judgeDetailsToNotify = { judge_fname: '', judge_lname: '' };
+
+    // Identify the group and the judge_id
     for (const [judge_id, socketId] of loggedInJudges.entries()) {
-      if (socketId === socket.id) {
-        loggedInJudges.delete(judge_id);
-        
-        for (const groupId in groupUsers) {
-          groupUsers[groupId] = groupUsers[groupId].filter(id => id !== socket.id);
-    
-          if (headJudges[groupId] === socket.id) {
-            delete headJudges[groupId];
-            console.log(`Head judge of group ${groupId} (${judge_id}) disconnected.`);
-          }
-    
-          if (groupUsers[groupId].length === 0) {
-            delete groupUsers[groupId];
-          }
+        if (socketId === socket.id) {
+            disconnectedJudgeId = judge_id;
+            loggedInJudges.delete(judge_id);
+            
+            if (judgeDetails.has(judge_id)) {
+              const { judge_fname, judge_lname } = judgeDetails.get(judge_id);
+              judgeDetailsToNotify = { judge_fname, judge_lname };
+              judgeDetails.delete(judge_id);
+            }
+
+            // Iterate over all groups to find the one the judge was part of
+            for (const groupId in groupUsers) {
+                if (groupUsers[groupId].includes(socket.id)) {
+                    // Remove the judge from the group's user list
+                    groupUsers[groupId] = groupUsers[groupId].filter(id => id !== socket.id);
+
+                    if (headJudges[groupId] === socket.id) {
+                        // Handle if the disconnected judge was the head judge
+                        delete headJudges[groupId];
+                        console.log(`Head judge of group ${groupId} (${judge_id}) disconnected.`);
+                    }
+
+                    if (groupUsers[groupId].length === 0) {
+                        // If no users left in the group, remove the group
+                        delete groupUsers[groupId];
+                    } else {
+                        // Notify all judges in the group about the disconnection
+                        groupIdToNotify = groupId;
+                    }
+                    break; // Exit loop after finding the correct group
+                }
+            }
+            break; // Exit loop after finding the correct judge
         }
-      }
     }
-  });
 
-  socket.on('judgeGymnast', ({ groupId, gymnast }) => {
-    console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${groupId}`);
-    io.to(`group_${groupId}`).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
-    io.to(`group_${groupId}`).emit('nextGymnast', gymnast);
-  });
+    if (groupIdToNotify) {
+        io.to(`group_${groupIdToNotify}`).emit('judgeDisconnected', {
+            judge_id: disconnectedJudgeId,
+            group_id: groupIdToNotify
+        });
+        io.to(`group_${groupIdToNotify}`).emit('serverMessage', `${judgeDetailsToNotify.judge_fname} ${judgeDetailsToNotify.judge_lname} has disconnected from the group.`);
+    }
 
-  // socket.on('judgeGymnastSingle', ({ socketId, groupId, gymnast }) => {
-  //   console.log(gymnast)
-  //   console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${groupId}`);
-  //   io.to(socketId).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
-  //   io.to(socketId).emit('nextGymnast', gymnast);
-  // });
+  });
 
   socket.on('headJudgeMessage', ({ groupId, message }) => {
     console.log(`Head judge sending message to ${groupId}`);

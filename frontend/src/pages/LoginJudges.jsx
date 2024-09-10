@@ -12,10 +12,10 @@ const LoginJudges = () => {
   const navigate = useNavigate();
   const { setJudgeInfo, socket } = useNotifications();
 
-  useEffect(() => {
-    localStorage.clear();
-    localStorage.setItem("layout", 0);
-  }, []);
+  // useEffect(() => {
+    // localStorage.clear();
+    // localStorage.setItem("layout", 0);
+  // }, []);
 
   const handleLogin = async () => {
     try {

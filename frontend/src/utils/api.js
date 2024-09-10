@@ -97,7 +97,7 @@ export const submitDifficulty = async (eventId, judgeId, gymnastId, difficulty, 
     return response.data;
   } catch (error) {
     console.log(error);
-    console.error("Error fetching events:", error);
+    console.error("Error submitting difficulty:", error);
     return [];
   }
 };
@@ -108,7 +108,18 @@ export const submitExecution = async (eventId, judgeId, gymnastId, deduction) =>
     return response.data;
   } catch (error) {
     console.log(error);
-    console.error("Error fetching events:", error);
+    console.error("Error submitting execution:", error);
+    return [];
+  }
+};
+
+export const getJudgeInfo = async (judgeId) => {
+  try {
+    const response = await axiosInstance.get(`/judges/id/${judgeId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    console.error("Error fetching judge info:", error);
     return [];
   }
 };

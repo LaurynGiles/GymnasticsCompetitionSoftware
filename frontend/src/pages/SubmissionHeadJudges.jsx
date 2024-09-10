@@ -83,7 +83,7 @@ const SubmissionHeadJudges = () => {
       }
     });
 
-    socket.emit('finalScoreSubmitted', { groupId, finalScore: startScore - penalty - averageDeduction });
+    socket.emit('finalScoreSubmitted', { groupId, finalScore: (startScore - penalty - averageDeduction).toFixed(3) });
     
     setDeductionTotal(null);
     setPenalty(null);
@@ -111,7 +111,7 @@ const SubmissionHeadJudges = () => {
     <div className="bg-[#feffff] flex flex-col items-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
         <div className="fixed top-0 left-0 w-full z-10">
-          <NavigationBarDefault showBackIcon={false} showBookIcon={false} currPage={"/submission"} />
+          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} currPage={"/submission"} />
         </div>
         <div className="flex flex-col items-center w-full h-full pt-[75px] pb-[50px] gap-8 relative overflow-y-auto">
           <InfoBlock />

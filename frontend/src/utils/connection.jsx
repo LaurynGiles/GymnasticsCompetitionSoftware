@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import { getJudgeInfo } from "../utils/api.js";
 
 const NotificationContext = createContext();
 
@@ -19,7 +20,7 @@ export const NotificationProvider = ({ children }) => {
   const [groupId, setGroupId] = useState(null);
   const [headOfGroup, setHeadOfGroup] = useState(false);
   const [nextGymnast, setNextGymnast] = useState(null);
-  const [currApparatus, setCurrApparatus] = useState("");
+  const [currApparatus, setCurrApparatus] = useState(null);
   const [deductionTotal, setDeductionTotal] = useState(null);
   const [receivedDeductions, setReceivedDeductions] = useState([]);
   const [penalty, setPenalty] = useState(null);
@@ -28,10 +29,37 @@ export const NotificationProvider = ({ children }) => {
   const [showResubmissionPopup, setShowResubmissionPopup] = useState(false);
   const [resubmissionApproved, setResubmissionApproved] = useState(false);
   const [judgingStarted, setJudgingStarted] = useState(false);
+  
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
     setSocket(socketConnection);
+
+    socketConnection.on("judgeDisconnected", ({ judge_id, group_id }) => {
+        console.log(`Judge ${judge_id} disconnected from group ${group_id}`);
+          
+        setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judge_id));
+          
+        // addNotification({ 
+        //     type: "server", 
+        //     message: `${judge_fname} ${judge_lname} has disconnected from the group.`, 
+        //     sender: "system", 
+        //     time: new Date().toLocaleTimeString() 
+        // });
+    });
+
+    socketConnection.on("judgeLeaveGroup", ({ judge_id, group_id}) => {
+      console.log(`Judge ${judge_id} left group ${group_id}`);
+        
+      setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judge_id));
+        
+      // addNotification({ 
+      //     type: "server", 
+      //     message: `${judge_fname} ${judge_lname} has disconnected from the group.`, 
+      //     sender: "system", 
+      //     time: new Date().toLocaleTimeString() 
+      // });
+  });
 
     socketConnection.on("rejectionMessage", (message) => {
       console.log(`Rejection message received: ${message}`);
@@ -152,7 +180,7 @@ export const NotificationProvider = ({ children }) => {
 
   const approveJoinRequest = (judge) => {
     setJoinRequests(prev => prev.filter(req => req.judge_id !== judge.judge_id));
-    socket.emit("approveJoinRequest", {judge, gymnast: nextGymnast, judgingStarted});
+    socket.emit("approveJoinRequest", {judge, gymnast: nextGymnast, judgingStarted, startScore, penalty});
   };
 
   const rejectJoinRequest = (judge) => {
@@ -175,6 +203,16 @@ export const NotificationProvider = ({ children }) => {
     });
     setResubmissionRequests(prev => prev.filter(judge => judge.judgeId !== judgeData.judgeId));
   };
+
+  // const fetchJudgeInfo = async (judge_id) => {
+  //   try {
+  //       const judgeInfo = await getJudgeInfo(judge_id);
+  //       return judgeInfo;
+  //   } catch (error) {
+  //       console.error('Error fetching judge info:', error);
+  //       return null;
+  //   }
+  // };
 
   return (
     <NotificationContext.Provider value={{

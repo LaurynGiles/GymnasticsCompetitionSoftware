@@ -6,15 +6,20 @@ import DeductionBlock from "../components/DeductionBlock";
 import TotalDeductionsBlock from "../components/TotalDeductionsBlock";
 import DeductionButtonsSquare from "../components/DeductionButtonSquare";
 import DeductionBlockSquare from "../components/DeductionBlockSquare";
+import LeavePopup from "../components/LeavePopup.jsx";
+import { useNotifications } from "../utils/connection.jsx";
 
 const CalculationsJudges = () => {
 
   const [values, setValues] = useState([]);
   const [total, setTotal] = useState(0.0);
   const [layout, setLayout] = useState(0);
+  const [leaveGroup, setLeaveGroup] = useState(false);
+  const { groupId, socket, headOfGroup, setHeadOfGroup, setNextGymnast, setCurrApparatus, setPenalty, setDeductionTotal, setStartScore, setFinalScore, judgeInfo } = useNotifications();
 
   useEffect(() => {
     console.log("Loading calculations page");
+    console.log(headOfGroup);
 
     const storedValues = localStorage.getItem("values");
     const storedTotal = localStorage.getItem("total");
@@ -99,11 +104,24 @@ const CalculationsJudges = () => {
     }
   };
 
+  const handleLeaveGroup = () => {
+    setLeaveGroup(false);
+    socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
+    setHeadOfGroup(false);
+    setNextGymnast(null);
+    setCurrApparatus(null);
+    setPenalty(null);
+    setDeductionTotal(null);
+    setStartScore(null);
+    setFinalScore(null);
+    handleNavigation('/homejudges');
+  };
+
   return (
     <div className="bg-white flex flex-col w-full h-screen">
       <div className="bg-bright-white flex-1 w-full">
         <div className="fixed top-0 left-0 w-full z-10 bg-white shadow-md">
-          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} currPage={"/calculationsjudges"}/>
+          <NavigationBarDefault showBackIcon={false} showPeopleIcon={headOfGroup} currPage={"/calculationsjudges"}/>
         </div>
         <div className="w-full flex flex-col items-center pt-[75px] pb-[20px] md:pt-[90px] gap-4 md:gap-10 px-4 md:px-8 lg:px-16 overflow-y-auto">
           <div className="w-full flex flex-col items-center gap-8 md:gap-12">
@@ -115,6 +133,7 @@ const CalculationsJudges = () => {
           </div>
         </div>
       </div>
+      {leaveGroup && <LeavePopup message={"Are you sure that you want to leave the judging table."} onYes={() => handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}
     </div>
   );
 };

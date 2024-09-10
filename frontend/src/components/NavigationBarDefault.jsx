@@ -7,7 +7,7 @@ import BackIcon from "./BackIcon";
 import BookIcon from "./BookIcon"
 import PeopleIcon from "./PeopleIcon";
 
-const NavigationBarDefault = ({ showBackIcon, showPeopleIcon, showBookIcon, prevPage, currPage }) => {
+const NavigationBarDefault = ({ showBackIcon, showPeopleIcon, showBookIcon, prevPage, currPage, setLeaveGroup }) => {
 
   return (
     <div className="flex items-center w-full justify-between px-4 py-[12px] relative bg-glaucous">
@@ -52,7 +52,7 @@ const RightHeader = ({ currPage }) => {
 
   return (
     <div className="flex w-[180px] items-center justify-end gap-[30px] relative">
-      <HomeIcon onClick={() => handleNavigation('/homejudges')} />
+      <HomeIcon onClick={() => setLeaveGroup(true)} />
       <BellIcon onClick={() => handleNavigation('/notificationsjudges')} />
       <SettingsIcon onClick={() => handleNavigation('/settings')} />
     </div>
