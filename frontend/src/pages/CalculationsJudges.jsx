@@ -114,7 +114,7 @@ const CalculationsJudges = () => {
     setDeductionTotal(null);
     setStartScore(null);
     setFinalScore(null);
-    handleNavigation('/homejudges');
+    navigate('/homejudges');
   };
 
   return (

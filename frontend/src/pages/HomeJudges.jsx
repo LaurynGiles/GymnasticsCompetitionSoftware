@@ -101,6 +101,7 @@ const HomeJudges = () => {
     if (comp && apparatusId) {
       const fetchEventBoxes = async () => {
         const events = await getEventsBySessionAndApparatus(comp, apparatusId);
+        console.log(events);
         setEventBoxes(events);
       };
 
@@ -142,6 +143,7 @@ const HomeJudges = () => {
                 levels={eventBox.levels}
                 ages={eventBox.ages}
                 gymnasts={eventBox.gymnasts}
+                complete={eventBox.complete}
                 comp={comp}
                 setShowError={setShowError}
                 setError={setError}

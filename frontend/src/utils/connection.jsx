@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { io } from 'socket.io-client';
-import { getJudgeInfo } from "../utils/api.js";
 
 const NotificationContext = createContext();
 
@@ -29,7 +28,8 @@ export const NotificationProvider = ({ children }) => {
   const [showResubmissionPopup, setShowResubmissionPopup] = useState(false);
   const [resubmissionApproved, setResubmissionApproved] = useState(false);
   const [judgingStarted, setJudgingStarted] = useState(false);
-  
+  const [totalGymnasts, setTotalGymnasts] = useState(0);
+  const [eventEnded, setEventEnded] = useState(false);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -39,32 +39,22 @@ export const NotificationProvider = ({ children }) => {
         console.log(`Judge ${judge_id} disconnected from group ${group_id}`);
           
         setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judge_id));
-          
-        // addNotification({ 
-        //     type: "server", 
-        //     message: `${judge_fname} ${judge_lname} has disconnected from the group.`, 
-        //     sender: "system", 
-        //     time: new Date().toLocaleTimeString() 
-        // });
     });
 
     socketConnection.on("judgeLeaveGroup", ({ judge_id, group_id}) => {
       console.log(`Judge ${judge_id} left group ${group_id}`);
         
       setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judge_id));
-        
-      // addNotification({ 
-      //     type: "server", 
-      //     message: `${judge_fname} ${judge_lname} has disconnected from the group.`, 
-      //     sender: "system", 
-      //     time: new Date().toLocaleTimeString() 
-      // });
-  });
+    });
+
+    socketConnection.on("eventEnded", ({ group_id }) => {
+      console.log("The event has ended, you must leave the group");
+      setEventEnded(true);
+    });
 
     socketConnection.on("rejectionMessage", (message) => {
       console.log(`Rejection message received: ${message}`);
       addNotification({ type: "reject", message, sender: "system", time: new Date().toLocaleTimeString() });
-      // setJoinRejected(true);
       setJoinStatus("rejected");
       console.log(`New join status ${joinStatus}`);
     });
@@ -255,7 +245,11 @@ export const NotificationProvider = ({ children }) => {
       resubmissionApproved,
       setResubmissionApproved,
       judgingStarted,
-      setJudgingStarted
+      setJudgingStarted,
+      totalGymnasts,
+      setTotalGymnasts,
+      eventEnded,
+      setEventEnded
     }}>
       {children}
     </NotificationContext.Provider>

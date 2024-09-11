@@ -9,7 +9,7 @@ import Popup from "../components/Popup.jsx";
 
 const ScoreCardJudges = () => {
 
-  const { socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, nextGymnast, navigateToCalculations,
+  const { setNextGymnast, setPenalty, setStartScore, setDeductionTotal, setFinalScore, socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, eventEnded, setEventEnded, nextGymnast, navigateToCalculations,
      setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup, resubmissionApproved, setResubmissionApproved } = useNotifications();
   const navigate = useNavigate(); 
   const [showFinalScorePopup, setShowFinalScorePopup] = useState(false);
@@ -44,6 +44,26 @@ const ScoreCardJudges = () => {
     navigate("/calculationsjudges");
   };
 
+  const closeEndPop = () => {
+    socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
+    setEventEnded(false);
+    setLeaveGroup(false);
+    setNextGymnast(null);
+    setCurrApparatus(null);
+    setPenalty(null);
+    setDeductionTotal(null);
+    setStartScore(null);
+    setFinalScore(null);
+    setNavigateToCalculations(false);
+    setJudgingStarted(false);
+    localStorage.removeItem('homeJudgesState');
+    localStorage.removeItem('penalty');
+    localStorage.removeItem('startScore');
+    localStorage.removeItem('total');
+    localStorage.removeItem('values');
+    navigate("/homejudges");
+  };
+
   return (
     <div className="bg-bright-white flex flex-row justify-center w-full h-screen">
       <div className="bg-bright-white overflow-hidden flex-1">
@@ -65,6 +85,11 @@ const ScoreCardJudges = () => {
           {resubmissionApproved &&  (
             <Popup message="The head judge had approved your score resubmission." onClose={closeApprovedPop} />
           )}
+          {
+            eventEnded && (
+              <Popup message="This event has been completed, you will now be returned to the home page." onClose={closeEndPop} />
+            )
+          }
           <ResubmitButton title="Request resubmission" handleButtonClick={handleButtonClick}/>
         </div>
       </div>

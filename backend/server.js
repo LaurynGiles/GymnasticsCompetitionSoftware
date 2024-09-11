@@ -122,10 +122,17 @@ io.on('connection', (socket) => {
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
 
     if (judgingStarted) {
-      console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${group_id}`);
-      io.to(socket_id).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
-      io.to(socket_id).emit('nextGymnast', gymnast);
-      io.to(socket_id).emit('scoresUpdated', { startScore, penalty });
+      // console.log(`Gymnast selected for judging: ${gymnast.gymnast_id} in group ${group_id}`);
+
+      if (gymnast) {
+        io.to(socket_id).emit('serverMessage', `${gymnast.first_name} ${gymnast.last_name} (${gymnast.gymnast_id}) selected for judging.`)
+        io.to(socket_id).emit('nextGymnast', gymnast);
+      }
+
+      if (startScore && penalty) {
+        io.to(socket_id).emit('scoresUpdated', { startScore, penalty });
+      }
+      
     }
   });
 
@@ -237,6 +244,12 @@ io.on('connection', (socket) => {
         });
         io.to(`group_${groupIdToNotify}`).emit('serverMessage', `${judgeDetailsToNotify.judge_fname} ${judgeDetailsToNotify.judge_lname} has disconnected from the group.`);
     }
+
+  });
+
+  socket.on('endEvent', async ({ group_id, event_id }) => {
+    console.log(`Event ${event_id} ended, all member must leave the group.`);
+    io.to(`group_${group_id}`).emit('eventEnded', { group_id});
 
   });
 

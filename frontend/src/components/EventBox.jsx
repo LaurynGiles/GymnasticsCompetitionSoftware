@@ -5,9 +5,9 @@
   import { useNotifications } from "../utils/connection.jsx";
   import { useNavigate } from "react-router-dom";
 
-  const EventBox = ({group_id, apparatus, levels, ages, gymnasts, setShowError, setError, setNoSelect}) => {
+  const EventBox = ({group_id, apparatus, levels, ages, gymnasts, complete, setShowError, setError, setNoSelect}) => {
 
-    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId, setCurrApparatus, setHeadOfGroup, headOfGroup } = useNotifications();
+    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId, setCurrApparatus, setHeadOfGroup, setTotalGymnasts, totalGymnasts } = useNotifications();
     const [showPopup, setShowPopup] = useState(false);
     const [rotateArrow, setRotateArrow] = useState(180);
     const [statusMessage, setStatusMessage] = useState("");
@@ -17,46 +17,56 @@
   
     useEffect(() => {
 
-        if (joinStatus != "") {
-          if (group_id == groupId) {
-            if (joinStatus == "approved") {
-              setStatusMessage("Join approved");
-              console.log(`Setting status message to approved for group ${group_id}`);
-              setButtonClass("bg-prussian-blue-dark");
-              setIsButtonDisabled(true);
-              setNoSelect(true);
-
-            } else if (joinStatus == "rejected") {
-              setStatusMessage("Join rejected");
-              console.log(`Setting status message to rejected for group ${group_id}`);
-              setButtonClass("bg-prussian-blue cursor-pointer");
-              setIsButtonDisabled(false);
-              setNoSelect(false);
-
-            } else if (joinStatus == "waiting") {
-              setStatusMessage("Waiting for approval");
-              console.log(`Setting status message to waiting for group ${group_id}`);
-              setButtonClass("bg-prussian-blue-dark");
-              setIsButtonDisabled(true);
-              setNoSelect(true);
-            }
+        console.log(`Complete ${complete}`);
+        
+        if (complete) {
+          setStatusMessage("Completed");
+          console.log(`Setting status message to completed for group ${group_id}`);
+          setButtonClass("bg-text cursor-not-allowed");
+          setIsButtonDisabled(true);
+          setNoSelect(false);
+        } else {
+          if (joinStatus != "") {
+            if (group_id == groupId) {
+              if (joinStatus == "approved") {
+                setStatusMessage("Join approved");
+                console.log(`Setting status message to approved for group ${group_id}`);
+                setButtonClass("bg-prussian-blue-dark");
+                setIsButtonDisabled(true);
+                setNoSelect(true);
   
-          } else if (group_id != groupId) {
-
-            if (joinStatus == "rejected") {
-              setButtonClass("bg-prussian-blue cursor-pointer");
-              setIsButtonDisabled(false);
-              setNoSelect(false);
-            } else {
-              setButtonClass("bg-text cursor-not-allowed");
-              setIsButtonDisabled(true);
-              setNoSelect(true);
+              } else if (joinStatus == "rejected") {
+                setStatusMessage("Join rejected");
+                console.log(`Setting status message to rejected for group ${group_id}`);
+                setButtonClass("bg-prussian-blue cursor-pointer");
+                setIsButtonDisabled(false);
+                setNoSelect(false);
+  
+              } else if (joinStatus == "waiting") {
+                setStatusMessage("Waiting for approval");
+                console.log(`Setting status message to waiting for group ${group_id}`);
+                setButtonClass("bg-prussian-blue-dark");
+                setIsButtonDisabled(true);
+                setNoSelect(true);
+              }
+    
+            } else if (group_id != groupId) {
+  
+              if (joinStatus == "rejected") {
+                setButtonClass("bg-prussian-blue cursor-pointer");
+                setIsButtonDisabled(false);
+                setNoSelect(false);
+              } else {
+                setButtonClass("bg-text cursor-not-allowed");
+                setIsButtonDisabled(true);
+                setNoSelect(true);
+              }
+              
             }
-            
           }
         }
 
-    }, [joinStatus, group_id, groupId]);
+    }, [joinStatus, group_id, groupId, complete]);
 
     const handleArrowClick = () => {
       setShowPopup(!showPopup);
@@ -69,7 +79,8 @@
   
           if (joinResult === 'headJudge') {
             setCurrApparatus(apparatus);
-            console.log(headOfGroup);
+            console.log(`Number of gymnasts: ${gymnasts.length}`);
+            setTotalGymnasts(gymnasts.length);
             navigate("/lobby");
           }
   

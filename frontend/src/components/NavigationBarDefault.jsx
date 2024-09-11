@@ -12,7 +12,7 @@ const NavigationBarDefault = ({ showBackIcon, showPeopleIcon, showBookIcon, prev
   return (
     <div className="flex items-center w-full justify-between px-4 py-[12px] relative bg-glaucous">
       <LeftHeader showBackIcon={showBackIcon} showBookIcon={showBookIcon} showPeopleIcon={showPeopleIcon} prevPage={prevPage} currPage={currPage}/>
-      <RightHeader currPage={currPage}/>
+      <RightHeader currPage={currPage} setLeaveGroup={setLeaveGroup}/>
     </div>
   );
 };
@@ -43,7 +43,7 @@ const LeftHeader = ({ showBackIcon, showBookIcon, showPeopleIcon, prevPage, curr
   );
 };
 
-const RightHeader = ({ currPage }) => {
+const RightHeader = ({ currPage, setLeaveGroup }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {

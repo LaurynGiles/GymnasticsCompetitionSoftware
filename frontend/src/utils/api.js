@@ -46,19 +46,6 @@ export const getEventsBySessionIds = async (sessionIds) => {
     }
 };
 
-export const checkEventExists = async (level, age, apparatus) => {
-  try {
-    const response = await axiosInstance.get('/events/checkExists', {
-      params: { level, age, apparatus }
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Error checking event existence:', error);
-    return [];
-  }
-};
-
 export const getGymnastsByEvent = async (event_id, session_id) => {
   try {
     const response = await axiosInstance.get(`/gymnasts/event/${event_id}/gymnasts`);
@@ -120,6 +107,45 @@ export const getJudgeInfo = async (judgeId) => {
   } catch (error) {
     console.log(error);
     console.error("Error fetching judge info:", error);
+    return [];
+  }
+};
+
+export const checkEventComplete = async (eventId) => {
+  try {
+    const response = await axiosInstance.get(`/complete/event/${eventId}`);
+    console.log(response);
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    console.error("Error checking event completeness:", error);
+    return [];
+  }
+};
+
+export const checkSessionComplete = async (sessionId) => {
+  try {
+    const response = await axiosInstance.get(`/complete/session/${sessionId}`);
+    console.log(response);
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    console.error("Error checking session completeness:", error);
+    return [];
+  }
+};
+
+export const checkTimeSlotComplete = async (timeSlotId) => {
+  try {
+    const response = await axiosInstance.get(`/complete/timeSlot/${timeSlotId}`);
+    console.log(response);
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    console.error("Error checking timeslot completeness:", error);
     return [];
   }
 };

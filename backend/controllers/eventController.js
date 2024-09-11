@@ -129,6 +129,7 @@ export async function getEventsBySessionAndApparatus(req, res, next) {
         return {
             eventId: event.event_id,
             apparatusName: event.Apparatus.apparatus_name,
+            complete: event.completed,
             gymnasts: gymnasts.map(g => ({
                 id: g.gymnast_id,
                 first_name: g.first_name,

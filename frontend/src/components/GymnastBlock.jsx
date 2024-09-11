@@ -12,7 +12,7 @@ const GymnastBlock = ({ number, name, level, age, club, isSelected, onSelect, co
 
   return (
     <div className="w-[90%] md:w-[60%] lg:w-[60%] h-auto md:h-[120px] lg:h-[120px] flex flex-row items-center md:justify-center gap-4 md:gap-8 lg:gap-16 p-4 bg-anti-flash-white rounded-lg shadow-md"
-    onClick={() => onSelect(number)}
+    onClick={() => !competed && onSelect(number)}
     >
       {/* Circle with number */}
       <div className="flex items-center justify-center w-16 h-16 lg:h-20 lg:w-20 bg-glaucous rounded-full text-anti-flash-white text-lg md:text-xl lg:text-2xl font-montserrat font-medium">
