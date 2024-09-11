@@ -11,7 +11,7 @@ import Popup from "../components/Popup.jsx";
 
 const HomeJudges = () => {
 
-  const { judgeInfo, navigateToCalculations, setNavigateToCalculations } = useNotifications();
+  const { judgeInfo, navigateToCalculations, setNavigateToCalculations, setDeductionTotal, setFinalScore, setJoinStatus } = useNotifications();
 
   const [compOptions, setCompOptions] = useState([]);
   const [apparatusOptions, setApparatusOptions] = useState([]);
@@ -45,6 +45,9 @@ const HomeJudges = () => {
   useEffect(() => {
     if (navigateToCalculations) {
       setNavigateToCalculations(false);
+      setDeductionTotal(null);
+      setFinalScore(null);
+      setJoinStatus("");
       navigate("/calculationsjudges");
     }
   }, [navigateToCalculations, navigate, setNavigateToCalculations]);

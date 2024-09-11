@@ -249,7 +249,9 @@ export const NotificationProvider = ({ children }) => {
       totalGymnasts,
       setTotalGymnasts,
       eventEnded,
-      setEventEnded
+      setEventEnded,
+      joinedJudges,
+      setJoinedJudges
     }}>
       {children}
     </NotificationContext.Provider>

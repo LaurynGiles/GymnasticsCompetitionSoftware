@@ -16,7 +16,7 @@ const GymnastSelectHeadJudges = () => {
   const [selectedGymnast, setSelectedGymnast] = useState(null);
   const [error, setError] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const { groupId, sessionId, socket, headOfGroup, setHeadOfGroup, setJudgingStarted, setNextGymnast, setCurrApparatus, setNavigateToCalculations, setPenalty, setDeductionTotal, setStartScore, setFinalScore, judgeInfo, totalGymnasts } = useNotifications();
+  const { groupId, setJoinedJudges, sessionId, socket, headOfGroup, setHeadOfGroup, setJudgingStarted, setNextGymnast, setCurrApparatus, setNavigateToCalculations, setPenalty, setDeductionTotal, setStartScore, setFinalScore, judgeInfo, totalGymnasts } = useNotifications();
   const [leaveGroup, setLeaveGroup] = useState(false);
   const navigate = useNavigate();
 
@@ -99,6 +99,9 @@ const GymnastSelectHeadJudges = () => {
     setLeaveGroup(false);
     socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
     socket.emit('endEvent', {group_id: groupId});
+
+    setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
+
     setHeadOfGroup(false);
     setNextGymnast(null);
     setCurrApparatus(null);

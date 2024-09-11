@@ -9,7 +9,7 @@ import Popup from "../components/Popup.jsx";
 
 const ScoreCardJudges = () => {
 
-  const { setNextGymnast, setPenalty, setStartScore, setDeductionTotal, setFinalScore, socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, eventEnded, setEventEnded, nextGymnast, navigateToCalculations,
+  const { setCurrApparatus, setNextGymnast, setPenalty, setStartScore, setDeductionTotal, setFinalScore, socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, eventEnded, setEventEnded, nextGymnast, navigateToCalculations,
      setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup, resubmissionApproved, setResubmissionApproved } = useNotifications();
   const navigate = useNavigate(); 
   const [showFinalScorePopup, setShowFinalScorePopup] = useState(false);
@@ -47,15 +47,7 @@ const ScoreCardJudges = () => {
   const closeEndPop = () => {
     socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
     setEventEnded(false);
-    setLeaveGroup(false);
-    setNextGymnast(null);
-    setCurrApparatus(null);
-    setPenalty(null);
-    setDeductionTotal(null);
-    setStartScore(null);
-    setFinalScore(null);
     setNavigateToCalculations(false);
-    setJudgingStarted(false);
     localStorage.removeItem('homeJudgesState');
     localStorage.removeItem('penalty');
     localStorage.removeItem('startScore');
