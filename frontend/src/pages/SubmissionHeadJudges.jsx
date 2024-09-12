@@ -9,15 +9,19 @@ import JudgeScore from "../components/JudgeScore";
 import JudgeAnalysis from "../components/JudgeAnalysis";
 import SmallSelectBox from "../components/SmallSelectBox";
 import Popup from "../components/Popup";
+import LeavePopup from "../components/LeavePopup.jsx";
 import ScoreSubmissionBlock from "../components/ScoreSubmissionBlock";
 import ResubmitRequest from "../components/ResubmitRequest.jsx";
 import { useNotifications } from "../utils/connection.jsx";
 import { submitDifficulty, submitExecution } from "../utils/api.js";
 
 const SubmissionHeadJudges = () => {
-  const { startScore, penalty, receivedDeductions, groupId, currApparatus, judgeInfo, joinedJudges, nextGymnast, 
-    socket, setDeductionTotal, setStartScore, setPenalty, setFinalScore, setReceivedDeductions, resubmissionRequests, 
-    approveResubmissionRequest, rejectResubmissionRequest, } = useNotifications();
+  const {startScore, penalty, receivedDeductions, currApparatus,joinedJudges, nextGymnast, setReceivedDeductions, resubmissionRequests, 
+    approveResubmissionRequest, rejectResubmissionRequest,  groupId, setJoinedJudges, sessionId, socket, headOfGroup, setHeadOfGroup, 
+    setJudgingStarted, setNextGymnast, setCurrApparatus, setNavigateToCalculations, setPenalty, setDeductionTotal, setStartScore, setFinalScore, 
+    judgeInfo, totalGymnasts } = useNotifications();
+  const [leaveGroup, setLeaveGroup] = useState(false);
+  const [confirmSubmit, setConfirmSubmit] = useState(false);
   const [averageDeduction, setAverageDeduction] = useState(0.0);
   const [visibleAnalysis, setVisibleAnalysis] = useState({});
   const [rotateArrow, setRotateArrow] = useState({});
@@ -65,7 +69,27 @@ const SubmissionHeadJudges = () => {
     setShowRequestPopup(true);
   };
 
-  const handleSubmitClick = async () => {
+  const handleSubmitClick = () => {
+
+    console.log(`Judges: ${joinedJudges.length}`)
+
+    if (receivedDeductions.length != (joinedJudges.length + 1)) {
+      setConfirmSubmit(true);
+    } else {
+      submitScores();
+    }
+
+ 
+  };
+
+  const handleClosePopup = () => {
+    setShowSubmitPopup(false);
+    if (navigateOnClose) {
+      navigate("/gymnastselect");
+    }
+  };
+
+  const submitScores = async () => {
 
     try {
       const difficultyResponse = await submitDifficulty(groupId, judgeInfo.judge_id, nextGymnast.gymnast_id, startScore, penalty);
@@ -85,33 +109,49 @@ const SubmissionHeadJudges = () => {
 
     socket.emit('finalScoreSubmitted', { groupId, finalScore: (startScore - penalty - averageDeduction).toFixed(3) });
     
-    setDeductionTotal(null);
-    setPenalty(null);
-    setFinalScore(null);
-    setStartScore(null);
+    // setDeductionTotal(null);
+    // setPenalty(null);
+    // setFinalScore(null);
+    // setStartScore(null);
     setReceivedDeductions([]);
 
-    localStorage.setItem("values", []);
-    localStorage.setItem("total", 0.0);
-    localStorage.setItem("startScore", 0.0);
-    localStorage.setItem("penalty", 0.0);
+    // localStorage.setItem("values", []);
+    // localStorage.setItem("total", 0.0);
+    // localStorage.setItem("startScore", 0.0);
+    // localStorage.setItem("penalty", 0.0);
 
     setShowSubmitPopup(true);
     setNavigateOnClose(true);
-  };
+  }
 
-  const handleClosePopup = () => {
-    setShowSubmitPopup(false);
-    if (navigateOnClose) {
-      navigate("/gymnastselect");
-    }
+  const handleLeaveGroup = () => {
+    setLeaveGroup(false);
+    socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
+
+    setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
+
+    setHeadOfGroup(false);
+    setNextGymnast(null);
+    setCurrApparatus(null);
+    setPenalty(null);
+    setDeductionTotal(null);
+    setStartScore(null);
+    setFinalScore(null);
+    setNavigateToCalculations(false);
+    setJudgingStarted(false);
+    localStorage.removeItem('homeJudgesState');
+    localStorage.removeItem('penalty');
+    localStorage.removeItem('startScore');
+    localStorage.removeItem('total');
+    localStorage.removeItem('values');
+    navigate('/homejudges');
   };
 
   return (
     <div className="bg-[#feffff] flex flex-col items-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
         <div className="fixed top-0 left-0 w-full z-10">
-          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} currPage={"/submission"} />
+          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} currPage={"/submission"} setLeaveGroup={setLeaveGroup} />
         </div>
         <div className="flex flex-col items-center w-full h-full pt-[75px] pb-[50px] gap-8 relative overflow-y-auto">
           <InfoBlock />
@@ -185,6 +225,8 @@ const SubmissionHeadJudges = () => {
       </div>
       {showRequestPopup && <Popup message={`Request sent to ${requestName}`} onClose={() => setShowRequestPopup(false)} />}
       {showSubmitPopup && <Popup message={"Submitted final score"} onClose={handleClosePopup} />}
+      {leaveGroup && <LeavePopup message={"Are you sure that you want to leave the judging table."} onYes={handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}
+      {confirmSubmit && <LeavePopup message={"The number of deductions you have received does not match the number of judges at the table, please confirm that you want to submit this score."} onYes={submitScores} onNo={() => setConfirmSubmit(false)}/>}
     </div>
   );
 };

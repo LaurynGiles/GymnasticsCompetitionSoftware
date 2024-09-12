@@ -41,14 +41,14 @@ export const NotificationProvider = ({ children }) => {
         setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judge_id));
     });
 
-    socketConnection.on("judgeLeaveGroup", ({ judge_id, group_id}) => {
-      console.log(`Judge ${judge_id} left group ${group_id}`);
+    socketConnection.on("judgeLeaveGroup", ({ judge_id, judge_fname, judge_lname, group_id}) => {
+      console.log(`${judge_fname} ${judge_lname} left group ${group_id}`);
         
       setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judge_id));
     });
 
     socketConnection.on("eventEnded", ({ group_id }) => {
-      console.log("The event has ended, you must leave the group");
+      console.log("The event has ended, you must leave the group.");
       setEventEnded(true);
     });
 
@@ -250,7 +250,6 @@ export const NotificationProvider = ({ children }) => {
       setTotalGymnasts,
       eventEnded,
       setEventEnded,
-      joinedJudges,
       setJoinedJudges
     }}>
       {children}

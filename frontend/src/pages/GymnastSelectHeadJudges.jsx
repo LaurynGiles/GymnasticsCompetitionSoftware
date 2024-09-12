@@ -16,7 +16,9 @@ const GymnastSelectHeadJudges = () => {
   const [selectedGymnast, setSelectedGymnast] = useState(null);
   const [error, setError] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
-  const { groupId, setJoinedJudges, sessionId, socket, headOfGroup, setHeadOfGroup, setJudgingStarted, setNextGymnast, setCurrApparatus, setNavigateToCalculations, setPenalty, setDeductionTotal, setStartScore, setFinalScore, judgeInfo, totalGymnasts } = useNotifications();
+  const { setEventEnded, eventEnded, groupId, setJoinedJudges, sessionId, socket, headOfGroup, setHeadOfGroup, setJudgingStarted, setNextGymnast,
+     setCurrApparatus, setNavigateToCalculations, setPenalty, setDeductionTotal, setStartScore, setFinalScore, judgeInfo, totalGymnasts 
+    } = useNotifications();
   const [leaveGroup, setLeaveGroup] = useState(false);
   const navigate = useNavigate();
 
@@ -66,7 +68,9 @@ const GymnastSelectHeadJudges = () => {
         }
       }
 
-      handleLeaveGroup();
+      console.log(`Ending event ${groupId}`);
+      socket.emit('endEvent', {group_id: groupId});
+      // handleLeaveGroup();
 
     } else {
       console.log("Event has not yet completed.");
@@ -98,10 +102,9 @@ const GymnastSelectHeadJudges = () => {
   const handleLeaveGroup = () => {
     setLeaveGroup(false);
     socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
-    socket.emit('endEvent', {group_id: groupId});
 
     setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
-
+    setEventEnded(false);
     setHeadOfGroup(false);
     setNextGymnast(null);
     setCurrApparatus(null);
@@ -154,7 +157,6 @@ const GymnastSelectHeadJudges = () => {
                     level={gymnast.level}
                     age={gymnast.age}
                     club={gymnast.club}
-                    // isSelected={selectedGymnast === gymnast.gymnast_id}
                     competed={true}
                   />
                 ))}
@@ -168,6 +170,11 @@ const GymnastSelectHeadJudges = () => {
               </div>
         </div>
       </div>
+          {
+            eventEnded && (
+              <Popup message="This event has been completed, you will now be returned to the home page." onClose={handleLeaveGroup} />
+            )
+          }
       {showPopup && <Popup message={"No gymnast selected"} onClose={() => setShowPopup(false)} />}
       {leaveGroup && <LeavePopup message={"Are you sure that you want to leave the judging table."} onYes={handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}
     </div>

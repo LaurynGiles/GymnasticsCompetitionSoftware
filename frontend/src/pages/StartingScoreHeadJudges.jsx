@@ -8,14 +8,17 @@ import Header from "../components/Header";
 import StartButton from "../components/StartButton";
 import EditableScoreBlock from "../components/EditableScoreBlock";
 import Popup from "../components/Popup";
+import LeavePopup from "../components/LeavePopup.jsx";
 import { useNotifications } from "../utils/connection.jsx";
 import { useNavigate } from "react-router-dom";
 
 const StartingScoreHeadJudges = () => {
 
-  const { deductionTotal, setStartScore, setPenalty, groupId, socket } = useNotifications();
   const [startScoreLocal, setStartScoreLocal] = useState(0.0);
   const [penaltyLocal, setPenaltyLocal] = useState(0.0);
+  const [leaveGroup, setLeaveGroup] = useState(false);
+  const { deductionTotal, groupId, socket, setHeadOfGroup, setNextGymnast, setCurrApparatus, setPenalty, 
+    setDeductionTotal, setStartScore, setFinalScore, judgeInfo, setNavigateToCalculations, setJudgingStarted, setJoinedJudges  } = useNotifications();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,11 +57,34 @@ const StartingScoreHeadJudges = () => {
     navigate("/submission");
   };
 
+  const handleLeaveGroup = () => {
+    setLeaveGroup(false);
+    socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
+
+    setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
+
+    setHeadOfGroup(false);
+    setNextGymnast(null);
+    setCurrApparatus(null);
+    setPenalty(null);
+    setDeductionTotal(null);
+    setStartScore(null);
+    setFinalScore(null);
+    setNavigateToCalculations(false);
+    setJudgingStarted(false);
+    localStorage.removeItem('homeJudgesState');
+    localStorage.removeItem('penalty');
+    localStorage.removeItem('startScore');
+    localStorage.removeItem('total');
+    localStorage.removeItem('values');
+    navigate('/homejudges');
+  };
+
   return (
     <div className="bg-bright-white flex flex-col justify-center w-full h-screen">
       <div className="bg-bright-white w-full h-full">
         <div className="fixed top-0 left-0 w-full z-10">
-          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} currPage={"/startingscore"} />
+          <NavigationBarDefault showBackIcon={false} showPeopleIcon={true} setLeaveGroup={setLeaveGroup} currPage={"/startingscore"} />
         </div>
         
         <div className="pt-[75px] pb-[20px] lg:pt-[90px] px-4 lg:px-8 flex flex-col items-center gap-4 md:gap-6 overflow-y-auto h-full">
@@ -95,6 +121,7 @@ const StartingScoreHeadJudges = () => {
           
         </div>
       </div>
+      {leaveGroup && <LeavePopup message={"Are you sure that you want to leave the judging table."} onYes={handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}
     </div>
   );
 };

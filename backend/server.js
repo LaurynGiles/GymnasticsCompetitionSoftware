@@ -61,6 +61,7 @@ io.on('connection', (socket) => {
   socket.on('joinGroup', ({group_id, apparatus, judge_id, head_judge, judge_fname, judge_lname }, callback) => {
 
     console.log(`Judge ${judge_id} attempting to join group ${group_id}`);
+    console.log(`Head judge? ${head_judge}`);
 
     for (const groupId in groupUsers) {
       if (groupUsers[groupId].includes(socket.id)) {
@@ -145,15 +146,22 @@ io.on('connection', (socket) => {
     socket.leave(`group_${group_id}`);
     groupUsers[group_id] = groupUsers[group_id].filter(id => id !== socket.id);
 
-    if (headJudges[group_id] === judge_id) {
+    console.log(headJudges[group_id]);
+    console.log(socket.id);
+    if (headJudges[group_id] === socket.id) {
       console.log("Head judge left group");
       delete headJudges[group_id];
     }
 
     io.to(`group_${group_id}`).emit('serverMessage', `${judge_fname} ${judge_lname} left the group`);
-    io.to(`group_${group_id}`).emit('judgeLeaveGroup', {judge_id, group_id});
+    io.to(`group_${group_id}`).emit('judgeLeaveGroup', {judge_id, judge_fname, judge_lname, group_id});
     console.log(`Socket left group${group_id}`);
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
+
+    if (groupUsers[group_id].length === 0) {
+      // If no users left in the group, remove the group
+      delete groupUsers[group_id];
+  }
   });
 
   socket.on('judgeGymnast', ({ groupId, gymnast }) => {

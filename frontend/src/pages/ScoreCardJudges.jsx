@@ -4,13 +4,15 @@ import InfoBlock from "../components/InfoBlock";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import ScoreCard from "../components/ScoreCard";
 import ResubmitButton from "../components/ResubmitButton";
+import LeavePopup from "../components/LeavePopup.jsx";
 import { useNotifications } from "../utils/connection.jsx";
 import Popup from "../components/Popup.jsx";
 
 const ScoreCardJudges = () => {
 
-  const { setCurrApparatus, setNextGymnast, setPenalty, setStartScore, setDeductionTotal, setFinalScore, socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, eventEnded, setEventEnded, nextGymnast, navigateToCalculations,
+  const { setHeadOfGroup, setJudgingStarted, setCurrApparatus, setNextGymnast, setPenalty, setStartScore, setDeductionTotal, setFinalScore, socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, eventEnded, setEventEnded, nextGymnast, navigateToCalculations,
      setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup, resubmissionApproved, setResubmissionApproved } = useNotifications();
+  const [leaveGroup, setLeaveGroup] = useState(false);
   const navigate = useNavigate(); 
   const [showFinalScorePopup, setShowFinalScorePopup] = useState(false);
 
@@ -45,22 +47,44 @@ const ScoreCardJudges = () => {
   };
 
   const closeEndPop = () => {
+    // socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
+    // setEventEnded(false);
+    // setNavigateToCalculations(false);
+    // localStorage.removeItem('homeJudgesState');
+    // localStorage.removeItem('penalty');
+    // localStorage.removeItem('startScore');
+    // localStorage.removeItem('total');
+    // localStorage.removeItem('values');
+    // navigate("/homejudges");
+    handleLeaveGroup();
+  };
+
+  const handleLeaveGroup = () => {
+    setLeaveGroup(false);
     socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
-    setEventEnded(false);
+    setHeadOfGroup(false);
+    setNextGymnast(null);
+    setCurrApparatus(null);
+    setPenalty(null);
+    setDeductionTotal(null);
+    setStartScore(null);
+    setFinalScore(null);
     setNavigateToCalculations(false);
+    setJudgingStarted(false);
     localStorage.removeItem('homeJudgesState');
     localStorage.removeItem('penalty');
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
-    navigate("/homejudges");
+    setEventEnded(false);
+    navigate('/homejudges');
   };
 
   return (
     <div className="bg-bright-white flex flex-row justify-center w-full h-screen">
       <div className="bg-bright-white overflow-hidden flex-1">
         <div className="fixed top-0 left-0 w-full z-10">
-          <NavigationBarDefault showBackIcon={false} currPage={"/scorecardjudges"}/>
+          <NavigationBarDefault showBackIcon={false} currPage={"/scorecardjudges"} setLeaveGroup={setLeaveGroup}/>
         </div>
         <div className="flex flex-col w-full h-full items-center gap-12 overflow-y-auto pt-[75px] pb-[20px] relative">
           <InfoBlock />
@@ -85,6 +109,7 @@ const ScoreCardJudges = () => {
           <ResubmitButton title="Request resubmission" handleButtonClick={handleButtonClick}/>
         </div>
       </div>
+      {leaveGroup && <LeavePopup message={"Are you sure that you want to leave the judging table."} onYes={handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}
     </div>
   );
 };
