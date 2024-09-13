@@ -5,6 +5,14 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    admin_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Admin',
+        key: 'admin_id',
+      },
+    },
     competition_name: {
       type: DataTypes.STRING(100),
       allowNull: false,
@@ -32,6 +40,9 @@ export default (sequelize, DataTypes) => {
   Competition.associate = (models) => {
     Competition.hasMany(models.TimeSlot, {
       foreignKey: 'competition_id',
+    });
+    Competition.belongsTo(models.Admin, {
+      foreignKey: 'admin_id',
     });
   };
 

@@ -5,6 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('Competition', [
       {
         competition_name: 'Spring Invitational',
+        admin_id: 1,
         start_date: '2024-03-01',
         end_date: '2024-03-03',
         location: 'Springfield',
@@ -14,6 +15,7 @@ module.exports = {
       },
       {
         competition_name: 'Summer Championships',
+        admin_id: 1,
         start_date: '2024-06-15',
         end_date: '2024-06-17',
         location: 'Sunville',

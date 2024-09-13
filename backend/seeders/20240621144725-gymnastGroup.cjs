@@ -13,11 +13,16 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      {
-        session_id: 1,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
+      // {
+      //   session_id: 1,
+      //   createdAt: new Date(),
+      //   updatedAt: new Date()
+      // },
+      // {
+      //   session_id: 3,
+      //   createdAt: new Date(),
+      //   updatedAt: new Date()
+      // }
     ], {});
   },
 

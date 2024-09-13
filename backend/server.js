@@ -14,12 +14,28 @@ const io = new Server(server, {
 });
 
 const loggedInJudges = new Map();
+const loggedInAdmins = new Map();
 const judgeDetails = new Map(); 
 const groupUsers = {};
 const headJudges = {};
 
 io.on('connection', (socket) => {
   console.log('A user connected', socket.id);
+
+  socket.on('adminLogin', ({ admin_id, username }, callback) => {
+    console.log("Trying to log in admin");
+
+    if (loggedInAdmins.has(admin_id)) {
+      console.log("Judge already logged in");
+      callback({ success: false, message: `${username} is already logged in from another device.` });
+    } else {
+      loggedInAdmins.set(admin_id, socket.id);
+      
+      console.log(`Admin ${username} logged in.`);
+      callback({ success: true, admin_id, username });
+    }
+  });
+
 
   socket.on('login', ({ judge_id, judge_fname, judge_lname }, callback) => {
     console.log("Trying to log in judge");

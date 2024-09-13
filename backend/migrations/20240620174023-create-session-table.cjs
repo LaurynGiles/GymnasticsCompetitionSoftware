@@ -12,7 +12,7 @@ module.exports = {
       },
       time_slot_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'TimeSlot',
           key: 'time_slot_id',

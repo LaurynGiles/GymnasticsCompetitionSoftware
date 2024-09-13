@@ -4,7 +4,7 @@ import db from './models/index.js';
 import { findJudgeByGsaId } from './service/judgeService.js';
 const { Judge } = db;
 
-passport.use(new LocalStrategy({
+passport.use('judge-local', new LocalStrategy({
     usernameField: 'gsa_id',
     passwordField: 'gsa_id',
 },

@@ -10,6 +10,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import './auth.js';
+import './adminAuth.js';
 
 import gymnastRoutes from './routes/gymnastRoutes.js';
 import competitionRoutes from './routes/competitionRoutes.js';
@@ -23,6 +24,8 @@ import timeslotRoutes from './routes/timeslotRoutes.js'
 import apparatusRoutes from './routes/apparatusRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import completeRoutes from './routes/completeRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import adminAuthRoutes from './routes/adminAuthRoutes.js'
 
 const app = express();
 const allowedOrigins = [
@@ -61,6 +64,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Routes
+app.use('/api/admins', adminRoutes);
 app.use('/api/gymnasts', gymnastRoutes);
 app.use('/api/competitions', competitionRoutes);
 app.use('/api/difficulties', difficultyRoutes);
@@ -73,6 +77,7 @@ app.use('/api/timeslots', timeslotRoutes);
 app.use('/api/apparatuses', apparatusRoutes);
 app.use('/api/complete', completeRoutes);
 app.use('/api', authRoutes);
+app.use('/api/adminLogin', adminAuthRoutes);
 
 function logModelDetails() {
   Object.values(db).forEach(model => {

@@ -15,6 +15,97 @@ describe('API Tests', () => {
         }
     });
 
+    describe('Admin API', () => {
+
+        let createdAdminId;
+
+        it('should create a new competition', (done) => {
+            const admin1 = {
+                username: 'admin1',
+                password: 'password123',
+                first_name: 'John',
+                last_name: 'Doe',
+                contact_number: '1234567890',
+                email: 'john.doe@example.com'
+            };
+
+            server.request.execute(app)
+                .post('/api/admins')
+                .send(admin1)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('admin_id');
+            });
+
+            const admin2 = {
+                username: 'admin2',
+                password: 'password456',
+                first_name: 'Bob',
+                last_name: 'Dylan',
+                contact_number: '7894561232',
+                email: 'bob.dylan@example.com'
+            };
+    
+            server.request.execute(app)
+                .post('/api/admins')
+                .send(admin2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('admin_id');
+                    createdAdminId = res.body.admin_id;
+                    done();
+            });
+        });
+
+        it('should get all admins', (done) => {
+            server.request.execute(app)
+                .get('/api/admins')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    done();
+                });
+        });
+
+        it('should update an admin', (done) => {
+            const updatedAdmin = {
+                contact_number: '0987654321'
+            };
+    
+            server.request.execute(app)
+                .put(`/api/admins/${createdAdminId}`)
+                .send(updatedAdmin)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.contact_number).to.equal('0987654321');
+                    done();
+                });
+        });
+
+        it('should get the updated admin', (done) => {
+            server.request.execute(app)
+                .get(`/api/admins/${createdAdminId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('admin_id', createdAdminId);
+                    done();
+                });
+        });
+
+        it('should delete an admin', (done) => {
+            server.request.execute(app)
+                .delete(`/api/admins/${createdAdminId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+                    done();
+                });
+        });
+    });
+
     describe('Competition API', () => {
 
         let createdCompetitionId;
@@ -22,6 +113,7 @@ describe('API Tests', () => {
         it('should create a new competition', (done) => {
             const competition1 = {
                 competition_name: 'Spring Invitational',
+                admin_id: 1,
                 start_date: '2024-03-01',
                 end_date: '2024-03-03',
                 location: 'Springfield',
@@ -39,6 +131,7 @@ describe('API Tests', () => {
 
             const competition2 = {
                 competition_name: 'Summer Championships',
+                admin_id: 1,
                 start_date: '2024-06-15',
                 end_date: '2024-06-17',
                 location: 'Sunville',

@@ -7,7 +7,7 @@ export default (sequelize, DataTypes) => {
     },
     time_slot_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'TimeSlot',
         key: 'time_slot_id',

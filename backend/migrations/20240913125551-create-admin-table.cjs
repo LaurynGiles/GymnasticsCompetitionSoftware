@@ -4,40 +4,34 @@ const Sequelize = require('sequelize');
 
 module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.createTable('Competition', {
-      competition_id: {
+    await queryInterface.createTable('Admin', {
+      admin_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      admin_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Admin',
-          key: 'admin_id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-      },
-      competition_name: {
-        type: Sequelize.STRING(100),
+      username: {
+        type: Sequelize.STRING(30),
         allowNull: false,
       },
-      start_date: {
-        type: Sequelize.DATEONLY,
+      password: {
+        type: Sequelize.STRING(30),
         allowNull: false,
       },
-      end_date: {
-        type: Sequelize.DATEONLY,
+      first_name: {
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
-      location: {
-        type: Sequelize.STRING(100),
+      last_name: {
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
-      style: {
+      contact_number: {
         type: Sequelize.STRING(20),
+        allowNull: false,
+      },
+      email: {
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       createdAt: {
@@ -54,6 +48,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable('Competition');
+    await queryInterface.dropTable('Admin');
   },
 };
