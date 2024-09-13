@@ -66,3 +66,22 @@ export async function deleteCompetition(req, res, next) {
         next(error);
     }
 }
+
+export const getCompetitionsByAdmin = async (req, res) => {
+    const { admin_id } = req.params;
+
+    try {
+        const competitions = await Competition.findAll({
+            where: { admin_id },
+        });
+
+        if (!competitions.length) {
+            return res.status(404).json({ message: 'No competitions found for this admin.' });
+        }
+
+        res.status(200).json(competitions);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching competitions.' });
+    }
+};

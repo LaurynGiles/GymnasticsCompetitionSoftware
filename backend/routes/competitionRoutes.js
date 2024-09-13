@@ -1,11 +1,13 @@
 import express from 'express';
-import { getAllCompetitions, findCompetition, createCompetition, updateCompetition, deleteCompetition } from '../controllers/competitionController.js';
+import { getAllCompetitions, findCompetition, createCompetition, updateCompetition, deleteCompetition, getCompetitionsByAdmin } from '../controllers/competitionController.js';
 
 const router = express.Router();
 
 router.get('/', getAllCompetitions);
 
 router.get('/:id', findCompetition);
+
+router.get('/admin/:admin_id', getCompetitionsByAdmin);
 
 router.post('/', createCompetition);
 
