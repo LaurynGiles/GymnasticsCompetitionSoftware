@@ -33,7 +33,7 @@ const HomeAdmin = () => {
 
   }, [adminInfo.admin_id]);
 
-  const handleJudgeHome = async () => {
+  const handleJudgeHome = () => {
       navigate("/createWelcome");
   };
 

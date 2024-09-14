@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import LoginAdmin from './pages/LoginAdmin.jsx';
 import HomeAdmin from './pages/HomeAdmin.jsx';
 import WelcomePage from './pages/WelcomePage.jsx';
+import ConfigPage from './pages/ConfigPage.jsx';
 import { NotificationProvider } from './utils/connection.jsx';
 import './App.css'
 
@@ -16,6 +17,7 @@ function App() {
 
           <Route path="/homejudges" element={<HomeAdmin/>} />
           <Route path="/createWelcome" element={<WelcomePage/>} />
+          <Route path="/competitionConfig" element={<ConfigPage/>} />
           {/* <Route path="/notificationsjudges" element={<NotificationsJudges />} /> */}
           {/* <Route path="/calculationsjudges" element={<CalculationsJudges/>} /> */}
           {/* <Route path="/scorecardjudges" element={<ScoreCardJudges />} /> */}

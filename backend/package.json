@@ -15,7 +15,11 @@
     "undo-migrate": "npx sequelize-cli db:migrate:undo",
     "undo-all-migrate": "npx sequelize-cli db:migrate:undo:all",
     "undo-seed": "npx sequelize-cli db:seed:undo",
-    "undo-all-seed": "npx sequelize-cli db:seed:undo:all"
+    "undo-all-seed": "npx sequelize-cli db:seed:undo:all",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "resolutions": {
+    "lodash": "4.17.21"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +36,7 @@
     "express-session": "^1.18.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
+    "react-datepicker": "^7.3.0",
     "sequelize": "^6.37.3",
     "socket.io": "^4.7.5",
     "sqlite3": "^5.1.7"
@@ -41,6 +46,7 @@
     "chai": "^5.1.1",
     "chai-http": "^5.0.0",
     "mocha": "^10.4.0",
+    "npm-force-resolutions": "^0.0.10",
     "sequelize-cli": "^6.6.2"
   }
 }
