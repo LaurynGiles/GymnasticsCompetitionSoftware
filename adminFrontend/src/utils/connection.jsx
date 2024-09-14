@@ -11,6 +11,20 @@ export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [socket, setSocket] = useState(null);
   const [adminInfo, setAdminInfo] = useState({});
+  const [qualifications, setQualifications] = useState([]);
+  const [competition, setCompetition] = useState({
+    name: "",
+    location: "",
+    startDate: null,
+    endDate: null,
+    style: "",
+    minBronze: null,
+    maxBronze: null,
+    minSilver: null,
+    maxSilver: null,
+    minGold: null,
+    maxGold: null,
+  });
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -32,7 +46,11 @@ export const NotificationProvider = ({ children }) => {
       addNotification, 
       socket,
       adminInfo,
-      setAdminInfo
+      setAdminInfo,
+      qualifications,
+      setQualifications,
+      competition,
+      setCompetition
     }}>
       {children}
     </NotificationContext.Provider>

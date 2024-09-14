@@ -1,22 +1,45 @@
 import PropTypes from "prop-types";
 import React from "react";
 import ScoreInput from "../components/ScoreInput";
+import TextInput from "../components/TextInput";
 
-const ScoreRange = ({ className, scoreInputText = "0.00", scoreInputText1 = "33.99" }) => {
+const ScoreRange = ({ minScore, maxScore, setMinScore, setMaxScore, hasError }) => {
   return (
-    <div className={`inline-flex items-end gap-6 relative ${className}`}>
-      <ScoreInput text={scoreInputText} />
-      <div className="relative w-[72px] h-10 [font-family:'Montserrat-Medium',Helvetica] font-medium text-prussian-blue text-xl text-center tracking-[0] leading-[normal]">
+    <div className={"flex items-center gap-4"}>
+      {/* Minimum Score Input */}
+      <div className="flex items-center gap-2">
+        <ScoreInput
+          text={minScore}
+          setText={setMinScore}
+          placeholder="Min Score"
+          hasError={hasError}
+        />
+      </div>
+
+      {/* "To" Label */}
+      <div className="font-medium text-prussian-blue text-lg">
         to
       </div>
-      <ScoreInput text={scoreInputText1} />
+
+      {/* Maximum Score Input */}
+      <div className="flex items-center gap-2">
+        <ScoreInput
+          text={maxScore}
+          setText={setMaxScore}
+          placeholder="Max Score"
+          hasError={hasError}
+        />
+      </div>
     </div>
   );
 };
 
 ScoreRange.propTypes = {
-  scoreInputText: PropTypes.string,
-  scoreInputText1: PropTypes.string,
+  minScore: PropTypes.string,
+  maxScore: PropTypes.string,
+  setMinScore: PropTypes.func.isRequired,
+  setMaxScore: PropTypes.func.isRequired,
+  hasError: PropTypes.bool,
 };
 
 export default ScoreRange;

@@ -1,11 +1,14 @@
 import PropTypes from "prop-types";
 import React from "react";
+import FilledRadioSelectIcon from "../components/FilledRadioSelectIcon";
+import RadioSelectIcon from "../components/RadioSelectIcon";
 
-const RadioButtonOption = ({ className, text = "MAG" }) => {
+const RadioButtonOption = ({ text, selected, setSelected }) => {
+
   return (
-    <div className={`inline-flex items-center gap-5 px-2.5 py-0 relative bg-anti-flash-white ${className}`}>
-      <img className="relative w-6 h-6" alt="Empty radio button" />
-      <div className="relative w-fit mt-[-1.00px] [font-family:'Montserrat-Medium',Helvetica] font-medium text-[#12263a] text-2xl tracking-[0] leading-[normal]">
+    <div className="inline-flex items-center gap-5 px-4 py-2 bg-anti-flash-white rounded-lg cursor-pointer" onClick={setSelected}>
+      {selected ? <FilledRadioSelectIcon /> : <RadioSelectIcon />}
+      <div className="relative font-medium text-prussian-blue font-montserrat text-2xl">
         {text}
       </div>
     </div>
@@ -13,7 +16,10 @@ const RadioButtonOption = ({ className, text = "MAG" }) => {
 };
 
 RadioButtonOption.propTypes = {
-  text: PropTypes.string,
+  text: PropTypes.string.isRequired,
+  selected: PropTypes.bool.isRequired,
+  setSelected: PropTypes.func.isRequired,
+  setOtherSelected: PropTypes.func.isRequired,
 };
 
 export default RadioButtonOption;

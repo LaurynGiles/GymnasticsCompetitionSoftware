@@ -9,7 +9,7 @@ const EditableScoreBlock = ({ title, score, setScore }) => {
     const handleBlur = () => {
         // Format the score to 3 decimal places on blur
         const formattedScore = parseFloat(score).toFixed(3);
-        setScore(formattedScore);
+        setScore(isNaN(formattedValue) ? "" : formattedValue);
     };
 
     return (
@@ -20,7 +20,7 @@ const EditableScoreBlock = ({ title, score, setScore }) => {
           <div className="w-full bg-bright-white rounded-lg flex items-center justify-center">
               <input
                   type="text"
-                  value={score}
+                  value={score || ""}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="0.000"
