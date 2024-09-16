@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React from "react";
 
-const ScoreInput = ({ text, setText, hasError = false }) => {
-
+const ScoreInput = ({ text = "", setText, hasError = false }) => {
   const handleChange = (e) => {
     setText(e.target.value);
   };
@@ -10,7 +9,6 @@ const ScoreInput = ({ text, setText, hasError = false }) => {
   const handleBlur = () => {
     // Format the score to 3 decimal places on blur
     const formattedValue = parseFloat(text).toFixed(3);
-    console.log(formattedValue);
     setText(isNaN(formattedValue) ? "" : formattedValue);
   };
 

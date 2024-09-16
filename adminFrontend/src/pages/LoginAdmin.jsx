@@ -40,7 +40,7 @@ const LoginAdmin = () => {
         socket.emit('adminLogin', { admin_id, username}, (socketResponse) => {
           if (socketResponse.success) {
             console.log("Socket joined successfully");
-            navigate('/homejudges');
+            navigate('/homeAdmin');
           } else {
             console.log("Socket bad error");
             setErrorMessage(socketResponse.message);

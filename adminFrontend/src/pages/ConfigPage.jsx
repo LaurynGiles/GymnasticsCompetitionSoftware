@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavigationBar from "../components/NavigationBar";
 import BlueButton from "../components/BlueButton";
 import ConfigHeader from "../components/ConfigHeader";
@@ -11,16 +11,65 @@ import TextInput from "../components/TextInput";
 import AddButton from "../components/AddButton";
 import { useNotifications } from "../utils/connection.jsx";
 import XIcon from "../components/XIcon.jsx";
+import StartButton from "../components/StartButton.jsx";
+import { useNavigate } from "react-router-dom";
+import PageHeader from "../components/PageHeader.jsx";
 
 const ConfigPage = () => {
   const { competition, setCompetition, qualifications, setQualifications } = useNotifications();
   const [newQualName, setNewQualName] = useState("");
   const [newQualScore, setNewQualScore] = useState("");
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
+
+  const handleContinue = () => {
+    navigate("/timeslotConfig")
+  };
+
+  useEffect(() => {
+    const storedCompetition = JSON.parse(localStorage.getItem('competition')) || {};
+    const storedQualifications = JSON.parse(localStorage.getItem('qualifications')) || [];
+
+    if (Object.keys(storedCompetition).length > 0) {
+      storedCompetition.startDate = storedCompetition.startDate ? new Date(storedCompetition.startDate) : null;
+      storedCompetition.endDate = storedCompetition.endDate ? new Date(storedCompetition.endDate) : null;
+      setCompetition(storedCompetition);
+    }
+    setQualifications(storedQualifications);
+  }, [setCompetition, setQualifications]);
+
+  useEffect(() => {
+    // Only save non-empty values
+    if (competition.name || competition.location || competition.startDate || competition.endDate || competition.style) {
+      console.log(`Setting local storage competition: ${competition}`);
+      localStorage.setItem('competition', JSON.stringify({
+        ...competition,
+        startDate: competition.startDate ? competition.startDate.toISOString() : null,
+        endDate: competition.endDate ? competition.endDate.toISOString() : null,
+      }));
+    }
+
+    if (qualifications.length > 0) {
+      console.log(`Setting local storage qualification: ${qualifications}`);
+      localStorage.setItem('qualifications', JSON.stringify(qualifications));
+    }
+
+  }, [competition, qualifications]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCompetition(prev => ({ ...prev, [name]: value }));
+    if (name === "startDate" || name === "endDate") {
+      // Convert value to Date object
+      setCompetition(prev => ({
+        ...prev,
+        [name]: value ? new Date(value) : null
+      }));
+    } else {
+      setCompetition(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleScoreChange = (minName, maxName, value) => {
@@ -46,23 +95,21 @@ const ConfigPage = () => {
     setQualifications((prev) => prev.filter((qual) => qual.id !== id));
   };
 
+
+
   return (
     <div className="flex w-full h-screen bg-bright-white">
       <NavigationBar />
       <div className="flex-1 ml-72 mb-20 bg-bright-white overflow-auto p-5">
         <div className="w-full max-w-5xl mx-auto gap-10">
           {/* Header */}
-          <div className="flex items-center justify-center bg-light-periwinkle p-4 mb-6 rounded-lg shadow-md">
-            <h1 className="text-[34px] font-medium text-prussian-blue text-center">
-              Competition Configuration
-            </h1>
-          </div>
+         <PageHeader title={"Competition Configuration"}/>
 
           {/* Configuration Form */}
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-10 justify-center">
             {/* General Information */}
             <ConfigHeader />
-            <div className="bg-white p-5 rounded-lg shadow-md">
+            <div className="bg-white p-5 rounded-lg shadow-md w-full">
               <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-center gap-4">
                   <InputLabel text="Competition name" />
@@ -117,7 +164,7 @@ const ConfigPage = () => {
             <p className="text-xl font-medium text-text mb-4">
               Indicate the final score ranges required by gymnasts to receive a medal.
             </p>
-            <div className="bg-white p-5 rounded-lg shadow-md">
+            <div className="bg-white p-5 rounded-lg shadow-md w-full">
               <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-center gap-4">
                   <InputLabel text="Bronze" />
@@ -151,7 +198,7 @@ const ConfigPage = () => {
 
           {/* Qualifications */}
           <ConfigHeader text="Qualifications" />
-            <div className="bg-white p-5 rounded-lg shadow-md">
+            <div className="bg-white p-5 rounded-lg shadow-md w-full">
               <div className="grid grid-cols-1 gap-4">
                 {/* Qualification Inputs */}
                 <div className="flex items-center gap-4 mb-4">
@@ -167,7 +214,7 @@ const ConfigPage = () => {
                 </div>
 
                 {/* Display List of Qualifications */}
-                <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+                <div className="bg-gray-100 p-4 rounded-lg shadow-md w-full">
                 <h2 className="text-2xl font-medium font-montserrat text-prussian-blue mb-4">Existing Qualifications</h2>
                 {qualifications.length > 0 ? (
                   <ul className="list-disc pl-5 text-lg text-prussian-blue font-montserrat">
@@ -182,13 +229,21 @@ const ConfigPage = () => {
                 ) : (
                   <p className="text-lg text-prussian-blue font-montserrat font-medium">No qualifications added yet.</p>
                 )}
+                
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
+
+          
+        </div>
+        <div className="flex justify-center items-center p-5 bg-bright-white">
+          <StartButton onClick={handleContinue} title={"Continue"}/>
         </div>
       </div>
+
+
     </div>
   );
 };

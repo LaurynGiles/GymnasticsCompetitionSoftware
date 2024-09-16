@@ -18,13 +18,21 @@ export const NotificationProvider = ({ children }) => {
     startDate: null,
     endDate: null,
     style: "",
-    minBronze: null,
-    maxBronze: null,
-    minSilver: null,
-    maxSilver: null,
-    minGold: null,
-    maxGold: null,
+    minBronze: "",
+    maxBronze: "",
+    minSilver: "",
+    maxSilver: "",
+    minGold: "",
+    maxGold: "",
   });
+  const [timeslots, setTimeSlots] = useState([]);
+  // const [timeslots, setTimeSlots] = useState({
+  //   id: "",
+  //   date: null,
+  //   reportTime: null,
+  //   compTime: null,
+  //   awardTime: null,
+  // });
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -50,7 +58,9 @@ export const NotificationProvider = ({ children }) => {
       qualifications,
       setQualifications,
       competition,
-      setCompetition
+      setCompetition,
+      timeslots,
+      setTimeSlots
     }}>
       {children}
     </NotificationContext.Provider>

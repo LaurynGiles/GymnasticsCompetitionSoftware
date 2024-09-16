@@ -4,6 +4,7 @@ import LoginAdmin from './pages/LoginAdmin.jsx';
 import HomeAdmin from './pages/HomeAdmin.jsx';
 import WelcomePage from './pages/WelcomePage.jsx';
 import ConfigPage from './pages/ConfigPage.jsx';
+import TimeSlotPage from './pages/TimeSlotPage.jsx';
 import { NotificationProvider } from './utils/connection.jsx';
 import './App.css'
 
@@ -15,11 +16,11 @@ function App() {
           <Route path="/" index element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginAdmin />} />
 
-          <Route path="/homejudges" element={<HomeAdmin/>} />
+          <Route path="/homeAdmin" element={<HomeAdmin/>} />
           <Route path="/createWelcome" element={<WelcomePage/>} />
           <Route path="/competitionConfig" element={<ConfigPage/>} />
           {/* <Route path="/notificationsjudges" element={<NotificationsJudges />} /> */}
-          {/* <Route path="/calculationsjudges" element={<CalculationsJudges/>} /> */}
+          <Route path="/timeslotConfig" element={<TimeSlotPage/>} />
           {/* <Route path="/scorecardjudges" element={<ScoreCardJudges />} /> */}
 
           {/* <Route path="/lobby" element={<LobbyHeadJudges />} /> */}

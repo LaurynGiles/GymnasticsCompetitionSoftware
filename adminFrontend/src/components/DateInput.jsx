@@ -12,14 +12,17 @@ const DateInput = ({ date, setDate }) => {
     setIsOpen(false); // Optionally close the date picker after selecting a date
   };
 
+  // Ensure date is a Date object before calling toLocaleDateString
+  const formattedDate = date instanceof Date ? date.toLocaleDateString() : "";
+
   return (
     <div className="relative">
-      <div className="flex w-full max-w-[500px] items-center gap-2.5 px-2.5 py-1 bg-anti-flash-white rounded-lg shadow-sm">
+      <div className="flex w-full bg-bright-white items-center px-2.5 py-1 bg-anti-flash-white rounded-lg shadow-sm">
         <input
           type="text"
-          value={date ? date.toLocaleDateString() : ""}
+          value={formattedDate}
           readOnly
-          className="w-full bg-transparent font-montserrat font-medium text-prussian-blue text-2xl leading-normal outline-none"
+          className="w-full bg-transparent font-montserrat font-medium text-center text-prussian-blue text-2xl leading-normal outline-none"
           onClick={() => setIsOpen(!isOpen)}
         />
         <button onClick={() => setIsOpen(!isOpen)} aria-label="Open calendar">

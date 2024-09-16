@@ -19,7 +19,6 @@ RadioButtonOption.propTypes = {
   text: PropTypes.string.isRequired,
   selected: PropTypes.bool.isRequired,
   setSelected: PropTypes.func.isRequired,
-  setOtherSelected: PropTypes.func.isRequired,
 };
 
 export default RadioButtonOption;
