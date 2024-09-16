@@ -5,6 +5,7 @@ import HomeAdmin from './pages/HomeAdmin.jsx';
 import WelcomePage from './pages/WelcomePage.jsx';
 import ConfigPage from './pages/ConfigPage.jsx';
 import TimeSlotPage from './pages/TimeSlotPage.jsx';
+import GymnastInfoPage from './pages/GymnastInfoPage.jsx'
 import { NotificationProvider } from './utils/connection.jsx';
 import './App.css'
 
@@ -21,7 +22,7 @@ function App() {
           <Route path="/competitionConfig" element={<ConfigPage/>} />
           {/* <Route path="/notificationsjudges" element={<NotificationsJudges />} /> */}
           <Route path="/timeslotConfig" element={<TimeSlotPage/>} />
-          {/* <Route path="/scorecardjudges" element={<ScoreCardJudges />} /> */}
+          <Route path="/gymnastInfo" element={<GymnastInfoPage/>} />
 
           {/* <Route path="/lobby" element={<LobbyHeadJudges />} /> */}
           {/* <Route path="/gymnastselect" element={<GymnastSelectHeadJudges />} /> */}

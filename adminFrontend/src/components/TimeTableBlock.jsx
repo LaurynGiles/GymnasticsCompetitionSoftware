@@ -11,7 +11,7 @@ const TimeTableBlock = ({ time, setTime }) => {
 };
 
 TimeTableBlock.propTypes = {
-  time: PropTypes.instanceOf(Date),
+  time: PropTypes.string,
   setTime: PropTypes.func.isRequired,
 };
 

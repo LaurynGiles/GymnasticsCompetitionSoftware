@@ -39,8 +39,9 @@ const NavigationBar = () => {
           <ClockIcon onClick={() => handleNavigation('/timeslotConfig')}/>
           <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Time Slots</span>
         </div>
-        <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded">
-          <GymnastIcon />
+        <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded"
+          onClick={() => handleNavigation('/gymnastInfo')}>
+          <GymnastIcon onClick={() => handleNavigation('/gymnastInfo')}/>
           <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Gymnasts</span>
         </div>
         <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded">
