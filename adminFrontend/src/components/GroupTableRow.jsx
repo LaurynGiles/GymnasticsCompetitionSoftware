@@ -5,42 +5,28 @@ import LargeTableBlock from "./LargeTableBlock";
 import NumberTableBlock from "./NumberTableBlock";
 import { useNotifications } from "../utils/connection";
 
-const TimeSlotTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, onUpdate }) => {
-  const [error, setError] = useState(false);
-  const { timeslots } = useNotifications(); // Get timeslots from your hook
+const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, onUpdate, error }) => {
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const dateObj = new Date(dateString);
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+  };
 
   const handleTimeSlotIDChange = (newTimeSlotID) => {
-    const timeslot = timeslots.find(slot => slot.id === newTimeSlotID);
-    console.log(timeslots);
-    console.log(timeslot);
-    console.log(newTimeSlotID);
-    if (timeslot) {
-      setError(""); // Clear error if valid
-      onUpdate({
-        TimeSlotID: newTimeSlotID,
-        date: timeslot.date.toString(),
-        reportTime: timeslot.reportTime,
-        compTime: timeslot.compTime,
-        awardTime: timeslot.awardTime,
-      });
-      console.log(reportTime);
-    } else {
-      setError("Invalid TimeSlot ID"); // Set error message if not valid
-      onUpdate({
-        TimeSlotID: newTimeSlotID,
-        date: null,
-        reportTime: null,
-        compTime: null,
-        awardTime: null,
-      });
-    }
+    onUpdate({
+      timeslotId: newTimeSlotID,
+    });
   };
 
   return (
     <div className={`flex items-center gap-10 ${error ? 'border border-red-500' : ''}`}>
       <SmallTableBlock text={ID.toString()} />
       <NumberTableBlock value={TimeSlotID} onChange={handleTimeSlotIDChange}/>
-      <LargeTableBlock text={date}/>
+      <LargeTableBlock text={formatDate(date)} />
       <SmallTableBlock text={reportTime}/>
       <SmallTableBlock text={compTime}/>
       <SmallTableBlock text={awardTime}/>
@@ -48,7 +34,7 @@ const TimeSlotTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTim
   );
 };
 
-TimeSlotTableRow.propTypes = {
+GroupTableRow.propTypes = {
     ID: PropTypes.number.isRequired,
     TimeSlotID: PropTypes.number,
     date: PropTypes.string,
@@ -58,4 +44,4 @@ TimeSlotTableRow.propTypes = {
     onUpdate: PropTypes.func.isRequired,
   };
   
-  export default TimeSlotTableRow;
+  export default GroupTableRow;

@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
 import NavigationBar from "../components/NavigationBar";
 import ConfigHeader from "../components/ConfigHeader";
-import InputLabel from "../components/InputLabel";
 import AddButton from "../components/AddButton";
 import TimeSlotTableRow from "../components/TimeSlotTableRow.jsx";
 import PageHeader from "../components/PageHeader";
 import TimeSlotHeaders from "../components/TimeSlotHeaders";
-import { useNotifications } from "../utils/connection.jsx";
+import StartButton from "../components/StartButton.jsx";
+import { useNavigate } from "react-router-dom";
 
 const TimeSlotPage = () => {
 
-  const { timeslots, setTimeSlots } = useNotifications();
+  const navigate = useNavigate();
 
   const [localTimeslots, setLocalTimeslots] = useState(() => {
     const savedTimeslots = localStorage.getItem("timeslots");
     return savedTimeslots ? JSON.parse(savedTimeslots).map(slot => ({
       ...slot,
       date: slot.date ? new Date(slot.date) : null
-    })) : timeslots;
+    })) : [];
   });
   useEffect(() => {
     // Save timeslots to local storage whenever they change
     localStorage.setItem("timeslots", JSON.stringify(localTimeslots));
-    setTimeSlots(localTimeslots); // Update global state if needed
-  }, [localTimeslots, setTimeSlots]);
+  }, [localTimeslots]);
+
+  const handleContinue = () => {
+    navigate("/gymnastInfo")
+  };
   
   const handleAddTimeSlot = () => {
     // Find the highest ID in the current timeslots
@@ -40,7 +43,6 @@ const TimeSlotPage = () => {
 
     const updatedTimeslots = [...localTimeslots, newTimeslot];
     setLocalTimeslots(updatedTimeslots);
-    setTimeSlots(updatedTimeslots); // Update global state if needed
   };
 
   const handleUpdateTimeSlot = (id, updatedFields) => {
@@ -48,7 +50,6 @@ const TimeSlotPage = () => {
       slot.id === id ? { ...slot, ...updatedFields } : slot
     );
     setLocalTimeslots(updatedTimeslots);
-    setTimeSlots(updatedTimeslots); // Update global state if needed
   };
 
   return (
@@ -68,7 +69,7 @@ const TimeSlotPage = () => {
                 <TimeSlotHeaders />
                 {/* Table Rows */}
                 <div className="bg-anti-flash-white rounded-lg">
-                  {timeslots.map((slot) => (
+                  {localTimeslots.map((slot) => (
                     <TimeSlotTableRow
                       key={slot.id}
                       ID={slot.id}
@@ -80,7 +81,6 @@ const TimeSlotPage = () => {
                     />
                   ))}
                 </div>
-
                 
               </div>
             </div>
@@ -89,6 +89,9 @@ const TimeSlotPage = () => {
           <div className="flex justify-center py-5">
             <AddButton title="+" onClick={handleAddTimeSlot} />
           </div>
+        </div>
+        <div className="flex justify-center items-center p-5 bg-bright-white">
+          <StartButton onClick={handleContinue} title={"Continue"}/>
         </div>
       </div>
     </div>

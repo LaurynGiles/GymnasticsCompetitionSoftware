@@ -25,9 +25,6 @@ export const NotificationProvider = ({ children }) => {
     minGold: "",
     maxGold: "",
   });
-  const [timeslots, setTimeSlots] = useState([]);
-  const [gymnasts, setGymnasts] = useState([]);
-  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     const socketConnection = io("http://localhost:5000");
@@ -53,13 +50,7 @@ export const NotificationProvider = ({ children }) => {
       qualifications,
       setQualifications,
       competition,
-      setCompetition,
-      timeslots,
-      setTimeSlots,
-      gymnasts,
-      setGymnasts,
-      groups,
-      setGroups
+      setCompetition
     }}>
       {children}
     </NotificationContext.Provider>

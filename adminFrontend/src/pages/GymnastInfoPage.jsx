@@ -1,36 +1,43 @@
 import React, { useState, useEffect } from "react";
 import NavigationBar from "../components/NavigationBar";
 import ConfigHeader from "../components/ConfigHeader";
-import InputLabel from "../components/InputLabel";
 import AddButton from "../components/AddButton";
-import GroupHeaders from "../components/GroupHeaders"; // Import GroupHeaders
+import GroupHeaders from "../components/GroupHeaders"; 
 import PageHeader from "../components/PageHeader";
-import GroupTableRow from "../components/GroupTableRow"
+import GroupTableRow from "../components/GroupTableRow";
 import { useNotifications } from "../utils/connection";
 
 const GymnastInfoPage = () => {
-  const { timeslots, setTimeslots } = useNotifications();
+
+  const [timeslots, setTimeSlots] = useState(() => {
+    const savedTimeSlots = localStorage.getItem("timeslots");
+    return savedTimeSlots ? JSON.parse(savedTimeSlots) : [];
+  });
   
-  const [groups, setGroups] = useState(() => {
+  const [localGroups, setLocalGroups] = useState(() => {
     const savedGroups = localStorage.getItem("groups");
     return savedGroups ? JSON.parse(savedGroups) : [];
   });
 
   useEffect(() => {
-    localStorage.setItem("groups", JSON.stringify(groups));
-  }, [groups]);
+    localStorage.setItem("groups", JSON.stringify(localGroups));
+  }, [localGroups]);
 
   const handleAddGroup = () => {
-    const newId = groups.length ? Math.max(groups.map(g => g.id)) + 1 : 1;
+    // Ensure the groups array is not empty before calling Math.max
+    const newId = localGroups.length > 0 
+      ? Math.max(...localGroups.map(g => g.id)) + 1 
+      : 1; // Start from 1 if no groups exist
+    
     const newGroup = { id: newId, timeslotId: null };
-    setGroups([...groups, newGroup]);
+    setLocalGroups(prevGroups => [...prevGroups, newGroup]);
   };
 
   const handleUpdateGroup = (id, updatedFields) => {
-    const updatedGroups = groups.map(group =>
+    const updatedGroups = localGroups.map(group =>
       group.id === id ? { ...group, ...updatedFields } : group
     );
-    setGroups(updatedGroups);
+    setLocalGroups(updatedGroups);
   };
 
   const getTimeslotDetails = (timeslotId) => {
@@ -48,21 +55,23 @@ const GymnastInfoPage = () => {
             <div className="bg-white p-5 rounded-lg shadow-md w-full">
               <GroupHeaders />
               <div className="bg-anti-flash-white rounded-lg">
-                {groups.map(group => {
-                  const timeslot = getTimeslotDetails(group.timeslotId);
-                  return (
-                    <GroupTableRow
-                      key={group.id}
-                      ID={group.id}
-                      TimeSlotID={group.timeslotId}
-                      date={timeslot?.date || ''}
-                      reportTime={timeslot?.reportTime || ''}
-                      compTime={timeslot?.compTime || ''}
-                      awardTime={timeslot?.awardTime || ''}
-                      onUpdate={(updatedFields) => handleUpdateGroup(group.id, updatedFields)}
-                    />
-                  );
-                })}
+                {localGroups.map(group => {
+                    const timeslot = getTimeslotDetails(group.timeslotId);
+                    const timeslotValid = Boolean(timeslot); // Check if the timeslot is valid
+                    return (
+                      <GroupTableRow
+                        key={group.id}
+                        ID={group.id}
+                        TimeSlotID={group.timeslotId}
+                        date={timeslot?.date || ''}
+                        reportTime={timeslot?.reportTime || ''}
+                        compTime={timeslot?.compTime || ''}
+                        awardTime={timeslot?.awardTime || ''}
+                        onUpdate={(updatedFields) => handleUpdateGroup(group.id, updatedFields)}
+                        error={!timeslotValid}
+                      />
+                    );
+                  })}
               </div>
             </div>
             <div className="flex justify-center py-5">
