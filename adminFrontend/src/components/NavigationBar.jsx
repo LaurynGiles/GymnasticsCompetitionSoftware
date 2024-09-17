@@ -6,6 +6,7 @@ import ClockIcon from "../components/ClockIcon";
 import GymnastIcon from "../components/GymnastIcon";
 import BookIcon from "../components/BookIcon";
 import TickIcon from "../components/TickIcon";
+import XIcon from "./XIcon";
 import { useNavigate } from "react-router-dom";
 
 const NavigationBar = () => {
@@ -17,7 +18,7 @@ const NavigationBar = () => {
   };
   
   return (
-    <div className="fixed top-0 left-0  h-full w-[18%] bg-anti-flash-white p-4 md:p-6 lg:p-8 flex flex-col items-center">
+    <div className="fixed top-0 left-0 h-full w-[18%] bg-anti-flash-white p-4 md:p-6 lg:p-8 flex flex-col items-center">
       <img 
         className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 object-cover mb-6"
         alt="Logo" 

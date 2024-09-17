@@ -13,7 +13,7 @@ const TextInput = ({ text, setText, hasError }) => {
         type="text"
         value={text}
         onChange={handleChange}
-        placeholder={"Enter text"}
+        placeholder={"Enter"}
         className={`w-full bg-transparent font-montserrat font-medium text-prussian-blue text-lg md:text-xl lg:text-2xl tracking-normal leading-normal outline-none ${hasError ? 'text-red-500' : ''}`}
       />
     </div>

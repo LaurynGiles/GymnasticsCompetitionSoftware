@@ -14,9 +14,11 @@ import XIcon from "../components/XIcon.jsx";
 import StartButton from "../components/StartButton.jsx";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader.jsx";
+import BarsIcon from "../components/BarsIcon.jsx";
 
 const ConfigPage = () => {
   const { competition, setCompetition, qualifications, setQualifications } = useNotifications();
+  const [isNavVisible, setIsNavVisible] = useState(true);
   const [newQualName, setNewQualName] = useState("");
   const [newQualScore, setNewQualScore] = useState("");
   const [error, setError] = useState(false);
@@ -99,8 +101,9 @@ const ConfigPage = () => {
 
   return (
     <div className="flex w-full h-screen bg-bright-white">
-      <NavigationBar />
-      <div className="flex-1 ml-72 mb-20 bg-bright-white overflow-auto p-5">
+       {isNavVisible && <NavigationBar />}
+      <div className="flex-1 mb-20 bg-bright-white p-5" style={{ marginLeft: isNavVisible ? '18%' : '0', width: isNavVisible ? 'calc(100% - 18%)' : '100%' }}>
+      <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)}/>
         <div className="w-full max-w-5xl mx-auto gap-10">
           {/* Header */}
          <PageHeader title={"Competition Configuration"}/>

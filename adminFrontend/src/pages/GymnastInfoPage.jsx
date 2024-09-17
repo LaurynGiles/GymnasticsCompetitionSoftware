@@ -5,10 +5,13 @@ import AddButton from "../components/AddButton";
 import GroupHeaders from "../components/GroupHeaders"; 
 import PageHeader from "../components/PageHeader";
 import GroupTableRow from "../components/GroupTableRow";
-import { useNotifications } from "../utils/connection";
+import GymnastHeaders from "../components/GymnastHeaders"
+import GymnastTableRow from "../components/GymnastTableRow";
+import XIcon from "../components/XIcon";
+import BarsIcon from "../components/BarsIcon";
 
 const GymnastInfoPage = () => {
-
+  const [isNavVisible, setIsNavVisible] = useState(true);
   const [timeslots, setTimeSlots] = useState(() => {
     const savedTimeSlots = localStorage.getItem("timeslots");
     return savedTimeSlots ? JSON.parse(savedTimeSlots) : [];
@@ -19,18 +22,67 @@ const GymnastInfoPage = () => {
     return savedGroups ? JSON.parse(savedGroups) : [];
   });
 
+  const [gymnasts, setGymnasts] = useState(() => {
+    const savedGymnasts = localStorage.getItem("gymnasts");
+    return savedGymnasts ? JSON.parse(savedGymnasts).map(gymnast => ({
+      ...gymnast,
+      level : Number(gymnast.level),
+      GSAId: Number(gymnast.GSAId), // Ensure GSAId is a number
+    })) : [];
+  });
+
   useEffect(() => {
-    localStorage.setItem("groups", JSON.stringify(localGroups));
+    if (localGroups.length > 0) {
+      localStorage.setItem("groups", JSON.stringify(localGroups));
+    }
   }, [localGroups]);
 
+  useEffect(() => {
+    // Filter out gymnasts that don't have the required fields
+    const validGymnasts = gymnasts.filter(gymnast => 
+      gymnast.GSAId && gymnast.name && gymnast.club && gymnast.district &&
+      gymnast.level && gymnast.dateOfBirth && gymnast.ageGroup
+    );
+  
+    if (validGymnasts.length > 0) {
+      console.log("Saving valid gymnasts to local storage:", validGymnasts);
+      localStorage.setItem("gymnasts", JSON.stringify(validGymnasts));
+    }
+  }, [gymnasts]);
+
   const handleAddGroup = () => {
-    // Ensure the groups array is not empty before calling Math.max
     const newId = localGroups.length > 0 
       ? Math.max(...localGroups.map(g => g.id)) + 1 
-      : 1; // Start from 1 if no groups exist
+      : 1;
     
     const newGroup = { id: newId, timeslotId: null };
     setLocalGroups(prevGroups => [...prevGroups, newGroup]);
+  };
+
+  const handleAddGymnast = () => {
+    const newId = gymnasts.length > 0 
+      ? Math.max(...gymnasts.map(g => g.id)) + 1 
+      : 1;
+
+    const newGymnast = { 
+      id: newId,
+      GSAId: null,
+      name: "",
+      club: "",
+      district: "",
+      level: null,
+      dateOfBirth: null,
+      ageGroup: "",
+      gymnastGroup: null
+    };
+    setGymnasts(prevGymnasts => [...prevGymnasts, newGymnast]);
+  };
+
+  const handleUpdateGymnast = (id, updatedFields) => {
+    const updatedGymnasts = gymnasts.map(gymnast =>
+      gymnast.id === id ? { ...gymnast, ...updatedFields } : gymnast
+    );
+    setGymnasts(updatedGymnasts);
   };
 
   const handleUpdateGroup = (id, updatedFields) => {
@@ -45,14 +97,20 @@ const GymnastInfoPage = () => {
   };
 
   return (
-    <div className="flex w-full h-screen bg-bright-white">
-      <NavigationBar />
-      <div className="flex-1 ml-72 mb-20 bg-bright-white overflow-auto p-5">
-        <div className="w-full max-w-7xl mx-auto gap-10">
+    <div className={`flex w-full left-0 h-screen bg-bright-white overflow-x-hidden`}>
+      {isNavVisible && <NavigationBar />}
+      {/* <button onClick={() => setIsNavVisible(!isNavVisible)} className="p-2 bg-blue-500 text-white rounded">
+        {isNavVisible ? "Hide Navigation" : "Show Navigation"}
+      </button> */}
+      
+      <div className={`flex-1 mb-20 bg-bright-white p-5`} style={{ marginLeft: isNavVisible ? '18%' : '0', width: isNavVisible ? 'calc(100% - 18%)' : '100%' }}>
+        <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)}/>
+        <div className={`w-full ml-20 ${isNavVisible ? 'max-w-[1300px]' : 'max-w-[1600px]'} mx-auto gap-10`}>
           <PageHeader title="Gymnast Info Configuration" />
+
           <div className="flex flex-col gap-10">
             <ConfigHeader text="Gymnast Groups" />
-            <div className="bg-white p-5 rounded-lg shadow-md w-full">
+            <div className="bg-white p-5 rounded-lg shadow-md w-[80%]">
               <GroupHeaders />
               <div className="bg-anti-flash-white rounded-lg">
                 {localGroups.map(group => {
@@ -78,6 +136,36 @@ const GymnastInfoPage = () => {
               <AddButton title="+" onClick={handleAddGroup} />
             </div>
           </div>
+
+          <div className="flex flex-col gap-10">
+            <ConfigHeader text="Gymnasts" />
+            <div className="bg-white p-5 rounded-lg shadow-md">
+              <GymnastHeaders />
+              <div className="bg-anti-flash-white rounded-lg">
+                {gymnasts.map(gymnast => {
+                    return (
+                      <GymnastTableRow
+                        key={gymnast.id}
+                        ID={gymnast.id}
+                        GSAId={gymnast.GSAId}
+                        name={gymnast.name}
+                        club={gymnast.club}
+                        district={gymnast.district}
+                        level={gymnast.level}
+                        dateOfBirth={gymnast.dateOfBirth}
+                        ageGroup={gymnast.ageGroup}
+                        gymnastGroup={gymnast.gymnastGroup}
+                        onUpdate={(updatedFields) => handleUpdateGymnast(gymnast.id, updatedFields)}
+                      />
+                    );
+                  })}
+              </div>
+            </div>
+            <div className="flex justify-center py-5">
+              <AddButton title="+" onClick={handleAddGymnast} />
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

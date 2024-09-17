@@ -16,8 +16,8 @@ const DateInput = ({ date, setDate }) => {
   const formattedDate = date instanceof Date ? date.toLocaleDateString() : "";
 
   return (
-    <div className="relative">
-      <div className="flex w-full bg-bright-white items-center px-2.5 py-1 bg-anti-flash-white rounded-lg shadow-sm">
+    <div className="relative w-[300px]">
+      <div className="flex  bg-bright-white items-center bg-anti-flash-white rounded-lg shadow-sm">
         <input
           type="text"
           value={formattedDate}
