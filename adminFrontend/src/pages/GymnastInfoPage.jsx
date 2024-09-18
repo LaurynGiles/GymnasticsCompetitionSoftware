@@ -97,7 +97,7 @@ const GymnastInfoPage = () => {
   };
 
   return (
-    <div className={`flex w-full left-0 h-screen bg-bright-white overflow-x-hidden`}>
+    <div className={`flex w-full left-0 h-screen bg-bright-white`}>
       {isNavVisible && <NavigationBar />}
       {/* <button onClick={() => setIsNavVisible(!isNavVisible)} className="p-2 bg-blue-500 text-white rounded">
         {isNavVisible ? "Hide Navigation" : "Show Navigation"}
@@ -110,26 +110,37 @@ const GymnastInfoPage = () => {
 
           <div className="flex flex-col gap-10">
             <ConfigHeader text="Gymnast Groups" />
-            <div className="bg-white p-5 rounded-lg shadow-md w-[80%]">
+            
+            <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
               <GroupHeaders />
-              <div className="bg-anti-flash-white rounded-lg">
-                {localGroups.map(group => {
-                    const timeslot = getTimeslotDetails(group.timeslotId);
-                    const timeslotValid = Boolean(timeslot); // Check if the timeslot is valid
-                    return (
-                      <GroupTableRow
-                        key={group.id}
-                        ID={group.id}
-                        TimeSlotID={group.timeslotId}
-                        date={timeslot?.date || ''}
-                        reportTime={timeslot?.reportTime || ''}
-                        compTime={timeslot?.compTime || ''}
-                        awardTime={timeslot?.awardTime || ''}
-                        onUpdate={(updatedFields) => handleUpdateGroup(group.id, updatedFields)}
-                        error={!timeslotValid}
-                      />
-                    );
-                  })}
+              <div className="flex flex-row gap-4">
+                <div className="bg-anti-flash-white rounded-lg">
+                  {localGroups.map(group => {
+                      const timeslot = getTimeslotDetails(group.timeslotId);
+                      const timeslotValid = Boolean(timeslot); // Check if the timeslot is valid
+                      return (
+                          <GroupTableRow
+                            key={group.id}
+                            ID={group.id}
+                            TimeSlotID={group.timeslotId}
+                            date={timeslot?.date || ''}
+                            reportTime={timeslot?.reportTime || ''}
+                            compTime={timeslot?.compTime || ''}
+                            awardTime={timeslot?.awardTime || ''}
+                            onUpdate={(updatedFields) => handleUpdateGroup(group.id, updatedFields)}
+                            error={!timeslotValid}
+                          />
+                      );
+                    })}
+                </div>
+                {/* XIcons for each group */}
+                <div className="flex flex-col justify-start mt-3 gap-8">
+                  {localGroups.map(group => (
+                    <div className="flex justify-end" key={group.id}>
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="flex justify-center py-5">
@@ -139,26 +150,39 @@ const GymnastInfoPage = () => {
 
           <div className="flex flex-col gap-10">
             <ConfigHeader text="Gymnasts" />
-            <div className="bg-white p-5 rounded-lg shadow-md">
+
+
+            <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md`}>
               <GymnastHeaders />
-              <div className="bg-anti-flash-white rounded-lg">
-                {gymnasts.map(gymnast => {
-                    return (
-                      <GymnastTableRow
-                        key={gymnast.id}
-                        ID={gymnast.id}
-                        GSAId={gymnast.GSAId}
-                        name={gymnast.name}
-                        club={gymnast.club}
-                        district={gymnast.district}
-                        level={gymnast.level}
-                        dateOfBirth={gymnast.dateOfBirth}
-                        ageGroup={gymnast.ageGroup}
-                        gymnastGroup={gymnast.gymnastGroup}
-                        onUpdate={(updatedFields) => handleUpdateGymnast(gymnast.id, updatedFields)}
-                      />
-                    );
-                  })}
+              <div className="flex flex-row gap-4">
+                <div className="bg-anti-flash-white rounded-lg w-full">
+                  {gymnasts.map(gymnast => {
+                      return (
+                        <GymnastTableRow
+                          key={gymnast.id}
+                          ID={gymnast.id}
+                          GSAId={gymnast.GSAId}
+                          name={gymnast.name}
+                          club={gymnast.club}
+                          district={gymnast.district}
+                          level={gymnast.level}
+                          dateOfBirth={gymnast.dateOfBirth}
+                          ageGroup={gymnast.ageGroup}
+                          gymnastGroup={gymnast.gymnastGroup}
+                          onUpdate={(updatedFields) => handleUpdateGymnast(gymnast.id, updatedFields)}
+                        />
+                      );
+                    })}
+                </div>
+
+                {/* XIcons for each group */}
+                <div className="flex flex-col justify-start mt-3 gap-8">
+                  {gymnasts.map(gymnast => (
+                    <div className="flex justify-end" key={gymnast.id}>
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(gymnast.id)} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="flex justify-center py-5">

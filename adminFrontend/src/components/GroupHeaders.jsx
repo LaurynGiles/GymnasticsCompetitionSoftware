@@ -6,7 +6,7 @@ import TinyTableHeader from "./TinyTableHeader";
 const GroupHeaders = () => {
   return (
     <div className="flex items-start py-2.5">
-      <SmallTableHeader text={"Group Number"}/>
+      <SmallTableHeader text={"Group ID"}/>
       <TinyTableHeader text={"TimeSlot ID"} />
       <LargeTableHeader text={"Date"}/>
       <SmallTableHeader text={"Report Time"} />

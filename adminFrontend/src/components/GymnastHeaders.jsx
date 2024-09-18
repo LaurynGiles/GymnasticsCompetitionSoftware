@@ -5,7 +5,7 @@ import TinyTableHeader from "./TinyTableHeader";
 
 const GymnastHeaders = () => {
   return (
-    <div className="flex justify-center gap-2 py-2.5">
+    <div className="flex justify-center gap-2 py-2.5 mx-2">
       <SmallTableHeader text={"Gymnast Number"}/>
       <TinyTableHeader text={"GSA ID"} />
       <LargeTableHeader text={"Name"}/>
