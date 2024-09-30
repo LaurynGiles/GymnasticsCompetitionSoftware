@@ -56,7 +56,7 @@ const GymnastTableRow = ({ ID, GSAId, name, club, district, level, dateOfBirth, 
   };
 
   return (
-    <div className="flex justify-center gap-2 py-2.5">
+    <div className="flex justify-center bg-anti-flash-white px-4 gap-2 py-2.5">
       <SmallTableBlock text={ID.toString()} />
       <NumberTableBlock value={GSAId} onChange={handleGSAIDChange}/>
       <TextTableBlock value={name} onChange={handleNameChange}/>

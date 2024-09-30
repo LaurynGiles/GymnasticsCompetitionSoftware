@@ -23,7 +23,7 @@ const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, onUpdate 
   };
 
   return (
-    <div className="flex items-center gap-10 p-2">
+    <div className="flex items-center bg-anti-flash-white gap-6 p-2">
       <SmallTableBlock text={ID.toString()} />
       <DateTableBlock date={date} setDate={handleDateChange} />
       <TimeTableBlock time={reportTime} setTime={handleReportTimeChange} />

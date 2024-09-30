@@ -38,6 +38,13 @@ const GymnastInfoPage = () => {
   }, [localGroups]);
 
   useEffect(() => {
+    // Save gymnasts to local storage every time gymnasts state changes
+    if (gymnasts.length > 0) {
+      localStorage.setItem("gymnasts", JSON.stringify(gymnasts));
+    }
+  }, [gymnasts]);
+
+  useEffect(() => {
     // Filter out gymnasts that don't have the required fields
     const validGymnasts = gymnasts.filter(gymnast => 
       gymnast.GSAId && gymnast.name && gymnast.club && gymnast.district &&
@@ -92,6 +99,30 @@ const GymnastInfoPage = () => {
     setLocalGroups(updatedGroups);
   };
 
+const handleRemoveGroup = (id) => {
+  const updatedGroups = localGroups.filter(group => group.id !== id);
+  setLocalGroups(updatedGroups);
+  
+  // Check if groups are empty and remove from local storage if so
+  if (updatedGroups.length === 0) {
+    localStorage.removeItem("groups");
+  } else {
+    localStorage.setItem("groups", JSON.stringify(updatedGroups));
+  }
+};
+
+const handleRemoveGymnast = (id) => {
+  const updatedGymnasts = gymnasts.filter(gymnast => gymnast.id !== id);
+  setGymnasts(updatedGymnasts);
+  
+  // Check if gymnasts are empty and remove from local storage if so
+  if (updatedGymnasts.length === 0) {
+    localStorage.removeItem("gymnasts");
+  } else {
+    localStorage.setItem("gymnasts", JSON.stringify(updatedGymnasts));
+  }
+};
+
   const getTimeslotDetails = (timeslotId) => {
     return timeslots.find(ts => ts.id === timeslotId);
   };
@@ -99,9 +130,6 @@ const GymnastInfoPage = () => {
   return (
     <div className={`flex w-full left-0 h-screen bg-bright-white`}>
       {isNavVisible && <NavigationBar />}
-      {/* <button onClick={() => setIsNavVisible(!isNavVisible)} className="p-2 bg-blue-500 text-white rounded">
-        {isNavVisible ? "Hide Navigation" : "Show Navigation"}
-      </button> */}
       
       <div className={`flex-1 mb-20 bg-bright-white p-5`} style={{ marginLeft: isNavVisible ? '18%' : '0', width: isNavVisible ? 'calc(100% - 18%)' : '100%' }}>
         <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)}/>
@@ -114,7 +142,7 @@ const GymnastInfoPage = () => {
             <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
               <GroupHeaders />
               <div className="flex flex-row gap-4">
-                <div className="bg-anti-flash-white rounded-lg">
+                <div className="rounded-lg">
                   {localGroups.map(group => {
                       const timeslot = getTimeslotDetails(group.timeslotId);
                       const timeslotValid = Boolean(timeslot); // Check if the timeslot is valid
@@ -134,9 +162,9 @@ const GymnastInfoPage = () => {
                     })}
                 </div>
                 {/* XIcons for each group */}
-                <div className="flex flex-col justify-start mt-3 gap-8">
+                <div className="flex flex-col items-start">
                   {localGroups.map(group => (
-                    <div className="flex justify-end" key={group.id}>
+                    <div className="flex justify-end py-4" key={group.id}>
                       <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} />
                     </div>
                   ))}
@@ -154,8 +182,10 @@ const GymnastInfoPage = () => {
 
             <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md`}>
               <GymnastHeaders />
+              
               <div className="flex flex-row gap-4">
-                <div className="bg-anti-flash-white rounded-lg w-full">
+
+                <div className="rounded-lg w-[97%]">
                   {gymnasts.map(gymnast => {
                       return (
                         <GymnastTableRow
@@ -176,13 +206,14 @@ const GymnastInfoPage = () => {
                 </div>
 
                 {/* XIcons for each group */}
-                <div className="flex flex-col justify-start mt-3 gap-8">
+                <div className="flex flex-col items-start">
                   {gymnasts.map(gymnast => (
-                    <div className="flex justify-end" key={gymnast.id}>
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(gymnast.id)} />
+                    <div className="flex justify-end py-[16px]" key={gymnast.id}>
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} />
                     </div>
                   ))}
                 </div>
+
               </div>
             </div>
             <div className="flex justify-center py-5">

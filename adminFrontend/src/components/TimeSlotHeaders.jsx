@@ -4,7 +4,7 @@ import LargeTableHeader from "../components/LargeTableHeader";
 
 const TimeSlotHeaders = () => {
   return (
-    <div className="flex items-center justify-center gap-10 px-0 py-2.5">
+    <div className="flex items-center justify-center gap-6 p-2.5">
       <SmallTableHeader text={"ID"}/>
       <LargeTableHeader text={"Date"}/>
       <SmallTableHeader text={"Report Time"} />

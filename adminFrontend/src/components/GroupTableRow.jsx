@@ -23,7 +23,7 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
   };
 
   return (
-    <div className={`flex items-start py-2.5 ${error ? 'border border-red-500' : ''}`}>
+    <div className={`flex items-center py-2.5 bg-anti-flash-white ${error ? 'border border-red-500' : ''}`}>
       <SmallTableBlock text={ID.toString()} />
       <NumberTableBlock value={TimeSlotID} onChange={handleTimeSlotIDChange}/>
       <LargeTableBlock text={formatDate(date)} />

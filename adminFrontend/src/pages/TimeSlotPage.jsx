@@ -8,6 +8,7 @@ import TimeSlotHeaders from "../components/TimeSlotHeaders";
 import StartButton from "../components/StartButton.jsx";
 import { useNavigate } from "react-router-dom";
 import BarsIcon from "../components/BarsIcon.jsx";
+import XIcon from "../components/XIcon.jsx";
 
 const TimeSlotPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -53,47 +54,71 @@ const TimeSlotPage = () => {
     setLocalTimeslots(updatedTimeslots);
   };
 
+  const handleRemoveTimeSlot = (id) => {
+    const updatedTimeslots = localTimeslots.filter(slot => slot.id !== id);
+    setLocalTimeslots(updatedTimeslots);
+    // Also remove from local storage if needed
+    if (updatedTimeslots.length === 0) {
+      localStorage.removeItem("timeslots");
+    } else {
+      localStorage.setItem("timeslots", JSON.stringify(updatedTimeslots));
+    }
+  };
+
   return (
     <div className="flex w-full h-screen bg-bright-white">
       {isNavVisible && <NavigationBar />}
       <div className="flex-1 mb-20 bg-bright-white p-5" style={{ marginLeft: isNavVisible ? '18%' : '0', width: isNavVisible ? 'calc(100% - 18%)' : '100%' }}>
-      <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)}/>
+        <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)} />
         <div className="w-full max-w-7xl mx-auto gap-10">
           {/* Header */}
           <PageHeader title="Time Slot Configuration" />
 
           {/* Sessions Configuration */}
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-8">
             <ConfigHeader text="Sessions" />
             <div className="bg-white p-5 rounded-lg shadow-md w-full">
-              <div className="flex flex-col items-center justify-start">
+              <div className="flex flex-col items-start justify-start">
                 {/* Table Headers */}
                 <TimeSlotHeaders />
                 {/* Table Rows */}
-                <div className="bg-anti-flash-white rounded-lg">
-                  {localTimeslots.map((slot) => (
-                    <TimeSlotTableRow
-                      key={slot.id}
-                      ID={slot.id}
-                      reportTime={slot.reportTime}
-                      compTime={slot.compTime}
-                      awardTime={slot.awardTime}
-                      date={slot.date}
-                      onUpdate={(updatedFields) => handleUpdateTimeSlot(slot.id, updatedFields)}
-                    />
-                  ))}
+                <div className="rounded-lg">
+                  <div className="flex flex-row gap-4">
+                    <div className="w-full">
+                      {localTimeslots.map((slot) => (
+                        <TimeSlotTableRow
+                          key={slot.id}
+                          ID={slot.id}
+                          reportTime={slot.reportTime}
+                          compTime={slot.compTime}
+                          awardTime={slot.awardTime}
+                          date={slot.date}
+                          onUpdate={(updatedFields) => handleUpdateTimeSlot(slot.id, updatedFields)}
+                        />
+                      ))}
+                    </div>
+
+                    {/* XIcons for each timeslot */}
+                    <div className="flex flex-col items-start">
+                      {localTimeslots.map((slot) => (
+                        <div className="flex justify-end py-6" key={slot.id}>
+                          <XIcon className="cursor-pointer" onClick={() => handleRemoveTimeSlot(slot.id)} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                
               </div>
             </div>
           </div>
+
           {/* Add Button */}
           <div className="flex justify-center py-5">
             <AddButton title="+" onClick={handleAddTimeSlot} />
           </div>
         </div>
         <div className="flex justify-center items-center p-5 bg-bright-white">
-          <StartButton onClick={handleContinue} title={"Continue"}/>
+          <StartButton onClick={handleContinue} title={"Continue"} />
         </div>
       </div>
     </div>
