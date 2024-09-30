@@ -7,8 +7,9 @@ import NumberTableBlock from "./NumberTableBlock";
 import TextTableBlock from "./TextTableBlock";
 import DateInput from "./DateInput";
 import SmallTextTableBlock from "./SmallTextTableBlock";
+import XIcon from "./XIcon";
 
-const GymnastTableRow = ({ ID, GSAId, name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate }) => {
+const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate, handleRemoveGymnast }) => {
 
   const handleGSAIDChange = (newGSAID) => {
     const parsedGSAID = newGSAID === "" ? null : parseInt(newGSAID, 10);
@@ -17,9 +18,16 @@ const GymnastTableRow = ({ ID, GSAId, name, club, district, level, dateOfBirth, 
     });
   };
 
-  const handleNameChange = (newName) => {
+  const handleFNameChange = (newFName) => {
     onUpdate({
-      name: newName,
+      f_name: newFName,
+    });
+  };
+
+
+  const handleLNameChange = (newLName) => {
+    onUpdate({
+      l_name: newLName,
     });
   };
 
@@ -56,16 +64,35 @@ const GymnastTableRow = ({ ID, GSAId, name, club, district, level, dateOfBirth, 
   };
 
   return (
-    <div className="flex justify-center bg-anti-flash-white px-4 gap-2 py-2.5">
-      <SmallTableBlock text={ID.toString()} />
-      <NumberTableBlock value={GSAId} onChange={handleGSAIDChange}/>
-      <TextTableBlock value={name} onChange={handleNameChange}/>
-      <TextTableBlock value={club} onChange={handleClubChange}/>
-      <SmallTextTableBlock value={district} onChange={handleDistrictChange}/>
-      <NumberTableBlock value={level} onChange={handleLevelChange}/>
-      <DateInput date={dateOfBirth} setDate={handleDOBChange}/>
-      <SmallTableBlock text={ageGroup} />
-      <NumberTableBlock value={gymnastGroup} onChange={handleGroupChange}/>
+    <div className="w-full flex justify-start gap-1 bg-anti-flash-white px-4 py-2.5">
+      {/* Conditional rendering based on ID */}
+      {ID === 1 ? (
+        <>
+          <SmallTableBlock text={ID.toString()} title={"Gymnast Number"} />
+          <NumberTableBlock value={GSAId} title={"GSA ID"} onChange={handleGSAIDChange} />
+          <TextTableBlock value={f_name} title="First Name" onChange={handleFNameChange} />
+          <TextTableBlock value={l_name} title="Last Name" onChange={handleLNameChange} />
+          <TextTableBlock value={club} title="Club" onChange={handleClubChange} />
+          <SmallTextTableBlock value={district} title="District" onChange={handleDistrictChange} />
+          <NumberTableBlock value={level} title="Level" onChange={handleLevelChange} />
+          <DateTableBlock date={dateOfBirth} title="Date of Birth" setDate={handleDOBChange} />
+          <SmallTableBlock title="Age group" text={ageGroup} />
+          <NumberTableBlock value={gymnastGroup} title="Gymnast Group" onChange={handleGroupChange} />
+        </>
+      ) : (
+        <>
+          <SmallTableBlock text={ID.toString()} />
+          <NumberTableBlock value={GSAId} onChange={handleGSAIDChange} />
+          <TextTableBlock value={f_name} onChange={handleFNameChange} />
+          <TextTableBlock value={l_name} onChange={handleLNameChange} />
+          <TextTableBlock value={club} onChange={handleClubChange} />
+          <SmallTextTableBlock value={district} onChange={handleDistrictChange} />
+          <NumberTableBlock value={level} onChange={handleLevelChange} />
+          <DateTableBlock date={dateOfBirth} setDate={handleDOBChange} />
+          <SmallTableBlock text={ageGroup} />
+          <NumberTableBlock value={gymnastGroup} onChange={handleGroupChange} />
+        </>
+      )}
     </div>
   );
 };

@@ -23,13 +23,25 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
   };
 
   return (
-    <div className={`flex items-center py-2.5 bg-anti-flash-white ${error ? 'border border-red-500' : ''}`}>
-      <SmallTableBlock text={ID.toString()} />
-      <NumberTableBlock value={TimeSlotID} onChange={handleTimeSlotIDChange}/>
-      <LargeTableBlock text={formatDate(date)} />
-      <SmallTableBlock text={reportTime}/>
-      <SmallTableBlock text={compTime}/>
-      <SmallTableBlock text={awardTime}/>
+    <div className={`w-full flex justify-start py-2.5 bg-anti-flash-white ${error ? 'border border-red-500' : ''}`}>
+      {/* Conditional rendering based on ID */}
+      {ID === 1 ? (
+        <>
+         <SmallTableBlock text={ID.toString()} title={"Group ID"} />
+          <NumberTableBlock value={TimeSlotID} onChange={handleTimeSlotIDChange} title={"Timeslot ID"}/>
+          <LargeTableBlock text={formatDate(date)} title={"Date"} />
+          <SmallTableBlock text={reportTime} title={"Report Time"}/>
+          <SmallTableBlock text={compTime} title={"Comp Time"}/>
+        </>
+      ) : (
+        <>
+          <SmallTableBlock text={ID.toString()} />
+          <NumberTableBlock value={TimeSlotID} onChange={handleTimeSlotIDChange}/>
+          <LargeTableBlock text={formatDate(date)}/>
+          <SmallTableBlock text={reportTime} />
+          <SmallTableBlock text={compTime}/>
+        </>
+      )}
     </div>
   );
 };

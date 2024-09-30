@@ -23,12 +23,25 @@ const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, onUpdate 
   };
 
   return (
-    <div className="flex items-center bg-anti-flash-white gap-6 p-2">
-      <SmallTableBlock text={ID.toString()} />
-      <DateTableBlock date={date} setDate={handleDateChange} />
-      <TimeTableBlock time={reportTime} setTime={handleReportTimeChange} />
-      <TimeTableBlock time={compTime} setTime={handleCompTimeChange} />
-      <TimeTableBlock time={awardTime} setTime={handleAwardTimeChange} />
+    <div className="flex justify-start bg-anti-flash-white gap-6 p-2">
+      {/* Conditional rendering based on ID */}
+      {ID === 1 ? (
+        <>
+          <SmallTableBlock text={ID.toString()} title={"Time Slot ID"} />
+          <DateTableBlock date={date} setDate={handleDateChange} title={"Date"}/>
+          <TimeTableBlock time={reportTime} setTime={handleReportTimeChange} title={"Report Time"}/>
+          <TimeTableBlock time={compTime} setTime={handleCompTimeChange} title={"Comp Time"}/>
+          <TimeTableBlock time={awardTime} setTime={handleAwardTimeChange} title={"Award Time"}/>
+        </>
+      ) : (
+        <>
+          <SmallTableBlock text={ID.toString()} />
+          <DateTableBlock date={date} setDate={handleDateChange} />
+          <TimeTableBlock time={reportTime} setTime={handleReportTimeChange} />
+          <TimeTableBlock time={compTime} setTime={handleCompTimeChange} />
+          <TimeTableBlock time={awardTime} setTime={handleAwardTimeChange} />
+        </>
+      )}
     </div>
   );
 };

@@ -16,13 +16,13 @@ const DateInput = ({ date, setDate }) => {
   const formattedDate = date instanceof Date ? date.toLocaleDateString() : "";
 
   return (
-    <div className="relative w-[300px]">
+    <div className="relative w-[200px]">
       <div className="flex  bg-bright-white items-center bg-anti-flash-white rounded-lg shadow-sm">
         <input
           type="text"
           value={formattedDate}
           readOnly
-          className="w-full bg-transparent font-montserrat font-medium text-center text-prussian-blue text-2xl leading-normal outline-none"
+          className="w-full h-[50px] bg-transparent font-montserrat font-medium text-center text-prussian-blue text-xl leading-normal outline-none"
           onClick={() => setIsOpen(!isOpen)}
         />
         <button onClick={() => setIsOpen(!isOpen)} aria-label="Open calendar">

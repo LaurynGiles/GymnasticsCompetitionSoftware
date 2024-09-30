@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-const NumberTableBlock = ({ value, onChange }) => {
+const NumberTableBlock = ({ value, onChange, title }) => {
   const handleChange = (event) => {
     const newValue = event.target.value;
     const parsedValue = newValue === "" ? null : parseInt(newValue, 10);
@@ -9,21 +9,30 @@ const NumberTableBlock = ({ value, onChange }) => {
   };
 
   return (
-    <input
-      type="text"
-      value={value !== null ? value : ''}
-      onChange={handleChange}
-      className="w-[100px] py-2 px-4 bg-bright-white border text-center border-gray-300 rounded-lg"
-      placeholder="0"
-      inputMode="numeric" // Suggests numeric keyboard on mobile devices
-      pattern="\d*" // Ensures only digits are accepted in HTML5
-    />
+    <div className="flex flex-col justify-between items-center">
+      {/* Render title if provided */}
+      {title && (
+        <div className="font-montserrat font-medium text-prussian-blue text-base md:text-lg text-center">
+          {title}
+        </div>
+      )}
+      <input
+        type="text"
+        value={value !== null ? value : ''}
+        onChange={handleChange}
+        className="w-[100px] h-[50px] bg-bright-white border text-center border-gray-300 rounded-lg"
+        placeholder="0"
+        inputMode="numeric" // Suggests numeric keyboard on mobile devices
+        pattern="\d*" // Ensures only digits are accepted in HTML5
+      />
+    </div>
   );
 };
 
 NumberTableBlock.propTypes = {
   value: PropTypes.number,
   onChange: PropTypes.func.isRequired,
+  title: PropTypes.string, // Title is optional
 };
 
 export default NumberTableBlock;

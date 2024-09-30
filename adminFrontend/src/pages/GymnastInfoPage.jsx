@@ -9,6 +9,7 @@ import GymnastHeaders from "../components/GymnastHeaders"
 import GymnastTableRow from "../components/GymnastTableRow";
 import XIcon from "../components/XIcon";
 import BarsIcon from "../components/BarsIcon";
+import StartButton from "../components/StartButton";
 
 const GymnastInfoPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -66,6 +67,9 @@ const GymnastInfoPage = () => {
     setLocalGroups(prevGroups => [...prevGroups, newGroup]);
   };
 
+  const handleContinue = () => {
+  };
+
   const handleAddGymnast = () => {
     const newId = gymnasts.length > 0 
       ? Math.max(...gymnasts.map(g => g.id)) + 1 
@@ -74,7 +78,8 @@ const GymnastInfoPage = () => {
     const newGymnast = { 
       id: newId,
       GSAId: null,
-      name: "",
+      f_name: "",
+      l_name: "",
       club: "",
       district: "",
       level: null,
@@ -140,9 +145,9 @@ const handleRemoveGymnast = (id) => {
             <ConfigHeader text="Gymnast Groups" />
             
             <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
-              <GroupHeaders />
-              <div className="flex flex-row gap-4">
-                <div className="rounded-lg">
+
+              <div className="flex items-center justify-center flex-row gap-4">
+                <div className="">
                   {localGroups.map(group => {
                       const timeslot = getTimeslotDetails(group.timeslotId);
                       const timeslotValid = Boolean(timeslot); // Check if the timeslot is valid
@@ -164,7 +169,10 @@ const handleRemoveGymnast = (id) => {
                 {/* XIcons for each group */}
                 <div className="flex flex-col items-start">
                   {localGroups.map(group => (
-                    <div className="flex justify-end py-4" key={group.id}>
+                    <div
+                      className={`flex justify-end ${group.id === 1 ? 'pt-[60px] pb-[20px]' : 'py-[20px]'}`} 
+                      key={group.id}
+                    >
                       <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} />
                     </div>
                   ))}
@@ -180,19 +188,19 @@ const handleRemoveGymnast = (id) => {
             <ConfigHeader text="Gymnasts" />
 
 
-            <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md`}>
-              <GymnastHeaders />
+            <div className={`flex flex-col bg-white p-5 rounded-lg shadow-md`}>
               
               <div className="flex flex-row gap-4">
 
-                <div className="rounded-lg w-[97%]">
+                <div className="w-[97%]">
                   {gymnasts.map(gymnast => {
                       return (
                         <GymnastTableRow
                           key={gymnast.id}
                           ID={gymnast.id}
                           GSAId={gymnast.GSAId}
-                          name={gymnast.name}
+                          f_name={gymnast.f_name}
+                          l_name={gymnast.l_name}
                           club={gymnast.club}
                           district={gymnast.district}
                           level={gymnast.level}
@@ -208,7 +216,10 @@ const handleRemoveGymnast = (id) => {
                 {/* XIcons for each group */}
                 <div className="flex flex-col items-start">
                   {gymnasts.map(gymnast => (
-                    <div className="flex justify-end py-[16px]" key={gymnast.id}>
+                    <div
+                      className={`flex justify-end ${gymnast.id === 1 ? 'pt-[88px] pb-[20px]' : 'py-[19px]'}`} 
+                      key={gymnast.id}
+                    >
                       <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} />
                     </div>
                   ))}
@@ -221,6 +232,9 @@ const handleRemoveGymnast = (id) => {
             </div>
           </div>
 
+        </div>
+        <div className="flex justify-center items-center p-5 bg-bright-white">
+          <StartButton onClick={handleContinue} title={"Continue"} />
         </div>
       </div>
     </div>

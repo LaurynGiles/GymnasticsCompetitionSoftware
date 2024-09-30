@@ -79,8 +79,7 @@ const TimeSlotPage = () => {
             <ConfigHeader text="Sessions" />
             <div className="bg-white p-5 rounded-lg shadow-md w-full">
               <div className="flex flex-col items-start justify-start">
-                {/* Table Headers */}
-                <TimeSlotHeaders />
+
                 {/* Table Rows */}
                 <div className="rounded-lg">
                   <div className="flex flex-row gap-4">
@@ -98,14 +97,17 @@ const TimeSlotPage = () => {
                       ))}
                     </div>
 
-                    {/* XIcons for each timeslot */}
-                    <div className="flex flex-col items-start">
-                      {localTimeslots.map((slot) => (
-                        <div className="flex justify-end py-6" key={slot.id}>
-                          <XIcon className="cursor-pointer" onClick={() => handleRemoveTimeSlot(slot.id)} />
-                        </div>
-                      ))}
-                    </div>
+                    {/* XIcons for each group */}
+                  <div className="flex flex-col items-start">
+                    {localTimeslots.map(slot => (
+                      <div
+                        className={`flex justify-end ${slot.id === 1 ? 'pt-[60px] pb-[14px]' : 'py-[17px]'}`} 
+                        key={slot.id}
+                      >
+                        <XIcon className="cursor-pointer" onClick={() => handleRemoveTimeSlot(slot.id)} />
+                      </div>
+                    ))}
+                  </div>
                   </div>
                 </div>
               </div>

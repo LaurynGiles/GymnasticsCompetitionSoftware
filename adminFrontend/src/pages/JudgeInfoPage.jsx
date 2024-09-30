@@ -7,6 +7,7 @@ import PageHeader from "../components/PageHeader";
 import JudgeTableRow from "../components/JudgeTableRow";
 import XIcon from "../components/XIcon";
 import BarsIcon from "../components/BarsIcon";
+import StartButton from "../components/StartButton";
 
 const JudgeInfoPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -65,6 +66,9 @@ const JudgeInfoPage = () => {
     }
   };
 
+  const handleContinue = () => {
+  };
+
   return (
     <div className={`flex w-full left-0 h-screen bg-bright-white`}>
       {isNavVisible && <NavigationBar />}
@@ -117,6 +121,10 @@ const JudgeInfoPage = () => {
             </div>
           </div>
 
+        </div>
+
+        <div className="flex justify-center items-center p-5 bg-bright-white">
+          <StartButton onClick={handleContinue} title={"Continue"} />
         </div>
       </div>
     </div>
