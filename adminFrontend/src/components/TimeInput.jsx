@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ClockIcon from "./ClockIcon";
+import SmallClockIcon from "./SmallClockIcon";
 
 const TimeInput = ({ time, setTime }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,17 +16,17 @@ const TimeInput = ({ time, setTime }) => {
 
   return (
     <div className="relative w-full">
-      <div className="flex w-full bg-bright-white items-center gap-2.5 px-2.5 py-1 bg-anti-flash-white rounded-lg shadow-sm">
+      <div className="flex w-full bg-bright-white items-center gap-2.5 bg-anti-flash-white rounded-lg shadow-sm">
         <input
           type="text"
           value={time || ""}
           readOnly
-          className="w-full bg-transparent font-montserrat font-medium text-center text-prussian-blue text-xl leading-normal outline-none"
+          className="w-full h-[50px] bg-transparent font-montserrat font-medium text-center text-prussian-blue text-xl leading-normal outline-none"
           placeholder="00:00"
           onClick={() => setIsOpen(!isOpen)}
         />
         <button onClick={() => setIsOpen(!isOpen)} aria-label="Open clock">
-          <ClockIcon />
+          <SmallClockIcon />
         </button>
       </div>
       {isOpen && (

@@ -173,7 +173,7 @@ const handleRemoveGymnast = (id) => {
                       className={`flex justify-end ${group.id === 1 ? 'pt-[60px] pb-[20px]' : 'py-[20px]'}`} 
                       key={group.id}
                     >
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} />
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} isVisible={true} />
                     </div>
                   ))}
                 </div>
@@ -220,7 +220,7 @@ const handleRemoveGymnast = (id) => {
                       className={`flex justify-end ${gymnast.id === 1 ? 'pt-[88px] pb-[20px]' : 'py-[19px]'}`} 
                       key={gymnast.id}
                     >
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} />
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} isVisible={true}/>
                     </div>
                   ))}
                 </div>

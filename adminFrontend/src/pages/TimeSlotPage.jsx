@@ -78,11 +78,11 @@ const TimeSlotPage = () => {
           <div className="flex flex-col gap-8">
             <ConfigHeader text="Sessions" />
             <div className="bg-white p-5 rounded-lg shadow-md w-full">
-              <div className="flex flex-col items-start justify-start">
+              <div className="flex flex-col items-center justify-start">
 
                 {/* Table Rows */}
                 <div className="rounded-lg">
-                  <div className="flex flex-row gap-4">
+                  <div className="flex flex-row gap-10">
                     <div className="w-full">
                       {localTimeslots.map((slot) => (
                         <TimeSlotTableRow
@@ -98,16 +98,16 @@ const TimeSlotPage = () => {
                     </div>
 
                     {/* XIcons for each group */}
-                  <div className="flex flex-col items-start">
-                    {localTimeslots.map(slot => (
-                      <div
-                        className={`flex justify-end ${slot.id === 1 ? 'pt-[60px] pb-[14px]' : 'py-[17px]'}`} 
-                        key={slot.id}
-                      >
-                        <XIcon className="cursor-pointer" onClick={() => handleRemoveTimeSlot(slot.id)} />
-                      </div>
-                    ))}
-                  </div>
+                    <div className="flex flex-col items-start">
+                      {localTimeslots.map(slot => (
+                        <div
+                          className={`flex justify-end ${slot.id === 1 ? 'pt-[60px] pb-[14px]' : 'py-[17px]'}`} 
+                          key={slot.id}
+                        >
+                          <XIcon className="cursor-pointer" onClick={() => handleRemoveTimeSlot(slot.id)} isVisible={true}/>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

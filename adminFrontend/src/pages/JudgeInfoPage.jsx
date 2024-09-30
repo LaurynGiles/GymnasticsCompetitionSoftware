@@ -83,7 +83,6 @@ const JudgeInfoPage = () => {
 
 
             <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md`}>
-              <JudgeHeaders />
               
               <div className="flex flex-row gap-4">
 
@@ -91,6 +90,7 @@ const JudgeInfoPage = () => {
                   {judges.map(judge => {
                       return (
                         <JudgeTableRow
+                            key={judge.id}
                             ID={judge.id}
                             GSAId={judge.GSAId}
                             f_name={judge.f_name}
@@ -107,9 +107,12 @@ const JudgeInfoPage = () => {
 
                 {/* XIcons for each group */}
                 <div className="flex flex-col items-start">
-                  {judges.map(judge => (
-                    <div className="flex justify-end py-[16px]" key={judge.id}>
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveJudge(judge.id)} />
+                {judges.map(judge => (
+                    <div
+                      className={`flex justify-end ${judge.id === 1 ? 'pt-[60px] pb-[18px]' : 'py-[19px]'}`} 
+                      key={judge.id}
+                    >
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveJudge(judge.id)} isVisible={true}/>
                     </div>
                   ))}
                 </div>

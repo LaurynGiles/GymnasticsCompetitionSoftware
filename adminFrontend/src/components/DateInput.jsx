@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-import CalendarIcon from "../components/CalendarIcon";
+import SmallCalendarIcon from "../components/SmallCalendarIcon";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -26,7 +26,7 @@ const DateInput = ({ date, setDate }) => {
           onClick={() => setIsOpen(!isOpen)}
         />
         <button onClick={() => setIsOpen(!isOpen)} aria-label="Open calendar">
-          <CalendarIcon />
+          <SmallCalendarIcon />
         </button>
       </div>
       {isOpen && (

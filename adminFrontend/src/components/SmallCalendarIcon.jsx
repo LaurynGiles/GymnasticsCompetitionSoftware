@@ -1,6 +1,6 @@
 import React from "react";
 
-const CalendarIcon = ({onClick}) => {
+const SmallCalendarIcon = ({onClick}) => {
   return (
     <svg 
         onClick ={onClick}
@@ -9,7 +9,7 @@ const CalendarIcon = ({onClick}) => {
         viewBox="0 0 24 24"
         strokeWidth="1.5" 
         stroke="currentColor" 
-        className="w-8 h-8 md:w-10 md:h-10 text-prussian-blue cursor-pointer">
+        className="w-6 h-6 md:w-8 md:h-8 text-text cursor-pointer">
         <path 
             strokeLinecap="round" 
             strokeLinejoin="round" 
@@ -22,4 +22,4 @@ const CalendarIcon = ({onClick}) => {
   );
 };
 
-export default CalendarIcon;
+export default SmallCalendarIcon;
