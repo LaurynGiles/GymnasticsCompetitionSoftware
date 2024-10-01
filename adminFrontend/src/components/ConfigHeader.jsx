@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-const ConfigHeader = ({ text = "Competition Details" }) => {
+const ConfigHeader = ({ text }) => {
   return (
     <div className="relative w-[40%] h-14 bg-light-periwinkle rounded-lg p-4">
       <div className="absolute inset-0 flex items-center justify-center text-center">

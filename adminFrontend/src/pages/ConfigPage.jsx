@@ -15,6 +15,8 @@ import StartButton from "../components/StartButton.jsx";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader.jsx";
 import BarsIcon from "../components/BarsIcon.jsx";
+import SelectBox from "../components/SelectBox.jsx";
+import DropdownInput from "../components/DropDownInput.jsx";
 
 const ConfigPage = () => {
   const { competition, setCompetition, qualifications, setQualifications } = useNotifications();
@@ -22,7 +24,44 @@ const ConfigPage = () => {
   const [newQualName, setNewQualName] = useState("");
   const [newQualScore, setNewQualScore] = useState("");
   const [error, setError] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
+  const [apparatusList, setApparatusList] = useState([{ id: 1, selected: '' }]);
   const navigate = useNavigate();
+
+  const apparatusOptions = [
+    "Vault",
+    "Floor",
+    "High Bar",
+    "Parallel Bar",
+    "Balance Beam",
+    "Double Bars",
+    "Pommel",
+    "Rings"
+  ];
+
+  const handleAddApparatus = () => {
+    setApparatusList((prev) => [
+      ...prev,
+      { id: prev.length + 1, selected: '' } // Keep track of selected options
+    ]);
+  };
+
+  const handleApparatusChange = (id, value) => {
+    setApparatusList((prev) => 
+      prev.map((item) => (item.id === id ? { ...item, selected: value } : item))
+    );
+  };
+
+  const handleRemoveApparatus = (id) => {
+    setApparatusList((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  useEffect(() => {
+    if (apparatusList.length > 0) {
+      // Save to local storage
+      localStorage.setItem('apparatusEvents', JSON.stringify(apparatusList));
+    }
+  }, [apparatusList]);
 
   const handleContinue = () => {
     navigate("/timeslotConfig")
@@ -111,7 +150,7 @@ const ConfigPage = () => {
           {/* Configuration Form */}
           <div className="flex flex-col gap-10 justify-center">
             {/* General Information */}
-            <ConfigHeader />
+            <ConfigHeader text="Competition Details"/>
             <div className="bg-white p-5 rounded-lg shadow-md w-full">
               <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-center gap-4">
@@ -159,6 +198,27 @@ const ConfigPage = () => {
                     setSelected={() => handleChange({ target: { name: 'style', value: 'WAG' } })}
                   />
                 </div>
+              </div>
+            </div>
+
+            <ConfigHeader text="Apparatus events" />
+            <div className="bg-white p-5 gap-4 rounded-lg shadow-md w-full">
+              <div className="grid grid-cols-1 gap-4">
+              {apparatusList.map((item) => (
+                  <div className="flex items-center gap-4" key={item.id}>
+                    <InputLabel text={`Apparatus ${item.id}`} />
+                    <DropdownInput 
+                      selectedOption={item.selected} 
+                      setSelectedOption={(value) => handleApparatusChange(item.id, value)} 
+                      options={apparatusOptions} 
+                      hasError={false} 
+                    />
+                    <XIcon onClick={() => handleRemoveApparatus(item.id)} className="ml-4 cursor-pointer" isVisible={item.id !== 1}/>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 flex justify-center">
+                <AddButton title={"Add Apparatus"} onClick={handleAddApparatus} />
               </div>
             </div>
 
@@ -223,7 +283,7 @@ const ConfigPage = () => {
                   <ul className="list-disc pl-5 text-lg text-prussian-blue font-montserrat">
                     {qualifications.map((qual) => (
                       <li key={qual.id} className="flex items-center mb-2 text-xl gap-4">
-                        <XIcon onClick={() => handleRemoveQualification(qual.id)} className="ml-4 cursor-pointer"/>
+                        <XIcon onClick={() => handleRemoveQualification(qual.id)} className="cursor-pointer" isVisible={true}/>
                         <span className="text-prussian-blue font-medium font-montserrat mr-4">{qual.name}:</span>
                         <span className="mr-4 font-montserrat text-prussian-blue font-medium">{qual.score}</span>
                       </li>
