@@ -26,6 +26,7 @@ import authRoutes from './routes/authRoutes.js';
 import completeRoutes from './routes/completeRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import adminAuthRoutes from './routes/adminAuthRoutes.js'
+import qualificationRoutes from './routes/qualificationRoutes.js'
 
 const app = express();
 const allowedOrigins = [
@@ -78,6 +79,7 @@ app.use('/api/apparatuses', apparatusRoutes);
 app.use('/api/complete', completeRoutes);
 app.use('/api', authRoutes);
 app.use('/api/adminLogin', adminAuthRoutes);
+app.use('/api/qualifications', qualificationRoutes);
 
 function logModelDetails() {
   Object.values(db).forEach(model => {

@@ -10,7 +10,7 @@ import SmallTextTableBlock from "./SmallTextTableBlock";
 import XIcon from "./XIcon";
 import DropdownTableBlock from "./DropDownTableBlock";
 
-const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate, handleRemoveGymnast }) => {
+const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate, groupError }) => {
 
   const handleGSAIDChange = (newGSAID) => {
     const parsedGSAID = newGSAID === "" ? null : parseInt(newGSAID, 10);
@@ -71,7 +71,7 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
   };
 
   return (
-    <div className="w-full flex justify-start gap-1 bg-anti-flash-white px-4 py-2.5">
+    <div className={`w-full flex  shadow-md justify-start gap-1 bg-anti-flash-white px-4 py-2.5 ${groupError ? 'border border-red-500' : ''}`}>
       {/* Conditional rendering based on ID */}
       {ID === 1 ? (
         <>
@@ -101,7 +101,11 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
           <SmallTextTableBlock value={district} onChange={handleDistrictChange} />
           <NumberTableBlock value={level} onChange={handleLevelChange} />
           <DateTableBlock date={dateOfBirth} setDate={handleDOBChange} />
-          <SmallTableBlock text={ageGroup} />
+          <DropdownTableBlock 
+              value={ageGroup} 
+              onChange={handleAgeGroupChange} 
+              options={["7-8", "8-9"]}
+            />
           <NumberTableBlock value={gymnastGroup} onChange={handleGroupChange} />
         </>
       )}

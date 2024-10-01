@@ -4,8 +4,9 @@ import SmallTableBlock from "./SmallTableBlock";
 import LargeTableBlock from "./LargeTableBlock";
 import NumberTableBlock from "./NumberTableBlock";
 import { useNotifications } from "../utils/connection";
+import DropdownTableBlock from "./DropDownTableBlock";
 
-const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, onUpdate, error }) => {
+const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, selectedNumSessions, numSessions, onUpdate, error }) => {
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -22,8 +23,30 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
     });
   };
 
+  const handleNumSessionsChange = (newNumSessions) => {
+    const parsedNumSessions = newNumSessions === "" ? null : parseInt(newNumSessions, 10);
+    onUpdate({
+      selectedNumSessions: isNaN(parsedNumSessions) ? null : parsedNumSessions,
+    });
+  };
+
+  const getOptions = () => {
+    switch (numSessions) {
+      case 1:
+        return ["A"];
+      case 2:
+        return ["A", "B"];
+      case 3:
+        return ["A", "B", "C"];
+      default:
+        return [];
+    }
+  };
+
+  const options = getOptions();
+
   return (
-    <div className={`w-full flex justify-start py-2.5 bg-anti-flash-white ${error ? 'border border-red-500' : ''}`}>
+    <div className={`w-full flex justify-start shadow-md px-2 py-2.5 bg-anti-flash-white ${error ? 'border border-red-500' : ''}`}>
       {/* Conditional rendering based on ID */}
       {ID === 1 ? (
         <>
@@ -32,6 +55,13 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
           <LargeTableBlock text={formatDate(date)} title={"Date"} />
           <SmallTableBlock text={reportTime} title={"Report Time"}/>
           <SmallTableBlock text={compTime} title={"Comp Time"}/>
+          <SmallTableBlock text={awardTime} title={"Award Time"}/>
+          <DropdownTableBlock 
+              value={selectedNumSessions} 
+              onChange={handleNumSessionsChange} 
+              options={options}
+              title="Competition"
+            />
         </>
       ) : (
         <>
@@ -40,6 +70,12 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
           <LargeTableBlock text={formatDate(date)}/>
           <SmallTableBlock text={reportTime} />
           <SmallTableBlock text={compTime}/>
+          <SmallTableBlock text={awardTime}/>
+          <DropdownTableBlock 
+              value={selectedNumSessions} 
+              onChange={handleNumSessionsChange} 
+              options={options}
+            />
         </>
       )}
     </div>
@@ -53,6 +89,7 @@ GroupTableRow.propTypes = {
     reportTime: PropTypes.string,
     compTime: PropTypes.string,
     awardTime: PropTypes.string,
+    selectedNumSessions: PropTypes.number,
     onUpdate: PropTypes.func.isRequired,
   };
   

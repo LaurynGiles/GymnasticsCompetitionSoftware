@@ -3,8 +3,9 @@ import React from "react";
 import SmallTableBlock from "./SmallTableBlock";
 import DateTableBlock from "./DateTableBlock";
 import TimeTableBlock from "./TimeTableBlock";
+import DropdownTableBlock from "./DropDownTableBlock"
 
-const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, onUpdate }) => {
+const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, numSessions, onUpdate }) => {
 
   const handleDateChange = (date) => {
     onUpdate({ date });
@@ -22,8 +23,15 @@ const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, onUpdate 
     onUpdate({ awardTime: time });
   };
 
+  const handleNumSessionsChange = (newNumSessions) => {
+    const parsedNumSessions = newNumSessions === "" ? null : parseInt(newNumSessions, 10);
+    onUpdate({
+      numSessions: isNaN(parsedNumSessions) ? null : parsedNumSessions,
+    });
+  };
+
   return (
-    <div className="flex justify-start bg-anti-flash-white gap-6 p-2">
+    <div className="flex shadow-md justify-start bg-anti-flash-white gap-6 p-2">
       {/* Conditional rendering based on ID */}
       {ID === 1 ? (
         <>
@@ -32,6 +40,12 @@ const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, onUpdate 
           <TimeTableBlock time={reportTime} setTime={handleReportTimeChange} title={"Report Time"}/>
           <TimeTableBlock time={compTime} setTime={handleCompTimeChange} title={"Comp Time"}/>
           <TimeTableBlock time={awardTime} setTime={handleAwardTimeChange} title={"Award Time"}/>
+          <DropdownTableBlock 
+              value={numSessions} 
+              onChange={handleNumSessionsChange} 
+              options={["1", "2", "3"]}
+              title="Number of Comps" 
+            />
         </>
       ) : (
         <>
@@ -40,6 +54,11 @@ const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, onUpdate 
           <TimeTableBlock time={reportTime} setTime={handleReportTimeChange} />
           <TimeTableBlock time={compTime} setTime={handleCompTimeChange} />
           <TimeTableBlock time={awardTime} setTime={handleAwardTimeChange} />
+          <DropdownTableBlock 
+              value={numSessions} 
+              onChange={handleNumSessionsChange} 
+              options={["1", "2", "3"]}
+            />
         </>
       )}
     </div>
@@ -52,6 +71,7 @@ TimeSlotTableRow.propTypes = {
   reportTime: PropTypes.string,
   compTime: PropTypes.string,
   awardTime: PropTypes.string,
+  numSessions: PropTypes.number,
   onUpdate: PropTypes.func.isRequired,
 };
 

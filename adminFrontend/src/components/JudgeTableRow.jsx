@@ -52,7 +52,7 @@ const JudgeTableRow = ({ ID, GSAId, f_name, l_name, club, level, headJudge, role
   };
 
   return (
-    <div className="flex justify-start bg-anti-flash-white px-4 gap-2 py-2.5">
+    <div className="flex shadow-md justify-start bg-anti-flash-white px-4 gap-2 py-2.5">
       {/* Conditional rendering based on ID */}
       {ID === 1 ? (
         <>

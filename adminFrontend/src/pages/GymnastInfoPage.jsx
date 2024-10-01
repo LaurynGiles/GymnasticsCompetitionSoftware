@@ -157,6 +157,11 @@ const GymnastInfoPage = () => {
     return timeslots.find(ts => ts.id === timeslotId);
   };
 
+  const getGroupDetails = (groupId) => {
+    console.log(localGroups.find(g => g.id === groupId));
+    return localGroups.find(g => g.id === groupId);
+  };
+
   return (
     <div className={`flex w-full left-0 h-screen bg-bright-white`}>
       {isNavVisible && <NavigationBar />}
@@ -173,10 +178,10 @@ const GymnastInfoPage = () => {
 
           <div className="flex flex-col items-center">
 
-              <div className={`flex flex-col items-center justify-center gap-4 bg-white p-5 rounded-lg shadow-md ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
+              <div className={`flex flex-col items-center justify-center gap-4 bg-white p-5 rounded-lg ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
 
-                <div className="flex items-center justify-center flex-row gap-4">
-                  <div className="">
+                <div className="w-full ml-4 flex items-center justify-center flex-row gap-1">
+                  <div className="w-full">
                     {localGroups.map(group => {
                         const timeslot = getTimeslotDetails(group.timeslotId);
                         const timeslotValid = Boolean(timeslot); 
@@ -189,6 +194,7 @@ const GymnastInfoPage = () => {
                             reportTime={timeslot?.reportTime || ''}
                             compTime={timeslot?.compTime || ''}
                             awardTime={timeslot?.awardTime || ''}
+                            numSessions={timeslot?.numSessions || ''}
                             onUpdate={(updatedFields) => handleUpdateGroup(group.id, updatedFields)}
                             error={!timeslotValid}
                           />
@@ -197,7 +203,7 @@ const GymnastInfoPage = () => {
                   </div>
                   <div className="flex flex-col items-start">
                     {localGroups.map(group => (
-                      <div className={`flex justify-end ${group.id === 1 ? 'pt-[60px] pb-[55px]' : 'py-[20px]'}`} key={group.id}>
+                      <div className={`flex justify-end ${group.id === 1 ? 'pt-[60px] pb-[67px]' : 'py-[20px]'}`} key={group.id}>
                         <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} isVisible={group.id !== 1} />
                       </div>
                     ))}
@@ -215,12 +221,15 @@ const GymnastInfoPage = () => {
             <ConfigHeader text="Gymnasts" />
 
 
-            <div className={`flex flex-col bg-white p-5 rounded-lg shadow-md`}>
+            <div className={`flex flex-col bg-white p-5 rounded-lg `}>
               
               <div className="flex flex-row gap-4">
 
                 <div className="w-[97%]">
                   {gymnasts.map(gymnast => {
+                    const group = getGroupDetails(gymnast.gymnastGroup);
+                    const groupValid = Boolean(group); 
+                    console.log(groupValid)
                       return (
                         <GymnastTableRow
                           key={gymnast.id}
@@ -235,6 +244,7 @@ const GymnastInfoPage = () => {
                           ageGroup={gymnast.ageGroup}
                           gymnastGroup={gymnast.gymnastGroup}
                           onUpdate={(updatedFields) => handleUpdateGymnast(gymnast.id, updatedFields)}
+                          groupError={!groupValid}
                         />
                       );
                     })}

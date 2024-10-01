@@ -16,11 +16,14 @@ const JudgeInfoPage = () => {
 
   const [judges, setJudges] = useState(() => {
     const savedJudges = localStorage.getItem("judges");
-    return savedJudges ? JSON.parse(savedJudges).map(judge => ({
+    // Initialize with an empty judge element if none exist
+    const parsedJudges = savedJudges ? JSON.parse(savedJudges).map(judge => ({
       ...judge,
       level: Number(judge.level),
       GSAId: Number(judge.GSAId), // Ensure GSAId is a number
-    })) : [];
+    })) : [{ id: 1, GSAId: null, f_name: "", l_name: "", club: "", level: null, headJudge: false, role: "" }];
+
+    return parsedJudges;
   });
 
   useEffect(() => {
@@ -57,15 +60,15 @@ const JudgeInfoPage = () => {
   };
 
   const handleRemoveJudge = (id) => {
-    const updatedJudges = judges.filter(judge => judge.id !== id);
-    setJudges(updatedJudges);
+    // Do not remove the first judge (default judge)
+    if (id === 1) return; 
 
-    // Check if judges are empty and remove from local storage if so
+    const updatedJudges = judges.filter(judge => judge.id !== id);
+    // Check if the list is empty, if so add the default judge back
     if (updatedJudges.length === 0) {
-      localStorage.removeItem("judges");
-    } else {
-      localStorage.setItem("judges", JSON.stringify(updatedJudges));
+      updatedJudges.push({ id: 1, GSAId: null, f_name: "", l_name: "", club: "", level: null, headJudge: false, role: "" });
     }
+    setJudges(updatedJudges);
   };
 
   const handleContinue = () => {
@@ -85,7 +88,7 @@ const JudgeInfoPage = () => {
             <ConfigHeader text="Judges" />
 
 
-            <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md`}>
+            <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg`}>
               
               <div className="flex flex-row gap-4">
 
@@ -112,10 +115,10 @@ const JudgeInfoPage = () => {
                 <div className="flex flex-col items-start">
                 {judges.map(judge => (
                     <div
-                      className={`flex justify-end ${judge.id === 1 ? 'pt-[60px] pb-[18px]' : 'py-[19px]'}`} 
+                      className={`flex justify-end ${judge.id === 1 ? 'pt-[60px] pb-[51px]' : 'py-[19px]'}`} 
                       key={judge.id}
                     >
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveJudge(judge.id)} isVisible={true}/>
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveJudge(judge.id)} isVisible={judge.id!==1}/>
                     </div>
                   ))}
                 </div>

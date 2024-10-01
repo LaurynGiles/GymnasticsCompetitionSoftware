@@ -29,3 +29,41 @@ export const getCompetitionsByAdmin = async (admin_id) => {
         }
     }
 };
+
+export const createCompetition = async (competitionData) => {
+    try {
+        const response = await axiosInstance.post('/competitions/', competitionData);
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error("Error creating competition:", error);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while creating the competition' };
+        }
+    }
+};
+
+export const createQualification = async (qualification) => {
+    try {
+        const response = await axiosInstance.post('/qualifications/', qualification);
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error("Error creating qualification:", error);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while creating the qualification' };
+        }
+    }
+};
+
+export const createTimeSlot = async (timeSlotData) => {
+    try {
+        const response = await axiosInstance.post('/timeslots/', timeSlotData);
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error("Error creating time slot:", error);
+        return { success: false, message: error.response?.data?.message || 'An error occurred while creating the time slot' };
+    }
+};

@@ -247,6 +247,103 @@ describe('API Tests', () => {
         });
       });
 
+      describe('Qualifications API', () => {
+        let createdQualificationId;
+        const competitionId = 1; // Replace with an existing competition_id if needed
+    
+        it('should create a new qualification with score values', (done) => {
+            const qualification1 = {
+                competition_id: competitionId,
+                name: 'Beginner Qualification',
+                min_score: 10.0,
+            };
+    
+            server.request.execute(app)
+                .post('/api/qualifications')
+                .send(qualification1)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('qualification_id');
+                    expect(res.body.name).to.equal('Beginner Qualification');
+                    expect(res.body.min_score).to.equal(10.0);
+                    createdQualificationId = res.body.qualification_id;
+                    done();
+                });
+        });
+    
+        it('should create another qualification with score values', (done) => {
+            const qualification2 = {
+                competition_id: competitionId,
+                name: 'Advanced Qualification',
+                min_score: 15.0,
+            };
+    
+            server.request.execute(app)
+                .post('/api/qualifications')
+                .send(qualification2)
+                .end((err, res) => {
+                    expect(res).to.have.status(201);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('qualification_id');
+                    expect(res.body.name).to.equal('Advanced Qualification');
+                    expect(res.body.min_score).to.equal(15.0);
+                    done();
+                });
+        });
+    
+        it('should get all qualifications and include score values', (done) => {
+            server.request.execute(app)
+                .get('/api/qualifications')
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('array');
+                    res.body.forEach(qualification => {
+                        expect(qualification).to.have.property('name');
+                        expect(qualification).to.have.property('min_score');
+                    });
+                    done();
+                });
+        });
+    
+        it('should update a qualification with new score values', (done) => {
+            const updatedQualification = {
+                min_score: 12.0,
+            };
+    
+            server.request.execute(app)
+                .put(`/api/qualifications/${createdQualificationId}`)
+                .send(updatedQualification)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.min_score).to.equal(12.0);
+                    done();
+                });
+        });
+    
+        it('should get the updated qualification and check score values', (done) => {
+            server.request.execute(app)
+                .get(`/api/qualifications/${createdQualificationId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('qualification_id', createdQualificationId);
+                    expect(res.body).to.have.property('min_score', 12.0);
+                    done();
+                });
+        });
+    
+        it('should delete a qualification', (done) => {
+            server.request.execute(app)
+                .delete(`/api/qualifications/${createdQualificationId}`)
+                .end((err, res) => {
+                    expect(res).to.have.status(204);
+                    done();
+                });
+        });
+    });    
+
     describe('TimeSlot API', () => {
 
         let createdTimeSlotId;

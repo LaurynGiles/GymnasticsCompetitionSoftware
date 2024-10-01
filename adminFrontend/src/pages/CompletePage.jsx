@@ -3,13 +3,86 @@ import Header from "../components/Header";
 import NavigationBar from "../components/NavigationBar";
 import TinyBlueButton from "../components/TinyBlueButton";
 import { useNavigate } from "react-router-dom";
+import { useNotifications } from "../utils/connection.jsx";
+import { createCompetition, createQualification, createTimeSlot } from "../utils/api.js";
 
 const CompletePage = () => {
 
   const navigate = useNavigate();
+  const { adminInfo, competition } = useNotifications();
 
   const handleJudgeHome = () => {
     navigate("HomeAdmin");
+  };
+
+  const handleCreateCompetition = async () => {
+    // Ensure all required fields are present
+    if (!competition.name || !competition.location || !competition.startDate || !competition.endDate || !competition.style) {
+      alert("Please fill in all required fields before creating a competition.");
+      return;
+    }
+
+    // Create the competition payload
+    const payload = {
+      admin_id: adminInfo.admin_id,
+      competition_name: competition.name,
+      start_date: competition.startDate,
+      end_date: competition.endDate,
+      location: competition.location,
+      style: competition.style,
+      bronze_min_score: competition.minBronze,
+      bronze_max_score: competition.maxBronze,
+      silver_min_score: competition.minSilver,
+      silver_max_score: competition.maxSilver,
+      gold_min_score: competition.minGold,
+      gold_max_score: competition.maxGold,
+    };
+
+    // Call the create competition API
+    const response = await createCompetition(payload);
+    if (response.success) {
+      alert("Competition created successfully!");
+
+      // Create qualifications using the competition id
+      const createdCompetitionId = response.data.competition_id; // Assuming your API returns this
+      const storedQualifications = JSON.parse(localStorage.getItem('qualifications')) || [];
+
+      // Iterate through qualifications and create each one
+      for (const qualification of storedQualifications) {
+        const qualificationPayload = {
+          competition_id: createdCompetitionId,
+          name: qualification.name,
+          min_score: parseFloat(qualification.score) // Ensure score is a float
+        };
+
+        const qualResponse = await createQualification(qualificationPayload);
+        if (!qualResponse.success) {
+          console.error(`Error creating qualification ${qualification.name}: ${qualResponse.message}`);
+        }
+      }
+
+      const storedTimeSlots = JSON.parse(localStorage.getItem('timeslots')) || [];
+
+      for (const timeSlot of storedTimeSlots) {
+        const timeSlotPayload = {
+          competition_id: createdCompetitionId,
+          date: new Date(timeSlot.date).toISOString().split('T')[0], // Convert to YYYY-MM-DD
+          report_time: timeSlot.reportTime,
+          competition_time: timeSlot.compTime,
+          award_time: timeSlot.awardTime,
+          completed: false,
+        };
+
+        const timeSlotResponse = await createTimeSlot(timeSlotPayload);
+        if (!timeSlotResponse.success) {
+          console.error(`Error creating time slot on ${timeSlot.date}: ${timeSlotResponse.message}`);
+        }
+      }
+
+      navigate("HomeAdmin"); // Navigate to the admin home page
+    } else {
+      alert(`Error creating competition: ${response.message}`);
+    }
   };
 
   return (
@@ -54,7 +127,7 @@ const CompletePage = () => {
             </p>
           </div>
         </div>
-        <TinyBlueButton title={"Create Competition"} onClick={handleJudgeHome} />
+        <TinyBlueButton title={"Create Competition"} onClick={handleCreateCompetition} />
       </div>
     </div>
   );

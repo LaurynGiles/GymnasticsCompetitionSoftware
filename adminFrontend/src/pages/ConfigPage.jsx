@@ -19,13 +19,26 @@ import SelectBox from "../components/SelectBox.jsx";
 import DropdownInput from "../components/DropDownInput.jsx";
 
 const ConfigPage = () => {
-  const { competition, setCompetition, qualifications, setQualifications } = useNotifications();
+  const [qualifications, setQualifications] = useState([]);
+  const [competition, setCompetition] = useState({
+    name: "",
+    location: "",
+    startDate: null,
+    endDate: null,
+    style: "",
+    minBronze: "",
+    maxBronze: "",
+    minSilver: "",
+    maxSilver: "",
+    minGold: "",
+    maxGold: "",
+  });
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [newQualName, setNewQualName] = useState("");
   const [newQualScore, setNewQualScore] = useState("");
   const [error, setError] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
-  const [apparatusList, setApparatusList] = useState([{ id: 1, selected: '' }]);
+  const [apparatusList, setApparatusList] = useState([]);
   const navigate = useNavigate();
 
   const apparatusOptions = [
@@ -56,27 +69,34 @@ const ConfigPage = () => {
     setApparatusList((prev) => prev.filter((item) => item.id !== id));
   };
 
-  useEffect(() => {
-    if (apparatusList.length > 0) {
-      // Save to local storage
-      localStorage.setItem('apparatusEvents', JSON.stringify(apparatusList));
-    }
-  }, [apparatusList]);
-
   const handleContinue = () => {
     navigate("/timeslotConfig")
   };
 
   useEffect(() => {
+    // Load stored competition data and qualifications
     const storedCompetition = JSON.parse(localStorage.getItem('competition')) || {};
     const storedQualifications = JSON.parse(localStorage.getItem('qualifications')) || [];
+    const storedApparatus = JSON.parse(localStorage.getItem('apparatusEvents')) || [];
+
+    console.log("Stored Competition:", storedCompetition);
+    console.log("Stored Qualifications:", storedQualifications);
+    console.log("Stored Apparatus:", storedApparatus);
 
     if (Object.keys(storedCompetition).length > 0) {
       storedCompetition.startDate = storedCompetition.startDate ? new Date(storedCompetition.startDate) : null;
       storedCompetition.endDate = storedCompetition.endDate ? new Date(storedCompetition.endDate) : null;
       setCompetition(storedCompetition);
     }
+
     setQualifications(storedQualifications);
+
+    // Initialize apparatus list with stored values or ensure at least one apparatus
+    if (storedApparatus.length > 0) {
+      setApparatusList(storedApparatus);
+    } else {
+      setApparatusList([{ id: 1, selected: '' }]); // Ensure at least one empty item
+    }
   }, [setCompetition, setQualifications]);
 
   useEffect(() => {
@@ -95,7 +115,12 @@ const ConfigPage = () => {
       localStorage.setItem('qualifications', JSON.stringify(qualifications));
     }
 
-  }, [competition, qualifications]);
+    if (apparatusList.length > 0) {
+      console.log(`Setting local storage apparatus list: ${apparatusList}`);
+      localStorage.setItem('apparatusEvents', JSON.stringify(apparatusList));
+    }
+
+  }, [competition, qualifications, apparatusList]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -157,7 +182,7 @@ const ConfigPage = () => {
                   <InputLabel text="Competition name" />
                   <TextInput 
                     name="name"
-                    value={competition.name}
+                    text={competition.name}
                     setText={(value) => handleChange({ target: { name: 'name', value } })}
                     hasError={error}
                   />
@@ -180,7 +205,7 @@ const ConfigPage = () => {
                   <InputLabel text="Location" />
                   <TextInput 
                     name="location"
-                    value={competition.location}
+                    text={competition.location}
                     setText={(value) => handleChange({ target: { name: 'location', value } })}
                     hasError={error}
                   />

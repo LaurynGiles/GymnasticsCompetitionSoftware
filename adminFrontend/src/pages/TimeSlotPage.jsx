@@ -22,7 +22,7 @@ const TimeSlotPage = () => {
     })) : [];
 
     if (timeslots.length === 0) {
-      return [{ id: 1, date: null, reportTime: null, compTime: null, awardTime: null }];
+      return [{ id: 1, date: null, reportTime: null, compTime: null, awardTime: null, numSessions: null }];
     }
     return timeslots;
   });
@@ -47,6 +47,7 @@ const TimeSlotPage = () => {
       reportTime: null,
       compTime: null,
       awardTime: null,
+      numSessions: null
     };
 
     const updatedTimeslots = [...localTimeslots, newTimeslot];
@@ -64,7 +65,7 @@ const TimeSlotPage = () => {
     const updatedTimeslots = localTimeslots.filter(slot => slot.id !== id);
 
     if (updatedTimeslots.length === 0) {
-      setLocalTimeslots([{ id: 1, date: null, reportTime: null, compTime: null, awardTime: null }]);
+      setLocalTimeslots([{ id: 1, date: null, reportTime: null, compTime: null, awardTime: null, numSessions: null }]);
     } else {
       // Reassign IDs to ensure continuity
       const reassignedTimeslots = updatedTimeslots.map((slot, index) => ({
@@ -86,12 +87,12 @@ const TimeSlotPage = () => {
 
           {/* Sessions Configuration */}
           <div className="flex flex-col gap-8">
-            <ConfigHeader text="Sessions" />
-            <div className="bg-white p-5 rounded-lg shadow-md w-full">
+            <ConfigHeader text="Timeslots" />
+            <div className="bg-white p-5 rounded-lg w-full">
               <div className="flex flex-col items-center justify-start">
 
                 {/* Table Rows */}
-                <div className="rounded-lg">
+                <div className="w-full rounded-lg">
                   <div className="flex flex-row gap-10">
                     <div className="w-full">
                       {localTimeslots.map((slot) => (
@@ -102,6 +103,7 @@ const TimeSlotPage = () => {
                           compTime={slot.compTime}
                           awardTime={slot.awardTime}
                           date={slot.date}
+                          numSessions={slot.numSessions}
                           onUpdate={(updatedFields) => handleUpdateTimeSlot(slot.id, updatedFields)}
                         />
                       ))}
