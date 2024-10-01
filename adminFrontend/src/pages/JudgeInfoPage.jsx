@@ -8,9 +8,11 @@ import JudgeTableRow from "../components/JudgeTableRow";
 import XIcon from "../components/XIcon";
 import BarsIcon from "../components/BarsIcon";
 import StartButton from "../components/StartButton";
+import { useNavigate } from "react-router-dom";
 
 const JudgeInfoPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
+  const navigate = useNavigate();
 
   const [judges, setJudges] = useState(() => {
     const savedJudges = localStorage.getItem("judges");
@@ -67,6 +69,7 @@ const JudgeInfoPage = () => {
   };
 
   const handleContinue = () => {
+    navigate("/completeSetup")
   };
 
   return (

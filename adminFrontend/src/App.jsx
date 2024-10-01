@@ -9,6 +9,7 @@ import GymnastInfoPage from './pages/GymnastInfoPage.jsx';
 import JudgeInfoPage from './pages/JudgeInfoPage.jsx';
 import { NotificationProvider } from './utils/connection.jsx';
 import './App.css'
+import CompletePage from './pages/CompletePage.jsx';
 
 function App() {
   return (
@@ -21,10 +22,10 @@ function App() {
           <Route path="/homeAdmin" element={<HomeAdmin/>} />
           <Route path="/createWelcome" element={<WelcomePage/>} />
           <Route path="/competitionConfig" element={<ConfigPage/>} />
-          {/* <Route path="/notificationsjudges" element={<NotificationsJudges />} /> */}
           <Route path="/timeslotConfig" element={<TimeSlotPage/>} />
           <Route path="/gymnastInfo" element={<GymnastInfoPage/>} />
           <Route path="/judgeInfo" element={<JudgeInfoPage/>} />
+          <Route path="/completeSetup" element={<CompletePage/>} />
         
         </Routes>
       </Router>

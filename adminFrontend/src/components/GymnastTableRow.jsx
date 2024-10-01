@@ -8,6 +8,7 @@ import TextTableBlock from "./TextTableBlock";
 import DateInput from "./DateInput";
 import SmallTextTableBlock from "./SmallTextTableBlock";
 import XIcon from "./XIcon";
+import DropdownTableBlock from "./DropDownTableBlock";
 
 const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate, handleRemoveGymnast }) => {
 
@@ -56,6 +57,12 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
     });
   };
 
+  const handleAgeGroupChange = (newAgeGroup) => {
+    onUpdate({
+      ageGroup: newAgeGroup,
+    });
+  };
+
   const handleGroupChange = (newGroup) => {
     const parsedGroup = newGroup === "" ? null : parseInt(newGroup, 10);
     onUpdate({
@@ -76,7 +83,12 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
           <SmallTextTableBlock value={district} title="District" onChange={handleDistrictChange} />
           <NumberTableBlock value={level} title="Level" onChange={handleLevelChange} />
           <DateTableBlock date={dateOfBirth} title="Date of Birth" setDate={handleDOBChange} />
-          <SmallTableBlock title="Age group" text={ageGroup} />
+          <DropdownTableBlock 
+              value={ageGroup} 
+              onChange={handleAgeGroupChange} 
+              options={["7-8", "8-9"]} 
+              title="Age Group" 
+            />
           <NumberTableBlock value={gymnastGroup} title="Gymnast Group" onChange={handleGroupChange} />
         </>
       ) : (

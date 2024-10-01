@@ -52,14 +52,18 @@ export default (sequelize, DataTypes) => {
         model: 'GymnastGroup',
         key: 'group_id',
       },
+      onDelete: 'SET NULL', // Set group_id to NULL if the group is deleted
+      onUpdate: 'CASCADE',
     },
   }, {
-    tableName: 'Gymnast',  // Explicitly set the table name here
+    tableName: 'Gymnast',
   });
 
   Gymnast.associate = (models) => {
     Gymnast.belongsTo(models.GymnastGroup, {
       foreignKey: 'group_id',
+      onDelete: 'SET NULL', // Ensure foreign key updates on deletion
+      onUpdate: 'CASCADE',
     });
     Gymnast.hasMany(models.Execution, {
       foreignKey: 'gymnast_id',

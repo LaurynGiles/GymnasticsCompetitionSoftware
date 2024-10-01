@@ -8,7 +8,7 @@ const DropdownTableBlock = ({ value, onChange, options, title }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between w-[300px] relative overflow-x-auto">
+    <div className="flex flex-col items-center justify-between w-[200px] relative overflow-x-auto">
       {/* Render title if provided */}
       {title && (
         <div className="font-montserrat font-medium text-prussian-blue text-base md:text-lg text-center mb-1">

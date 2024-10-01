@@ -16,11 +16,17 @@ const TimeSlotPage = () => {
 
   const [localTimeslots, setLocalTimeslots] = useState(() => {
     const savedTimeslots = localStorage.getItem("timeslots");
-    return savedTimeslots ? JSON.parse(savedTimeslots).map(slot => ({
+    const timeslots = savedTimeslots ? JSON.parse(savedTimeslots).map(slot => ({
       ...slot,
       date: slot.date ? new Date(slot.date) : null
     })) : [];
+
+    if (timeslots.length === 0) {
+      return [{ id: 1, date: null, reportTime: null, compTime: null, awardTime: null }];
+    }
+    return timeslots;
   });
+
   useEffect(() => {
     // Save timeslots to local storage whenever they change
     localStorage.setItem("timeslots", JSON.stringify(localTimeslots));
@@ -56,12 +62,16 @@ const TimeSlotPage = () => {
 
   const handleRemoveTimeSlot = (id) => {
     const updatedTimeslots = localTimeslots.filter(slot => slot.id !== id);
-    setLocalTimeslots(updatedTimeslots);
-    // Also remove from local storage if needed
+
     if (updatedTimeslots.length === 0) {
-      localStorage.removeItem("timeslots");
+      setLocalTimeslots([{ id: 1, date: null, reportTime: null, compTime: null, awardTime: null }]);
     } else {
-      localStorage.setItem("timeslots", JSON.stringify(updatedTimeslots));
+      // Reassign IDs to ensure continuity
+      const reassignedTimeslots = updatedTimeslots.map((slot, index) => ({
+        ...slot,
+        id: index + 1 // Set IDs starting from 1 and incrementing by 1
+      }));
+      setLocalTimeslots(reassignedTimeslots);
     }
   };
 
@@ -97,14 +107,17 @@ const TimeSlotPage = () => {
                       ))}
                     </div>
 
-                    {/* XIcons for each group */}
                     <div className="flex flex-col items-start">
                       {localTimeslots.map(slot => (
                         <div
-                          className={`flex justify-end ${slot.id === 1 ? 'pt-[60px] pb-[14px]' : 'py-[17px]'}`} 
+                          className={`flex justify-end ${slot.id === 1 ? 'pt-[91px] pb-[15px]' : 'py-[17px]'}`} 
                           key={slot.id}
                         >
-                          <XIcon className="cursor-pointer" onClick={() => handleRemoveTimeSlot(slot.id)} isVisible={true}/>
+                          <XIcon
+                            className="cursor-pointer"
+                            onClick={() => handleRemoveTimeSlot(slot.id)}
+                            isVisible={slot.id !== 1}
+                          />
                         </div>
                       ))}
                     </div>

@@ -12,6 +12,8 @@ export default (sequelize, DataTypes) => {
         model: 'Competition',
         key: 'competition_id',
       },
+      onDelete: 'CASCADE', // Delete TimeSlot when associated Competition is deleted
+      onUpdate: 'CASCADE',
     },
     date: {
       type: DataTypes.DATEONLY,
@@ -43,6 +45,8 @@ export default (sequelize, DataTypes) => {
     });
     TimeSlot.belongsTo(models.Competition, {
       foreignKey: 'competition_id',
+      onDelete: 'CASCADE', // Set cascade delete in the association
+      onUpdate: 'CASCADE',
     });
   };
 

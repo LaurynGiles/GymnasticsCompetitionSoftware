@@ -50,8 +50,9 @@ const NavigationBar = () => {
           <BookIcon onClick={() => handleNavigation('/judgeInfo')}/>
           <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Judges</span>
         </div>
-        <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded">
-          <TickIcon />
+        <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded"
+          onClick={() => handleNavigation('/completeSetup')}>
+          <TickIcon onClick={() => handleNavigation('/completeSetup')}/>
           <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Complete</span>
         </div>
       </div>

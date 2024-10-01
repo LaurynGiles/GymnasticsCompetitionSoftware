@@ -19,7 +19,7 @@ describe('API Tests', () => {
 
         let createdAdminId;
 
-        it('should create a new competition', (done) => {
+        it('should create a new admin', (done) => {
             const admin1 = {
                 username: 'admin1',
                 password: 'password123',
@@ -109,93 +109,143 @@ describe('API Tests', () => {
     describe('Competition API', () => {
 
         let createdCompetitionId;
-
-        it('should create a new competition', (done) => {
-            const competition1 = {
-                competition_name: 'Spring Invitational',
-                admin_id: 1,
-                start_date: '2024-03-01',
-                end_date: '2024-03-03',
-                location: 'Springfield',
-                style: 'MAG'
-            };
-
-            server.request.execute(app)
-                .post('/api/competitions')
-                .send(competition1)
-                .end((err, res) => {
-                    expect(res).to.have.status(201);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('competition_id');
-                });
-
-            const competition2 = {
-                competition_name: 'Summer Championships',
-                admin_id: 1,
-                start_date: '2024-06-15',
-                end_date: '2024-06-17',
-                location: 'Sunville',
-                style: 'WAG',
-            };
-    
-            server.request.execute(app)
-                .post('/api/competitions')
-                .send(competition2)
-                .end((err, res) => {
-                    expect(res).to.have.status(201);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('competition_id');
-                    createdCompetitionId = res.body.competition_id;
-                    done();
-                });
+      
+        it('should create a new competition with medal score values', (done) => {
+          const competition1 = {
+            competition_name: 'Spring Invitational',
+            admin_id: 1,
+            start_date: '2024-03-01',
+            end_date: '2024-03-03',
+            location: 'Springfield',
+            style: 'MAG',
+            bronze_min_score: 10.0,
+            bronze_max_score: 15.0,
+            silver_min_score: 16.0,
+            silver_max_score: 20.0,
+            gold_min_score: 21.0,
+            gold_max_score: 25.0,
+          };
+      
+          server.request.execute(app)
+            .post('/api/competitions')
+            .send(competition1)
+            .end((err, res) => {
+              expect(res).to.have.status(201);
+              expect(res.body).to.be.an('object');
+              expect(res.body).to.have.property('competition_id');
+              expect(res.body.bronze_min_score).to.equal(10.0);
+              expect(res.body.bronze_max_score).to.equal(15.0);
+              expect(res.body.silver_min_score).to.equal(16.0);
+              expect(res.body.silver_max_score).to.equal(20.0);
+              expect(res.body.gold_min_score).to.equal(21.0);
+              expect(res.body.gold_max_score).to.equal(25.0);
+            });
+      
+          const competition2 = {
+            competition_name: 'Summer Championships',
+            admin_id: 1,
+            start_date: '2024-06-15',
+            end_date: '2024-06-17',
+            location: 'Sunville',
+            style: 'WAG',
+            bronze_min_score: 12.0,
+            bronze_max_score: 17.0,
+            silver_min_score: 18.0,
+            silver_max_score: 22.0,
+            gold_min_score: 23.0,
+            gold_max_score: 28.0,
+          };
+      
+          server.request.execute(app)
+            .post('/api/competitions')
+            .send(competition2)
+            .end((err, res) => {
+              expect(res).to.have.status(201);
+              expect(res.body).to.be.an('object');
+              expect(res.body).to.have.property('competition_id');
+              expect(res.body.bronze_min_score).to.equal(12.0);
+              expect(res.body.bronze_max_score).to.equal(17.0);
+              expect(res.body.silver_min_score).to.equal(18.0);
+              expect(res.body.silver_max_score).to.equal(22.0);
+              expect(res.body.gold_min_score).to.equal(23.0);
+              expect(res.body.gold_max_score).to.equal(28.0);
+              createdCompetitionId = res.body.competition_id;
+              done();
+            });
         });
-
-        it('should get all competitions', (done) => {
-            server.request.execute(app)
-                .get('/api/competitions')
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('array');
-                    done();
-                });
+      
+        it('should get all competitions and include medal score values', (done) => {
+          server.request.execute(app)
+            .get('/api/competitions')
+            .end((err, res) => {
+              expect(res).to.have.status(200);
+              expect(res.body).to.be.an('array');
+              res.body.forEach(competition => {
+                expect(competition).to.have.property('bronze_min_score');
+                expect(competition).to.have.property('bronze_max_score');
+                expect(competition).to.have.property('silver_min_score');
+                expect(competition).to.have.property('silver_max_score');
+                expect(competition).to.have.property('gold_min_score');
+                expect(competition).to.have.property('gold_max_score');
+              });
+              done();
+            });
         });
-
-        it('should update a competition', (done) => {
-            const updatedCompetition = {
-                end_date: '2024-06-18'
-            };
-    
-            server.request.execute(app)
-                .put(`/api/competitions/${createdCompetitionId}`)
-                .send(updatedCompetition)
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body.end_date).to.equal('2024-06-18');
-                    done();
-                });
+      
+        it('should update a competition with new medal score values', (done) => {
+          const updatedCompetition = {
+            end_date: '2024-06-18',
+            bronze_min_score: 11.0,
+            bronze_max_score: 16.0,
+            silver_min_score: 17.0,
+            silver_max_score: 21.0,
+            gold_min_score: 22.0,
+            gold_max_score: 26.0,
+          };
+      
+          server.request.execute(app)
+            .put(`/api/competitions/${createdCompetitionId}`)
+            .send(updatedCompetition)
+            .end((err, res) => {
+              expect(res).to.have.status(200);
+              expect(res.body).to.be.an('object');
+              expect(res.body.end_date).to.equal('2024-06-18');
+              expect(res.body.bronze_min_score).to.equal(11.0);
+              expect(res.body.bronze_max_score).to.equal(16.0);
+              expect(res.body.silver_min_score).to.equal(17.0);
+              expect(res.body.silver_max_score).to.equal(21.0);
+              expect(res.body.gold_min_score).to.equal(22.0);
+              expect(res.body.gold_max_score).to.equal(26.0);
+              done();
+            });
         });
-
-        it('should get the updated competition', (done) => {
-            server.request.execute(app)
-                .get(`/api/competitions/${createdCompetitionId}`)
-                .end((err, res) => {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.an('object');
-                    expect(res.body).to.have.property('competition_id', createdCompetitionId);
-                    done();
-                });
+      
+        it('should get the updated competition and check medal score values', (done) => {
+          server.request.execute(app)
+            .get(`/api/competitions/${createdCompetitionId}`)
+            .end((err, res) => {
+              expect(res).to.have.status(200);
+              expect(res.body).to.be.an('object');
+              expect(res.body).to.have.property('competition_id', createdCompetitionId);
+              expect(res.body).to.have.property('bronze_min_score', 11.0);
+              expect(res.body).to.have.property('bronze_max_score', 16.0);
+              expect(res.body).to.have.property('silver_min_score', 17.0);
+              expect(res.body).to.have.property('silver_max_score', 21.0);
+              expect(res.body).to.have.property('gold_min_score', 22.0);
+              expect(res.body).to.have.property('gold_max_score', 26.0);
+              done();
+            });
         });
-
+      
         it('should delete a competition', (done) => {
-            server.request.execute(app)
-                .delete(`/api/competitions/${createdCompetitionId}`)
-                .end((err, res) => {
-                    expect(res).to.have.status(204);
-                    done();
-                });
+          server.request.execute(app)
+            .delete(`/api/competitions/${createdCompetitionId}`)
+            .end((err, res) => {
+              expect(res).to.have.status(204);
+              done();
+            });
         });
-    });
+      });
 
     describe('TimeSlot API', () => {
 

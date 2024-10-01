@@ -40,6 +40,30 @@ module.exports = {
         type: Sequelize.STRING(20),
         allowNull: false,
       },
+      bronze_min_score: {
+        type: Sequelize.DECIMAL(5, 2),
+        allowNull: true,
+      },
+      bronze_max_score: {
+        type: Sequelize.DECIMAL(5, 2),
+        allowNull: true,
+      },
+      silver_min_score: {
+        type: Sequelize.DECIMAL(5, 2),
+        allowNull: true,
+      },
+      silver_max_score: {
+        type: Sequelize.DECIMAL(5, 2),
+        allowNull: true,
+      },
+      gold_min_score: {
+        type: Sequelize.DECIMAL(5, 2),
+        allowNull: true,
+      },
+      gold_max_score: {
+        type: Sequelize.DECIMAL(5, 2),
+        allowNull: true,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

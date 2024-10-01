@@ -57,6 +57,8 @@ module.exports = {
           model: 'GymnastGroup',
           key: 'group_id',
         },
+        onDelete: 'SET NULL', // Set group_id to NULL if the group is deleted
+        onUpdate: 'CASCADE',
       },
       createdAt: {
         type: Sequelize.DATE,

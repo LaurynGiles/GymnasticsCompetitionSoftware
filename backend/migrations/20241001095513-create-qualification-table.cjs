@@ -3,9 +3,9 @@
 const Sequelize = require('sequelize');
 
 module.exports = {
-  up: async (queryInterface) => {
-    await queryInterface.createTable('TimeSlot', {
-      time_slot_id: {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('Qualification', {
+      qualification_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -18,27 +18,15 @@ module.exports = {
           key: 'competition_id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE', // Automatically delete TimeSlot if the associated Competition is deleted
+        onDelete: 'CASCADE',
       },
-      date: {
-        type: Sequelize.DATEONLY,
+      name: {
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
-      report_time: {
-        type: Sequelize.TIME,
+      min_score: {
+        type: Sequelize.FLOAT,
         allowNull: false,
-      },
-      competition_time: {
-        type: Sequelize.TIME,
-        allowNull: false,
-      },
-      award_time: {
-        type: Sequelize.TIME,
-        allowNull: false,
-      },
-      completed: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -53,7 +41,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface) => {
-    await queryInterface.dropTable('TimeSlot');
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('Qualification');
   },
 };

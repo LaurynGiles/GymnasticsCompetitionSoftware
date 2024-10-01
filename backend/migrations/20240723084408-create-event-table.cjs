@@ -16,7 +16,7 @@ module.exports = {
           model: 'GymnastGroup',
           key: 'group_id',
         },
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE', // Automatically delete events if the associated GymnastGroup is deleted
         onUpdate: 'CASCADE',
         allowNull: false,
       },
@@ -26,7 +26,7 @@ module.exports = {
           model: 'Apparatus',
           key: 'apparatus_id',
         },
-        onDelete: 'SET NULL',
+        onDelete: 'SET NULL', // Set apparatus_id to NULL if the associated Apparatus is deleted
         onUpdate: 'CASCADE',
         allowNull: false,
       },

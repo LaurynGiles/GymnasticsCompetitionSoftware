@@ -17,8 +17,8 @@ module.exports = {
           model: 'TimeSlot',
           key: 'time_slot_id',
         },
+        onDelete: 'CASCADE', // Automatically delete Session entries if the TimeSlot is deleted
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
       },
       completed: {
         type: Sequelize.BOOLEAN,

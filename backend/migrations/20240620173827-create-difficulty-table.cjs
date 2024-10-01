@@ -12,6 +12,8 @@ module.exports = {
           model: 'Event',
           key: 'event_id',
         },
+        onDelete: 'CASCADE', // Delete scores if the associated event is deleted
+        onUpdate: 'CASCADE',
         primaryKey: true,
       },
       gymnast_id: {
@@ -21,6 +23,8 @@ module.exports = {
           model: 'Gymnast',
           key: 'gymnast_id',
         },
+        onDelete: 'CASCADE', // Delete scores if the associated gymnast is deleted
+        onUpdate: 'CASCADE',
         primaryKey: true,
       },
       judge_id: {
@@ -30,6 +34,8 @@ module.exports = {
           model: 'Judge',
           key: 'judge_id',
         },
+        onDelete: 'SET NULL', // Set judge_id to NULL if the associated judge is deleted
+        onUpdate: 'CASCADE',
         primaryKey: true,
       },
       difficulty_score: {

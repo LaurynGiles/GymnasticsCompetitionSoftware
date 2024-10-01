@@ -12,6 +12,8 @@ export default (sequelize, DataTypes) => {
         model: 'TimeSlot',
         key: 'time_slot_id',
       },
+      onDelete: 'CASCADE', // Delete Session when associated TimeSlot is deleted
+      onUpdate: 'CASCADE',
     },
     completed: {
       type: DataTypes.BOOLEAN,
@@ -30,6 +32,8 @@ export default (sequelize, DataTypes) => {
   Session.associate = (models) => {
     Session.belongsTo(models.TimeSlot, {
       foreignKey: 'time_slot_id',
+      onDelete: 'CASCADE', // Ensure cascade delete from the association side as well
+      onUpdate: 'CASCADE',
     });
     Session.hasMany(models.GymnastGroup, {
       foreignKey: 'session_id',

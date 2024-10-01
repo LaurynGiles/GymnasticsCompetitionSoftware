@@ -12,6 +12,8 @@ export default (sequelize, DataTypes) => {
         model: 'Admin',
         key: 'admin_id',
       },
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
     },
     competition_name: {
       type: DataTypes.STRING(100),
@@ -33,6 +35,30 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    bronze_min_score: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+    },
+    bronze_max_score: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+    },
+    silver_min_score: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+    },
+    silver_max_score: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+    },
+    gold_min_score: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+    },
+    gold_max_score: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+    },
   }, {
     tableName: 'Competition',
   });
@@ -43,6 +69,11 @@ export default (sequelize, DataTypes) => {
     });
     Competition.belongsTo(models.Admin, {
       foreignKey: 'admin_id',
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
+    });
+    Competition.hasMany(models.Qualification, {
+      foreignKey: 'competition_id',
     });
   };
 

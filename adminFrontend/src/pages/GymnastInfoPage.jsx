@@ -10,9 +10,11 @@ import GymnastTableRow from "../components/GymnastTableRow";
 import XIcon from "../components/XIcon";
 import BarsIcon from "../components/BarsIcon";
 import StartButton from "../components/StartButton";
+import { useNavigate } from "react-router-dom";
 
 const GymnastInfoPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
+  const navigate = useNavigate();
   const [timeslots, setTimeSlots] = useState(() => {
     const savedTimeSlots = localStorage.getItem("timeslots");
     return savedTimeSlots ? JSON.parse(savedTimeSlots) : [];
@@ -20,16 +22,31 @@ const GymnastInfoPage = () => {
   
   const [localGroups, setLocalGroups] = useState(() => {
     const savedGroups = localStorage.getItem("groups");
-    return savedGroups ? JSON.parse(savedGroups) : [];
+    const groups = savedGroups ? JSON.parse(savedGroups) : [];
+    return groups.length === 0 ? [{ id: 1, timeslotId: null }] : groups;
   });
 
   const [gymnasts, setGymnasts] = useState(() => {
     const savedGymnasts = localStorage.getItem("gymnasts");
-    return savedGymnasts ? JSON.parse(savedGymnasts).map(gymnast => ({
+    const gymnasts = savedGymnasts ? JSON.parse(savedGymnasts).map(gymnast => ({
       ...gymnast,
-      level : Number(gymnast.level),
-      GSAId: Number(gymnast.GSAId), // Ensure GSAId is a number
+      level: Number(gymnast.level),
+      GSAId: Number(gymnast.GSAId),
     })) : [];
+    return gymnasts.length === 0
+      ? [{
+          id: 1,
+          GSAId: null,
+          f_name: "",
+          l_name: "",
+          club: "",
+          district: "",
+          level: null,
+          dateOfBirth: null,
+          ageGroup: "",
+          gymnastGroup: null,
+        }]
+      : gymnasts;
   });
 
   useEffect(() => {
@@ -45,18 +62,18 @@ const GymnastInfoPage = () => {
     }
   }, [gymnasts]);
 
-  useEffect(() => {
-    // Filter out gymnasts that don't have the required fields
-    const validGymnasts = gymnasts.filter(gymnast => 
-      gymnast.GSAId && gymnast.name && gymnast.club && gymnast.district &&
-      gymnast.level && gymnast.dateOfBirth && gymnast.ageGroup
-    );
+  // useEffect(() => {
+  //   // Filter out gymnasts that don't have the required fields
+  //   const validGymnasts = gymnasts.filter(gymnast => 
+  //     gymnast.GSAId && gymnast.name && gymnast.club && gymnast.district &&
+  //     gymnast.level && gymnast.dateOfBirth && gymnast.ageGroup
+  //   );
   
-    if (validGymnasts.length > 0) {
-      console.log("Saving valid gymnasts to local storage:", validGymnasts);
-      localStorage.setItem("gymnasts", JSON.stringify(validGymnasts));
-    }
-  }, [gymnasts]);
+  //   if (validGymnasts.length > 0) {
+  //     console.log("Saving valid gymnasts to local storage:", validGymnasts);
+  //     localStorage.setItem("gymnasts", JSON.stringify(validGymnasts));
+  //   }
+  // }, [gymnasts]);
 
   const handleAddGroup = () => {
     const newId = localGroups.length > 0 
@@ -68,6 +85,7 @@ const GymnastInfoPage = () => {
   };
 
   const handleContinue = () => {
+    navigate("/judgeInfo")
   };
 
   const handleAddGymnast = () => {
@@ -104,29 +122,36 @@ const GymnastInfoPage = () => {
     setLocalGroups(updatedGroups);
   };
 
-const handleRemoveGroup = (id) => {
-  const updatedGroups = localGroups.filter(group => group.id !== id);
-  setLocalGroups(updatedGroups);
-  
-  // Check if groups are empty and remove from local storage if so
-  if (updatedGroups.length === 0) {
-    localStorage.removeItem("groups");
-  } else {
-    localStorage.setItem("groups", JSON.stringify(updatedGroups));
-  }
-};
+  const handleRemoveGroup = (id) => {
+    let updatedGroups = localGroups.filter(group => group.id !== id);
+    if (updatedGroups.length === 0) {
+      updatedGroups = [{ id: 1, timeslotId: null }];
+    } else {
+      updatedGroups = updatedGroups.map((group, index) => ({ ...group, id: index + 1 }));
+    }
+    setLocalGroups(updatedGroups);
+  };
 
-const handleRemoveGymnast = (id) => {
-  const updatedGymnasts = gymnasts.filter(gymnast => gymnast.id !== id);
-  setGymnasts(updatedGymnasts);
-  
-  // Check if gymnasts are empty and remove from local storage if so
-  if (updatedGymnasts.length === 0) {
-    localStorage.removeItem("gymnasts");
-  } else {
-    localStorage.setItem("gymnasts", JSON.stringify(updatedGymnasts));
-  }
-};
+  const handleRemoveGymnast = (id) => {
+    let updatedGymnasts = gymnasts.filter(gymnast => gymnast.id !== id);
+    if (updatedGymnasts.length === 0) {
+      updatedGymnasts = [{
+        id: 1,
+        GSAId: null,
+        f_name: "",
+        l_name: "",
+        club: "",
+        district: "",
+        level: null,
+        dateOfBirth: null,
+        ageGroup: "",
+        gymnastGroup: null,
+      }];
+    } else {
+      updatedGymnasts = updatedGymnasts.map((gymnast, index) => ({ ...gymnast, id: index + 1 }));
+    }
+    setGymnasts(updatedGymnasts);
+  };
 
   const getTimeslotDetails = (timeslotId) => {
     return timeslots.find(ts => ts.id === timeslotId);
@@ -142,16 +167,20 @@ const handleRemoveGymnast = (id) => {
           <PageHeader title="Gymnast Info Configuration" />
 
           <div className="flex flex-col gap-10">
-            <ConfigHeader text="Gymnast Groups" />
-            
-            <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg shadow-md ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
+          <div className="flex flex-col items-start">
+              <ConfigHeader text="Gymnast Groups" />
+          </div>
 
-              <div className="flex items-center justify-center flex-row gap-4">
-                <div className="">
-                  {localGroups.map(group => {
-                      const timeslot = getTimeslotDetails(group.timeslotId);
-                      const timeslotValid = Boolean(timeslot); // Check if the timeslot is valid
-                      return (
+          <div className="flex flex-col items-center">
+
+              <div className={`flex flex-col items-center justify-center gap-4 bg-white p-5 rounded-lg shadow-md ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
+
+                <div className="flex items-center justify-center flex-row gap-4">
+                  <div className="">
+                    {localGroups.map(group => {
+                        const timeslot = getTimeslotDetails(group.timeslotId);
+                        const timeslotValid = Boolean(timeslot); 
+                        return (
                           <GroupTableRow
                             key={group.id}
                             ID={group.id}
@@ -163,25 +192,23 @@ const handleRemoveGymnast = (id) => {
                             onUpdate={(updatedFields) => handleUpdateGroup(group.id, updatedFields)}
                             error={!timeslotValid}
                           />
-                      );
-                    })}
-                </div>
-                {/* XIcons for each group */}
-                <div className="flex flex-col items-start">
-                  {localGroups.map(group => (
-                    <div
-                      className={`flex justify-end ${group.id === 1 ? 'pt-[60px] pb-[20px]' : 'py-[20px]'}`} 
-                      key={group.id}
-                    >
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} isVisible={true} />
-                    </div>
-                  ))}
+                        );
+                      })}
+                  </div>
+                  <div className="flex flex-col items-start">
+                    {localGroups.map(group => (
+                      <div className={`flex justify-end ${group.id === 1 ? 'pt-[60px] pb-[55px]' : 'py-[20px]'}`} key={group.id}>
+                        <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} isVisible={group.id !== 1} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex justify-center py-5">
-              <AddButton title="+" onClick={handleAddGroup} />
-            </div>
+
+              <div className="flex justify-center py-5">
+                <AddButton title="+" onClick={handleAddGroup} />
+              </div>
+          </div>
           </div>
 
           <div className="flex flex-col gap-10">
@@ -216,11 +243,8 @@ const handleRemoveGymnast = (id) => {
                 {/* XIcons for each group */}
                 <div className="flex flex-col items-start">
                   {gymnasts.map(gymnast => (
-                    <div
-                      className={`flex justify-end ${gymnast.id === 1 ? 'pt-[88px] pb-[20px]' : 'py-[19px]'}`} 
-                      key={gymnast.id}
-                    >
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} isVisible={true}/>
+                    <div className={`flex justify-end ${gymnast.id === 1 ? 'pt-[88px] pb-[51px]' : 'py-[19px]'}`} key={gymnast.id}>
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} isVisible={gymnast.id !== 1} />
                     </div>
                   ))}
                 </div>

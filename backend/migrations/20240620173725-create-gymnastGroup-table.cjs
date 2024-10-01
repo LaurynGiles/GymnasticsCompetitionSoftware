@@ -17,6 +17,8 @@ module.exports = {
           model: 'Session',
           key: 'session_id',
         },
+        onDelete: 'CASCADE',  // Automatically delete GymnastGroup when Session is deleted
+        onUpdate: 'CASCADE',
       },
       createdAt: {
         type: Sequelize.DATE,
