@@ -76,10 +76,25 @@ const CompletePage = () => {
         const timeSlotResponse = await createTimeSlot(timeSlotPayload);
         if (!timeSlotResponse.success) {
           console.error(`Error creating time slot on ${timeSlot.date}: ${timeSlotResponse.message}`);
+          continue;
         }
+
+        const numSessions = timeSlot.numSessions; // Retrieve numSessions from timeslot
+        for (let i = 0; i < numSessions; i++) {
+          const sessionPayload = {
+            time_slot_id: timeSlotResponse.data.time_slot_id, // Use the created time slot ID
+            completed: false,
+          };
+
+          const sessionResponse = await createSession(sessionPayload);
+          if (!sessionResponse.success) {
+            console.error(`Error creating session for time slot ${timeSlotResponse.data.time_slot_id}: ${sessionResponse.message}`);
+          }
+        }
+
       }
 
-      navigate("HomeAdmin"); // Navigate to the admin home page
+      navigate("HomeAdmin");
     } else {
       alert(`Error creating competition: ${response.message}`);
     }

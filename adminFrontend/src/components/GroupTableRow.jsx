@@ -24,11 +24,41 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
   };
 
   const handleNumSessionsChange = (newNumSessions) => {
-    const parsedNumSessions = newNumSessions === "" ? null : parseInt(newNumSessions, 10);
+    console.log(`new session value: ${newNumSessions}`);
+
+    // Convert "A", "B", "C" to 1, 2, 3 respectively
+    let parsedNumSessions;
+    switch (newNumSessions) {
+      case "A":
+        parsedNumSessions = 1;
+        break;
+      case "B":
+        parsedNumSessions = 2;
+        break;
+      case "C":
+        parsedNumSessions = 3;
+        break;
+      default:
+        parsedNumSessions = null; // Handle any unexpected values
+    }
+
     onUpdate({
-      selectedNumSessions: isNaN(parsedNumSessions) ? null : parsedNumSessions,
+      selectedNumSessions: parsedNumSessions,
     });
   };
+
+  const getSessionLetter = (number) => {
+    switch (number) {
+      case 1:
+        return "A";
+      case 2:
+        return "B";
+      case 3:
+        return "C";
+      default:
+        return "";
+    }
+  }
 
   const getOptions = () => {
     switch (numSessions) {
@@ -57,7 +87,7 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
           <SmallTableBlock text={compTime} title={"Comp Time"}/>
           <SmallTableBlock text={awardTime} title={"Award Time"}/>
           <DropdownTableBlock 
-              value={selectedNumSessions} 
+              value={getSessionLetter(selectedNumSessions)} 
               onChange={handleNumSessionsChange} 
               options={options}
               title="Competition"
@@ -72,7 +102,7 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
           <SmallTableBlock text={compTime}/>
           <SmallTableBlock text={awardTime}/>
           <DropdownTableBlock 
-              value={selectedNumSessions} 
+              value={getSessionLetter(selectedNumSessions)} 
               onChange={handleNumSessionsChange} 
               options={options}
             />

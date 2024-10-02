@@ -23,7 +23,7 @@ const GymnastInfoPage = () => {
   const [localGroups, setLocalGroups] = useState(() => {
     const savedGroups = localStorage.getItem("groups");
     const groups = savedGroups ? JSON.parse(savedGroups) : [];
-    return groups.length === 0 ? [{ id: 1, timeslotId: null }] : groups;
+    return groups.length === 0 ? [{ id: 1, timeslotId: null, selectedNumSessions: null }] : groups;
   });
 
   const [gymnasts, setGymnasts] = useState(() => {
@@ -125,7 +125,7 @@ const GymnastInfoPage = () => {
   const handleRemoveGroup = (id) => {
     let updatedGroups = localGroups.filter(group => group.id !== id);
     if (updatedGroups.length === 0) {
-      updatedGroups = [{ id: 1, timeslotId: null }];
+      updatedGroups = [{ id: 1, timeslotId: null, selectedNumSessions: null }];
     } else {
       updatedGroups = updatedGroups.map((group, index) => ({ ...group, id: index + 1 }));
     }
@@ -195,6 +195,7 @@ const GymnastInfoPage = () => {
                             compTime={timeslot?.compTime || ''}
                             awardTime={timeslot?.awardTime || ''}
                             numSessions={timeslot?.numSessions || ''}
+                            selectedNumSessions={group.selectedNumSessions}
                             onUpdate={(updatedFields) => handleUpdateGroup(group.id, updatedFields)}
                             error={!timeslotValid}
                           />
