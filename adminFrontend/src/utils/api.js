@@ -67,3 +67,59 @@ export const createTimeSlot = async (timeSlotData) => {
         return { success: false, message: error.response?.data?.message || 'An error occurred while creating the time slot' };
     }
 };
+
+export const getSessionsByTimeSlot = async (timeSlotId) => {
+    try {
+        const response = await axiosInstance.get(`/api/sessions/timeslot/${timeSlotId}`);
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error("Error fetching sessions by time slot:", error);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while fetching sessions' };
+        }
+    }
+};
+
+export const createGymnastGroup = async (payload) => {
+    try {
+        const response = await axiosInstance.post('/gymnastgroups/', payload);
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error("Error creating gymnast group:", error);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while creating gymnast group' };
+        }
+    }
+};
+
+export const createApparatus = async (apparatusName) => {
+    try {
+        const response = await axiosInstance.post('/apparatuses/', { name: apparatusName });
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error("Error creating apparatus:", error);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while creating the apparatus' };
+        }
+    }
+};
+
+export const createEvent = async (eventData) => {
+    try {
+        const response = await axiosInstance.post('/events/', eventData);
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error("Error creating event:", error);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while creating the event' };
+        }
+    }
+};

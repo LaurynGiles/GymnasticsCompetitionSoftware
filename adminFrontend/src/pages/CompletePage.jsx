@@ -94,6 +94,64 @@ const CompletePage = () => {
 
       }
 
+    // Create gymnast groups
+    const storedGroups = JSON.parse(localStorage.getItem('groups')) || [];
+    const sessionMapping = {}; // Create a mapping of session IDs
+
+    for (const group of storedGroups) {
+        const sessions = await getSessionsForTimeSlot(timeSlotResponse.data.time_slot_id); // Adjust as necessary
+        const sessionIndex = group.selectedNumSessions - 1; // Convert to zero-based index
+        const sessionId = sessions[sessionIndex]?.session_id; // Get the session ID based on the index
+
+        if (sessionId) {
+            const gymnastGroupPayload = {
+                session_id: sessionId,
+            };
+            const groupResponse = await createGymnastGroup(gymnastGroupPayload);
+            if (!groupResponse.success) {
+                console.error(`Error creating gymnast group for session ${sessionId}: ${groupResponse.message}`);
+            } else {
+                // Save the group ID for event creation
+                sessionMapping[groupResponse.data.group_id] = sessionId;
+            }
+        } else {
+            console.error(`No session found for group with selectedNumSessions: ${group.selectedNumSessions}`);
+        }
+    }
+
+    // Create apparatuses
+    const storedApparatuses = JSON.parse(localStorage.getItem('apparatusEvents')) || [];
+    const createdApparatusIds = []; // Array to store created apparatus IDs
+
+    for (const apparatus of storedApparatuses) {
+        const apparatusPayload = {
+            name: apparatus.selected, // Get the name from the selected field
+        };
+        const apparatusResponse = await createApparatus(apparatusPayload);
+        if (apparatusResponse.success) {
+            createdApparatusIds.push(apparatusResponse.data.apparatus_id); // Store the created apparatus ID
+            console.log(`Apparatus "${apparatus.name}" created successfully!`);
+        } else {
+            console.error(`Error creating apparatus "${apparatus.name}": ${apparatusResponse.message}`);
+        }
+    }
+
+    // Create events
+    for (const groupId in sessionMapping) {
+        const sessionId = sessionMapping[groupId];
+        for (const apparatusId of createdApparatusIds) {
+            const eventPayload = {
+                group_id: groupId,
+                session_id: sessionId,
+                apparatus_id: apparatusId,
+            };
+            const eventResponse = await createEvent(eventPayload);
+            if (!eventResponse.success) {
+                console.error(`Error creating event for group ${groupId} and apparatus ${apparatusId}: ${eventResponse.message}`);
+            }
+        }
+    }
+
       navigate("HomeAdmin");
     } else {
       alert(`Error creating competition: ${response.message}`);
