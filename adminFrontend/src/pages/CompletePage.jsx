@@ -250,6 +250,7 @@ const CompletePage = () => {
       // Create gymnast groups
       const storedGroups = JSON.parse(localStorage.getItem('groups')) || [];
       const sessionMapping = {}; // Create a mapping of session IDs
+      const groupMapping = {};
 
       for (const group of storedGroups) {
           const sessions = await getSessionsByTimeSlot(timeSlotResponse.data.time_slot_id); // Adjust as necessary
@@ -266,6 +267,7 @@ const CompletePage = () => {
               } else {
                   // Save the group ID for event creation
                   sessionMapping[groupResponse.data.group_id] = sessionId;
+                  groupMapping[group.id] = groupResponse.data.group_id;
               }
           } else {
               console.error(`No session found for group with selectedNumSessions: ${group.selectedNumSessions}`);
@@ -316,7 +318,7 @@ const CompletePage = () => {
               district: gymnast.district,
               level: gymnast.level,
               age: gymnast.ageGroup,
-              group_id: gymnast.gymnastGroup, // Link to the gymnast group created earlier
+              group_id: groupMapping[gymnast.gymnastGroup], // Link to the gymnast group created earlier
           };
           const gymnastResponse = await createGymnast(gymnastPayload);
           if (!gymnastResponse.success) {
