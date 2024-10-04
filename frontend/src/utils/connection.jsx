@@ -150,21 +150,21 @@ export const NotificationProvider = ({ children }) => {
     /** SET HEAD OF GROUP and GROUP ID back to normal when leaving a group */
 
     return () => {
-      socketConnection.off("judgeDisconnected", handleJudgeDisconnected);
-      socketConnection.off("judgeLeaveGroup", handleJudgeLeaveGroup);
-      socketConnection.off("eventEnded", handleEventEnded);
-      socketConnection.off("rejectionMessage", handleRejectionMessage);
-      socketConnection.off("serverMessage", handleServerMessage);
-      socketConnection.off("groupMessage", handleGroupMessage);
-      socketConnection.off("joinRequest", handleJoinRequest);
-      socketConnection.off("judgeJoined", handleJudgeJoined);
-      socketConnection.off("joinApproved", handleJoinApproved);
-      socketConnection.off("nextGymnast", handleNextGymnast);
-      socketConnection.off("receiveDeduction", handleReceiveDeduction);
-      socketConnection.off("scoresUpdated", handleScoresUpdated);
-      socketConnection.off("updateFinalScore", handleUpdateFinalScore);
-      socketConnection.off("resubmissionRequest", handleResubmissionRequest);
-      socketConnection.off("judgeResubmission", handleJudgeResubmission);
+      // socketConnection.off("judgeDisconnected", handleJudgeDisconnected);
+      // socketConnection.off("judgeLeaveGroup", handleJudgeLeaveGroup);
+      // socketConnection.off("eventEnded", handleEventEnded);
+      // socketConnection.off("rejectionMessage", handleRejectionMessage);
+      // socketConnection.off("serverMessage", handleServerMessage);
+      // socketConnection.off("groupMessage", handleGroupMessage);
+      // socketConnection.off("joinRequest", handleJoinRequest);
+      // socketConnection.off("judgeJoined", handleJudgeJoined);
+      // socketConnection.off("joinApproved", handleJoinApproved);
+      // socketConnection.off("nextGymnast", handleNextGymnast);
+      // socketConnection.off("receiveDeduction", handleReceiveDeduction);
+      // socketConnection.off("scoresUpdated", handleScoresUpdated);
+      // socketConnection.off("updateFinalScore", handleUpdateFinalScore);
+      // socketConnection.off("resubmissionRequest", handleResubmissionRequest);
+      // socketConnection.off("judgeResubmission", handleJudgeResubmission);
       socketConnection.close();
     };
   }, []);

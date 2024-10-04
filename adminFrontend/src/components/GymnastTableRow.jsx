@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import SmallTableBlock from "./SmallTableBlock";
 import DateTableBlock from "./DateTableBlock";
 import TimeTableBlock from "./TimeTableBlock";
@@ -11,6 +11,17 @@ import XIcon from "./XIcon";
 import DropdownTableBlock from "./DropDownTableBlock";
 
 const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate, groupError }) => {
+
+  const [ageGroupOptions, setAgeGroupOptions] = useState([]);
+
+  useEffect(() => {
+    // Retrieve age groups from local storage
+    const storedAgeGroups = JSON.parse(localStorage.getItem('ageGroups')) || [];
+    
+    // Create options in the format of "min-max yrs"
+    const options = storedAgeGroups.map(group => `${group.minAge}-${group.maxAge} yrs`);
+    setAgeGroupOptions(options);
+  }, []); // Run once on component mount
 
   const handleGSAIDChange = (newGSAID) => {
     const parsedGSAID = newGSAID === "" ? null : parseInt(newGSAID, 10);
@@ -86,7 +97,7 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
           <DropdownTableBlock 
               value={ageGroup} 
               onChange={handleAgeGroupChange} 
-              options={["7-8", "8-9"]} 
+              options={ageGroupOptions}
               title="Age Group" 
             />
           <NumberTableBlock value={gymnastGroup} title="Gymnast Group" onChange={handleGroupChange} />

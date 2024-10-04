@@ -17,6 +17,8 @@ import PageHeader from "../components/PageHeader.jsx";
 import BarsIcon from "../components/BarsIcon.jsx";
 import SelectBox from "../components/SelectBox.jsx";
 import DropdownInput from "../components/DropDownInput.jsx";
+import NumberTableBlock from "../components/NumberTableBlock.jsx";
+import NumberInputLarge from "../components/NumberInputLarge.jsx";
 
 const ConfigPage = () => {
   const [qualifications, setQualifications] = useState([]);
@@ -37,8 +39,8 @@ const ConfigPage = () => {
   const [newQualName, setNewQualName] = useState("");
   const [newQualScore, setNewQualScore] = useState("");
   const [error, setError] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
   const [apparatusList, setApparatusList] = useState([]);
+  const [ageGroupList, setAgeGroupList] = useState([]);
   const navigate = useNavigate();
 
   const apparatusOptions = [
@@ -66,7 +68,40 @@ const ConfigPage = () => {
   };
 
   const handleRemoveApparatus = (id) => {
-    setApparatusList((prev) => prev.filter((item) => item.id !== id));
+    setApparatusList((prev) => {
+      // Filter out the removed apparatus
+      const updatedList = prev.filter((item) => item.id !== id);
+      // Renumber the IDs
+      return updatedList.map((item, index) => ({ ...item, id: index + 1 }));
+    });
+  };
+
+  const handleAddAgeGroup = () => {
+    setAgeGroupList((prev) => [
+      ...prev,
+      { id: prev.length + 1,  minAge: null, maxAge: null } // Keep track of selected options
+    ]);
+  };
+
+  const handleMinAgeChange = (id, value) => {
+    setAgeGroupList((prev) => 
+      prev.map((item) => (item.id === id ? { ...item, minAge: value } : item))
+    );
+  };
+
+  const handleMaxAgeChange = (id, value) => {
+    setAgeGroupList((prev) => 
+      prev.map((item) => (item.id === id ? { ...item, maxAge: value } : item))
+    );
+  };
+
+  const handleRemoveAgeGroup = (id) => {
+    setAgeGroupList((prev) => {
+      // Filter out the removed age group
+      const updatedList = prev.filter((item) => item.id !== id);
+      // Renumber the IDs
+      return updatedList.map((item, index) => ({ ...item, id: index + 1 }));
+    });
   };
 
   const handleContinue = () => {
@@ -78,10 +113,12 @@ const ConfigPage = () => {
     const storedCompetition = JSON.parse(localStorage.getItem('competition')) || {};
     const storedQualifications = JSON.parse(localStorage.getItem('qualifications')) || [];
     const storedApparatus = JSON.parse(localStorage.getItem('apparatusEvents')) || [];
+    const storedAgeGroups = JSON.parse(localStorage.getItem('ageGroups')) || [];
 
     console.log("Stored Competition:", storedCompetition);
     console.log("Stored Qualifications:", storedQualifications);
     console.log("Stored Apparatus:", storedApparatus);
+    console.log("Stored AgeGroups:", storedAgeGroups);
 
     if (Object.keys(storedCompetition).length > 0) {
       storedCompetition.startDate = storedCompetition.startDate ? new Date(storedCompetition.startDate) : null;
@@ -97,7 +134,14 @@ const ConfigPage = () => {
     } else {
       setApparatusList([{ id: 1, selected: '' }]); // Ensure at least one empty item
     }
-  }, [setCompetition, setQualifications]);
+
+    if (storedAgeGroups.length > 0) {
+      setAgeGroupList(storedAgeGroups);
+    } else {
+      setAgeGroupList([{ id: 1, minAge: null, maxAge: null }]); // Ensure at least one empty item
+    }
+
+  }, [setCompetition, setQualifications, setApparatusList, setAgeGroupList]);
 
   useEffect(() => {
     // Only save non-empty values
@@ -120,7 +164,12 @@ const ConfigPage = () => {
       localStorage.setItem('apparatusEvents', JSON.stringify(apparatusList));
     }
 
-  }, [competition, qualifications, apparatusList]);
+    if (ageGroupList.length > 0) {
+      console.log(`Setting local storage age group list: ${ageGroupList}`);
+      localStorage.setItem('ageGroups', JSON.stringify(ageGroupList));
+    }
+
+  }, [competition, qualifications, apparatusList, ageGroupList]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -160,7 +209,6 @@ const ConfigPage = () => {
   const handleRemoveQualification = (id) => {
     setQualifications((prev) => prev.filter((qual) => qual.id !== id));
   };
-
 
 
   return (
@@ -226,7 +274,7 @@ const ConfigPage = () => {
               </div>
             </div>
 
-            <ConfigHeader text="Apparatus events" />
+            <ConfigHeader text="Apparatus Events" />
             <div className="bg-white p-5 gap-4 rounded-lg shadow-md w-full">
               <div className="grid grid-cols-1 gap-4">
               {apparatusList.map((item) => (
@@ -244,6 +292,31 @@ const ConfigPage = () => {
               </div>
               <div className="mt-4 flex justify-center">
                 <AddButton title={"Add Apparatus"} onClick={handleAddApparatus} />
+              </div>
+            </div>
+
+            <ConfigHeader text="Age Groups" />
+            <div className="bg-white p-5 gap-4 rounded-lg shadow-md w-full">
+              <div className="grid grid-cols-1 gap-4">
+              {ageGroupList.map((item) => (
+                  <div className="flex items-center gap-4" key={item.id}>
+                    <InputLabel text={`Age Group ${item.id}`} />
+                    <NumberInputLarge 
+                      value={item.minAge} 
+                      onChange={(value) => handleMinAgeChange(item.id, value)} // Pass the id here
+                    />
+                    to
+                    <NumberInputLarge 
+                      value={item.maxAge} 
+                      onChange={(value) => handleMaxAgeChange(item.id, value)} // Pass the id here
+                    />
+                    yrs
+                    <XIcon onClick={() => handleRemoveAgeGroup(item.id)} className="ml-4 cursor-pointer" isVisible={item.id !== 1}/>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 flex justify-center">
+                <AddButton title={"Add Age Group"} onClick={handleAddAgeGroup} />
               </div>
             </div>
 

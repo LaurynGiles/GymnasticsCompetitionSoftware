@@ -43,15 +43,15 @@ module.exports = {
       },
       gender: {
         type: Sequelize.STRING(20),
-        allowNull: false,
+        allowNull: true,
       },
       contact_number: {
         type: Sequelize.STRING(20),
-        allowNull: false,
+        allowNull: true,
       },
       email: {
         type: Sequelize.STRING(100),
-        allowNull: false,
+        allowNull: true,
       },
       createdAt: {
         type: Sequelize.DATE,

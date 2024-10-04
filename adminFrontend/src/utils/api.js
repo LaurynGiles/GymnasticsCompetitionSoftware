@@ -70,7 +70,7 @@ export const createTimeSlot = async (timeSlotData) => {
 
 export const getSessionsByTimeSlot = async (timeSlotId) => {
     try {
-        const response = await axiosInstance.get(`/api/sessions/timeslot/${timeSlotId}`);
+        const response = await axiosInstance.get(`/sessions/timeslot/${timeSlotId}`);
         return { success: true, data: response.data };
     } catch (error) {
         console.error("Error fetching sessions by time slot:", error);
@@ -81,6 +81,16 @@ export const getSessionsByTimeSlot = async (timeSlotId) => {
         }
     }
 };
+
+export const createSession = async (payload) => {
+    try {
+      const response = await axiosInstance.post('/sessions/', payload);
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error("Error creating session:", error);
+      return { success: false, message: error.response?.data?.message || 'An error occurred while creating the session' };
+    }
+  };
 
 export const createGymnastGroup = async (payload) => {
     try {
@@ -120,6 +130,34 @@ export const createEvent = async (eventData) => {
             return { success: false, message: error.response.data.message };
         } else {
             return { success: false, message: 'An error occurred while creating the event' };
+        }
+    }
+};
+
+export const createGymnast = async (gymnastData) => {
+    try {
+        const response = await axios.post('/gymnasts/', gymnastData);
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error(`Error creating gymnast: ${error}`);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while creating the gymnast' };
+        }
+    }
+};
+
+export const createJudge = async (judgeData) => {
+    try {
+        const response = await axios.post('/judges/', judgeData);
+        return { success: true, data: response.data };
+    } catch (error) {
+        console.error(`Error creating judge: ${error}`);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while creating the judge' };
         }
     }
 };
