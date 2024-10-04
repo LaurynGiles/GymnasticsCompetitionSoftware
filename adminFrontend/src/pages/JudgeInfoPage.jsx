@@ -103,7 +103,7 @@ const JudgeInfoPage = () => {
                             l_name={judge.l_name}
                             club={judge.club}
                             level={judge.level}
-                            headJudge={judge.headJudge}
+                            headJudge={judge.headJudge === "True"}
                             role={judge.role}
                             onUpdate={(updatedFields) => handleUpdateJudge(judge.id, updatedFields)}
                         />

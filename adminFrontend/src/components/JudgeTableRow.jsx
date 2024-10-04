@@ -46,8 +46,10 @@ const JudgeTableRow = ({ ID, GSAId, f_name, l_name, club, level, headJudge, role
   };
 
   const handleHeadJudgeChange = (newHeadJudge) => {
+    // Convert the string value to a boolean
+    const isHeadJudge = newHeadJudge === "True";
     onUpdate({
-      headJudge: newHeadJudge,
+      headJudge: isHeadJudge,
     });
   };
 
@@ -78,6 +80,7 @@ const JudgeTableRow = ({ ID, GSAId, f_name, l_name, club, level, headJudge, role
               options={["True", "False"]} 
               title="Head Judge" 
             />
+
         </>
       ) : (
         <>
@@ -99,8 +102,10 @@ const JudgeTableRow = ({ ID, GSAId, f_name, l_name, club, level, headJudge, role
             <DropdownTableBlock 
               value={headJudge ? "True" : "False"} 
               onChange={handleHeadJudgeChange} 
-              options={["True", "False"]}
+              options={["True", "False"]} 
+              title="Head Judge" 
             />
+
         </>
       )}
     </div>

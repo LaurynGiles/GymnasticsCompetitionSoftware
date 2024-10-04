@@ -20,7 +20,7 @@ const NumberTableBlock = ({ value, onChange, title }) => {
         type="text"
         value={value !== null ? value : ''}
         onChange={handleChange}
-        className="w-[100px] h-[50px] bg-bright-white border text-center text-base md:text-xl border-gray-300 rounded-lg"
+        className="w-[100px] h-[50px] bg-bright-white border text-prussian-blue text-center text-base md:text-xl border-gray-300 rounded-lg"
         placeholder="0"
         inputMode="numeric" // Suggests numeric keyboard on mobile devices
         pattern="\d*" // Ensures only digits are accepted in HTML5

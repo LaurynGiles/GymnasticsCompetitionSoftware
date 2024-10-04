@@ -10,28 +10,39 @@ import CompletionStatus from "../components/CompletionStatus.jsx";
 const CompletePage = () => {
 
   const navigate = useNavigate();
-  const { adminInfo, competition } = useNotifications();
+  const { adminInfo } = useNotifications();
 
+  const [storedCompetition, setCompetition] = useState({});
   const [storedTimeSlots, setStoredTimeSlots] = useState([]);
   const [storedGroups, setStoredGroups] = useState([]);
+  const [storedGymnasts, setStoredGymnasts] = useState([]);
+  const [storedJudges, setStoredJudges] = useState([]);
   const [storedApparatusEvents, setStoredApparatusEvents] = useState([]);
   const [storedAgeGroups, setStoredAgeGroups] = useState([]);
   const [pageStatus, setPageStatus] = useState({
     configPage: 'incomplete',
     timeSlotPage: 'incomplete',
+    gymnastPage: 'incomplete',
+    judgePage: 'incomplete',
   });
 
   useEffect(() => {
     const loadData = () => {
+      const comp = JSON.parse(localStorage.getItem('competition')) || {};
       const timeSlots = JSON.parse(localStorage.getItem('timeslots')) || [];
       const groups = JSON.parse(localStorage.getItem('groups')) || [];
       const apparatusEvents = JSON.parse(localStorage.getItem('apparatusEvents')) || [];
       const ageGroups = JSON.parse(localStorage.getItem('ageGroups')) || [];
+      const gymnasts = JSON.parse(localStorage.getItem('gymnasts')) || [];
+      const judges = JSON.parse(localStorage.getItem('judges')) || [];
 
       setStoredTimeSlots(timeSlots);
       setStoredGroups(groups);
       setStoredApparatusEvents(apparatusEvents);
       setStoredAgeGroups(ageGroups);
+      setCompetition(comp);
+      setStoredGymnasts(gymnasts);
+      setStoredJudges(judges);
     };
 
     loadData();
@@ -41,12 +52,22 @@ const CompletePage = () => {
     const isValid = validateConfigPage();
     console.log(isValid);
     setPageStatus((prev) => ({ ...prev, configPage: isValid ? 'complete' : 'incomplete' }));
-  }, [competition, storedApparatusEvents, storedAgeGroups]);
+  }, [storedCompetition, storedApparatusEvents, storedAgeGroups]);
 
   useEffect(() => {
     const isValidTimeSlots = validateTimeSlotPage();
     setPageStatus((prev) => ({ ...prev, timeSlotPage: isValidTimeSlots ? 'complete' : 'incomplete' }));
-  }, [storedTimeSlots]); // Add this effect to check time slots
+  }, [storedTimeSlots]);
+
+  useEffect(() => {
+    const isValidGymnastPage = validateGymnastPage();
+    setPageStatus((prev) => ({ ...prev, gymnastPage: isValidGymnastPage ? 'complete' : 'incomplete' }));
+  }, [storedGroups, storedGymnasts, storedTimeSlots]);
+
+  useEffect(() => {
+    const isValidJudgePage = validateJudgePage();
+    setPageStatus((prev) => ({ ...prev, judgePage: isValidJudgePage ? 'complete' : 'incomplete' }));
+  }, [storedJudges]);
 
   const validateTimeSlotPage = () => {
     const storedTimeSlots = JSON.parse(localStorage.getItem('timeslots')) || [];
@@ -56,8 +77,14 @@ const CompletePage = () => {
     );
   };
 
-  const handleJudgeHome = () => {
-    navigate("HomeAdmin");
+  const validateJudgePage = () => {
+    const storedJudges = JSON.parse(localStorage.getItem('judges')) || [];
+    
+    // Check that every judge has all required fields filled
+    return storedJudges.every(judge => 
+      judge.GSAId && judge.f_name && judge.l_name && judge.club && 
+      judge.level !== null && judge.headJudge && judge.role
+    );
   };
 
   const validateConfigPage = () => {
@@ -92,28 +119,76 @@ const CompletePage = () => {
     return true; // Return true if all validations pass
   };
 
+  const validateGymnastPage = () => {
+    const storedGroups = JSON.parse(localStorage.getItem('groups')) || [];
+    const storedTimeSlots = JSON.parse(localStorage.getItem('timeslots')) || [];
+    const storedGymnasts = JSON.parse(localStorage.getItem('gymnasts')) || [];
+
+    // Check if each gymnast group has a valid timeslotId and numSessions
+    for (const group of storedGroups) {
+      if (!group.timeslotId || group.numSessions === null) {
+        console.log("problem 1");
+        return false; // Incomplete if timeslotId or numSessions is missing
+      }
+      
+      // Check if timeslotId exists in storedTimeSlots
+      const validTimeslot = storedTimeSlots.some(slot => slot.id === group.timeslotId);
+      if (!validTimeslot) {
+        console.log("problem 2");
+        return false; // Incomplete if the timeslotId is not found
+      }
+    }
+
+    // Validate that all gymnast fields are filled and check gymnastGroup validity
+    const validGroupIds = storedGroups.map(group => group.id);
+    for (const gymnast of storedGymnasts) {
+      const requiredFields = [
+        "GSAId", "f_name", "l_name", "club", 
+        "district", "level", "dateOfBirth", "ageGroup", "gymnastGroup"
+      ];
+
+      for (const field of requiredFields) {
+        if (!gymnast[field]) {
+          console.log("problem 3");
+          console.log(gymnast);
+          console.log(gymnast[field]);
+          return false; // Return false if any required field is empty
+        }
+      }
+
+      // Check if the gymnast's group ID is valid
+      if (gymnast.gymnastGroup !== null && !validGroupIds.includes(gymnast.gymnastGroup)) {
+        console.log("problem 4");
+        return false; // Invalid gymnastGroup ID
+      }
+    }
+
+    return true; // Return true if all validations pass
+  };
+
   const handleCreateCompetition = async () => {
 
-    // Ensure all required fields are present
-    if (!validateConfigPage() && !validateTimeSlotPage) {
+    if (!validateConfigPage() || !validateTimeSlotPage() || !validateGymnastPage() || !validateJudgePage()) {
       alert("Please complete all required fields of the required pages.");
       return;
     }
+  
+    const storedCompetition = JSON.parse(localStorage.getItem('competition')) || {};
 
     // Create the competition payload
     const payload = {
       admin_id: adminInfo.admin_id,
-      competition_name: competition.name,
-      start_date: competition.startDate,
-      end_date: competition.endDate,
-      location: competition.location,
-      style: competition.style,
-      bronze_min_score: competition.minBronze,
-      bronze_max_score: competition.maxBronze,
-      silver_min_score: competition.minSilver,
-      silver_max_score: competition.maxSilver,
-      gold_min_score: competition.minGold,
-      gold_max_score: competition.maxGold,
+      competition_name: storedCompetition.name,
+      start_date: storedCompetition.startDate,
+      end_date: storedCompetition.endDate,
+      location: storedCompetition.location,
+      style: storedCompetition.style,
+      bronze_min_score: storedCompetition.minBronze,
+      bronze_max_score: storedCompetition.maxBronze,
+      silver_min_score: storedCompetition.minSilver,
+      silver_max_score: storedCompetition.maxSilver,
+      gold_min_score: storedCompetition.minGold,
+      gold_max_score: storedCompetition.maxGold,
     };
 
     // Call the create competition API
@@ -276,7 +351,7 @@ const CompletePage = () => {
   return (
     <div className="flex h-screen bg-bright-white">
       <NavigationBar />
-      <div className="flex-1 flex flex-col items-center justify-center px-4 lg:px-0 ml-64 gap-6 md:gap-16">
+      <div className="flex-1 flex flex-col items-center px-4 lg:px-0 ml-64 gap-8 mt-[50px]">
         <div className="w-full mx-auto flex flex-col items-center justify-center text-left">
           <div className="bg-notification-box p-5 rounded-lg shadow-lg max-w-5xl mx-auto">
             <p className="text-prussian-blue leading-relaxed">

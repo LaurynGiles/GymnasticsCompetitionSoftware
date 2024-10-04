@@ -6,6 +6,8 @@ const CompletionStatus = ({ pageStatus }) => {
     const pageNameMapping = {
         configPage: "Configuration Page",
         timeSlotPage: "Timeslot Page",
+        gymnastPage: "Gymnast Page",
+        judgePage: "Judge Page",
     };
 
   return (

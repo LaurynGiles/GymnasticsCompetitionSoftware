@@ -13,6 +13,7 @@ import DropdownTableBlock from "./DropDownTableBlock";
 const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate, groupError }) => {
 
   const [ageGroupOptions, setAgeGroupOptions] = useState([]);
+  const dateOfBirthObj = dateOfBirth ? new Date(dateOfBirth) : null;
 
   useEffect(() => {
     // Retrieve age groups from local storage
@@ -93,7 +94,7 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
           <TextTableBlock value={club} title="Club" onChange={handleClubChange} />
           <SmallTextTableBlock value={district} title="District" onChange={handleDistrictChange} />
           <NumberTableBlock value={level} title="Level" onChange={handleLevelChange} />
-          <DateTableBlock date={dateOfBirth} title="Date of Birth" setDate={handleDOBChange} />
+          <DateTableBlock date={dateOfBirthObj} title="Date of Birth" setDate={handleDOBChange} />
           <DropdownTableBlock 
               value={ageGroup} 
               onChange={handleAgeGroupChange} 
@@ -111,11 +112,11 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
           <TextTableBlock value={club} onChange={handleClubChange} />
           <SmallTextTableBlock value={district} onChange={handleDistrictChange} />
           <NumberTableBlock value={level} onChange={handleLevelChange} />
-          <DateTableBlock date={dateOfBirth} setDate={handleDOBChange} />
+          <DateTableBlock date={dateOfBirthObj} setDate={handleDOBChange} />
           <DropdownTableBlock 
               value={ageGroup} 
               onChange={handleAgeGroupChange} 
-              options={["7-8", "8-9"]}
+              options={ageGroupOptions}
             />
           <NumberTableBlock value={gymnastGroup} onChange={handleGroupChange} />
         </>
