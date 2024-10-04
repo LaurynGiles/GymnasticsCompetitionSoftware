@@ -41,7 +41,7 @@ const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, numSessio
           <TimeTableBlock time={compTime} setTime={handleCompTimeChange} title={"Comp Time"}/>
           <TimeTableBlock time={awardTime} setTime={handleAwardTimeChange} title={"Award Time"}/>
           <DropdownTableBlock 
-              value={numSessions} 
+              value={numSessions !== null ? String(numSessions) : ""}
               onChange={handleNumSessionsChange} 
               options={["1", "2", "3"]}
               title="Number of Comps" 
@@ -55,7 +55,7 @@ const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, numSessio
           <TimeTableBlock time={compTime} setTime={handleCompTimeChange} />
           <TimeTableBlock time={awardTime} setTime={handleAwardTimeChange} />
           <DropdownTableBlock 
-              value={numSessions} 
+              value={numSessions !== null ? String(numSessions) : ""}
               onChange={handleNumSessionsChange} 
               options={["1", "2", "3"]}
             />

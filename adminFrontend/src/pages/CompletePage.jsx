@@ -12,9 +12,49 @@ const CompletePage = () => {
   const navigate = useNavigate();
   const { adminInfo, competition } = useNotifications();
 
+  const [storedTimeSlots, setStoredTimeSlots] = useState([]);
+  const [storedGroups, setStoredGroups] = useState([]);
+  const [storedApparatusEvents, setStoredApparatusEvents] = useState([]);
+  const [storedAgeGroups, setStoredAgeGroups] = useState([]);
   const [pageStatus, setPageStatus] = useState({
     configPage: 'incomplete',
+    timeSlotPage: 'incomplete',
   });
+
+  useEffect(() => {
+    const loadData = () => {
+      const timeSlots = JSON.parse(localStorage.getItem('timeslots')) || [];
+      const groups = JSON.parse(localStorage.getItem('groups')) || [];
+      const apparatusEvents = JSON.parse(localStorage.getItem('apparatusEvents')) || [];
+      const ageGroups = JSON.parse(localStorage.getItem('ageGroups')) || [];
+
+      setStoredTimeSlots(timeSlots);
+      setStoredGroups(groups);
+      setStoredApparatusEvents(apparatusEvents);
+      setStoredAgeGroups(ageGroups);
+    };
+
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    const isValid = validateConfigPage();
+    console.log(isValid);
+    setPageStatus((prev) => ({ ...prev, configPage: isValid ? 'complete' : 'incomplete' }));
+  }, [competition, storedApparatusEvents, storedAgeGroups]);
+
+  useEffect(() => {
+    const isValidTimeSlots = validateTimeSlotPage();
+    setPageStatus((prev) => ({ ...prev, timeSlotPage: isValidTimeSlots ? 'complete' : 'incomplete' }));
+  }, [storedTimeSlots]); // Add this effect to check time slots
+
+  const validateTimeSlotPage = () => {
+    const storedTimeSlots = JSON.parse(localStorage.getItem('timeslots')) || [];
+    
+    return storedTimeSlots.every(slot => 
+      slot.date && slot.reportTime && slot.compTime && slot.awardTime && slot.numSessions
+    );
+  };
 
   const handleJudgeHome = () => {
     navigate("HomeAdmin");
@@ -55,11 +95,9 @@ const CompletePage = () => {
   const handleCreateCompetition = async () => {
 
     // Ensure all required fields are present
-    if (!validateConfigPage()) {
-      alert("Please complete all required fields and ensure valid entries in the configuration.");
+    if (!validateConfigPage() && !validateTimeSlotPage) {
+      alert("Please complete all required fields of the required pages.");
       return;
-    } else {
-      setPageStatus((prev) => ({ ...prev, configPage: 'complete' }));
     }
 
     // Create the competition payload
