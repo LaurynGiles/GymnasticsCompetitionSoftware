@@ -167,14 +167,15 @@ const CompletePage = () => {
   };
 
   const handleCreateCompetition = async () => {
-
+    // Validate all required pages
     if (!validateConfigPage() || !validateTimeSlotPage() || !validateGymnastPage() || !validateJudgePage()) {
       alert("Please complete all required fields of the required pages.");
       return;
     }
   
     const storedCompetition = JSON.parse(localStorage.getItem('competition')) || {};
-
+    console.log("Stored Competition Data:", storedCompetition);
+  
     // Create the competition payload
     const payload = {
       admin_id: adminInfo.admin_id,
@@ -190,32 +191,44 @@ const CompletePage = () => {
       gold_min_score: storedCompetition.minGold,
       gold_max_score: storedCompetition.maxGold,
     };
-
+  
+    console.log("Competition Payload:", payload);
+  
     // Call the create competition API
     const response = await createCompetition(payload);
+    console.log("Create Competition Response:", response);
+  
     if (response.success) {
-      alert("Competition created successfully!");
-
-      // Create qualifications using the competition id
+     
       const createdCompetitionId = response.data.competition_id; // Assuming your API returns this
+      console.log("Created Competition ID:", createdCompetitionId);
+  
+      // Create qualifications using the competition id
       const storedQualifications = JSON.parse(localStorage.getItem('qualifications')) || [];
-
+      console.log("Stored Qualifications:", storedQualifications);
+  
       // Iterate through qualifications and create each one
       for (const qualification of storedQualifications) {
         const qualificationPayload = {
           competition_id: createdCompetitionId,
           name: qualification.name,
-          min_score: parseFloat(qualification.score) // Ensure score is a float
+          min_score: parseFloat(qualification.score), // Ensure score is a float
         };
-
+  
+        console.log("Creating Qualification Payload:", qualificationPayload);
         const qualResponse = await createQualification(qualificationPayload);
+        console.log("Qualification Response:", qualResponse);
+  
         if (!qualResponse.success) {
           console.error(`Error creating qualification ${qualification.name}: ${qualResponse.message}`);
         }
       }
-
+  
       const storedTimeSlots = JSON.parse(localStorage.getItem('timeslots')) || [];
+      console.log("Stored Time Slots:", storedTimeSlots);
 
+      const timeSlotMapping = {};
+  
       for (const timeSlot of storedTimeSlots) {
         const timeSlotPayload = {
           competition_id: createdCompetitionId,
@@ -225,126 +238,159 @@ const CompletePage = () => {
           award_time: timeSlot.awardTime,
           completed: false,
         };
-
+  
+        console.log("Creating Time Slot Payload:", timeSlotPayload);
         const timeSlotResponse = await createTimeSlot(timeSlotPayload);
-        if (!timeSlotResponse.success) {
+        console.log("Time Slot Response:", timeSlotResponse);
+  
+        if (timeSlotResponse.success) {
+          // Map the local time slot ID to the created time slot ID
+          timeSlotMapping[timeSlot.id] = timeSlotResponse.data.time_slot_id;
+  
+          const numSessions = timeSlot.numSessions; // Retrieve numSessions from timeslot
+          for (let i = 0; i < numSessions; i++) {
+            const sessionPayload = {
+              time_slot_id: timeSlotResponse.data.time_slot_id, // Use the created time slot ID
+              completed: false,
+            };
+  
+            console.log("Creating Session Payload:", sessionPayload);
+            const sessionResponse = await createSession(sessionPayload);
+            console.log("Session Response:", sessionResponse);
+  
+            if (!sessionResponse.success) {
+              console.error(`Error creating session for time slot ${timeSlotResponse.data.time_slot_id}: ${sessionResponse.message}`);
+            }
+          }
+        } else {
           console.error(`Error creating time slot on ${timeSlot.date}: ${timeSlotResponse.message}`);
           continue;
         }
-
-        const numSessions = timeSlot.numSessions; // Retrieve numSessions from timeslot
-        for (let i = 0; i < numSessions; i++) {
-          const sessionPayload = {
-            time_slot_id: timeSlotResponse.data.time_slot_id, // Use the created time slot ID
-            completed: false,
-          };
-
-          const sessionResponse = await createSession(sessionPayload);
-          if (!sessionResponse.success) {
-            console.error(`Error creating session for time slot ${timeSlotResponse.data.time_slot_id}: ${sessionResponse.message}`);
-          }
-        }
-
       }
-
+  
       // Create gymnast groups
       const storedGroups = JSON.parse(localStorage.getItem('groups')) || [];
-      const sessionMapping = {}; // Create a mapping of session IDs
+      const sessionGroupMapping = {}; // Create a mapping of session IDs
       const groupMapping = {};
-
+  
       for (const group of storedGroups) {
-          const sessions = await getSessionsByTimeSlot(timeSlotResponse.data.time_slot_id); // Adjust as necessary
-          const sessionIndex = group.selectedNumSessions - 1; // Convert to zero-based index
-          const sessionId = sessions[sessionIndex]?.session_id; // Get the session ID based on the index
+        const timeSlotId = group.timeslotId; // Assuming you store timeslotId in the group object
+        const createdTimeSlotId = timeSlotMapping[timeSlotId];
 
-          if (sessionId) {
-              const gymnastGroupPayload = {
-                  session_id: sessionId,
-              };
-              const groupResponse = await createGymnastGroup(gymnastGroupPayload);
-              if (!groupResponse.success) {
-                  console.error(`Error creating gymnast group for session ${sessionId}: ${groupResponse.message}`);
-              } else {
-                  // Save the group ID for event creation
-                  sessionMapping[groupResponse.data.group_id] = sessionId;
-                  groupMapping[group.id] = groupResponse.data.group_id;
-              }
+        const sessions = await getSessionsByTimeSlot(createdTimeSlotId); // Adjust as necessary
+        console.log("Sessions for Time Slot ID:", createdTimeSlotId, "->", sessions);
+
+        const sessionIndex = group.selectedNumSessions - 1; // Convert to zero-based index
+        console.log(sessionIndex)
+        console.log(sessions.data)
+        const sessionId = sessions.data[sessionIndex]?.session_id; // Get the session ID based on the index
+        console.log(sessionId)
+  
+        if (sessionId) {
+          const gymnastGroupPayload = {
+            session_id: sessionId,
+          };
+          console.log("Creating Gymnast Group Payload:", gymnastGroupPayload);
+          const groupResponse = await createGymnastGroup(gymnastGroupPayload);
+          console.log("Gymnast Group Response:", groupResponse);
+
+          if (!groupResponse.success) {
+            console.error(`Error creating gymnast group for session ${sessionId}: ${groupResponse.message}`);
           } else {
-              console.error(`No session found for group with selectedNumSessions: ${group.selectedNumSessions}`);
+            // Save the group ID for event creation
+            sessionGroupMapping[groupResponse.data.group_id] = sessionId;
+            groupMapping[group.id] = groupResponse.data.group_id;
+            console.log(`Mapped Group ID ${group.id} to Real Group ID ${groupResponse.data.group_id}`);
           }
+        } else {
+          console.error(`No session found for group with selectedNumSessions: ${group.selectedNumSessions}`);
+        }
       }
-
+  
       // Create apparatuses
       const storedApparatuses = JSON.parse(localStorage.getItem('apparatusEvents')) || [];
       const createdApparatusIds = []; // Array to store created apparatus IDs
-
+  
       for (const apparatus of storedApparatuses) {
-          const apparatusPayload = {
-              name: apparatus.selected, // Get the name from the selected field
-          };
-          const apparatusResponse = await createApparatus(apparatusPayload);
-          if (apparatusResponse.success) {
-              createdApparatusIds.push(apparatusResponse.data.apparatus_id); // Store the created apparatus ID
-              console.log(`Apparatus "${apparatus.name}" created successfully!`);
-          } else {
-              console.error(`Error creating apparatus "${apparatus.name}": ${apparatusResponse.message}`);
-          }
+        const apparatusPayload = {
+          name: apparatus.selected, // Get the name from the selected field
+        };
+        console.log("Creating Apparatus Payload:", apparatusPayload);
+        const apparatusResponse = await createApparatus(apparatusPayload);
+        console.log("Apparatus Response:", apparatusResponse);
+  
+        if (apparatusResponse.success) {
+          createdApparatusIds.push(apparatusResponse.data.apparatus_id); // Store the created apparatus ID
+          console.log(`Apparatus "${apparatus.name}" created successfully!`);
+        } else {
+          console.error(`Error creating apparatus "${apparatus.name}": ${apparatusResponse.message}`);
+        }
       }
-
+  
       // Create events
-      for (const groupId in sessionMapping) {
-          const sessionId = sessionMapping[groupId];
-          for (const apparatusId of createdApparatusIds) {
-              const eventPayload = {
-                  group_id: groupId,
-                  session_id: sessionId,
-                  apparatus_id: apparatusId,
-              };
-              const eventResponse = await createEvent(eventPayload);
-              if (!eventResponse.success) {
-                  console.error(`Error creating event for group ${groupId} and apparatus ${apparatusId}: ${eventResponse.message}`);
-              }
+      for (const groupId in sessionGroupMapping) {
+        const sessionId = sessionGroupMapping[groupId];
+        for (const apparatusId of createdApparatusIds) {
+          const eventPayload = {
+            group_id: groupId,
+            session_id: sessionId,
+            apparatus_id: apparatusId,
+          };
+          console.log("Creating Event Payload:", eventPayload);
+          const eventResponse = await createEvent(eventPayload);
+          console.log("Event Response:", eventResponse);
+  
+          if (!eventResponse.success) {
+            console.error(`Error creating event for group ${groupId} and apparatus ${apparatusId}: ${eventResponse.message}`);
           }
+        }
       }
-
+  
       const storedGymnasts = JSON.parse(localStorage.getItem('gymnasts')) || [];
       for (const gymnast of storedGymnasts) {
-          const gymnastPayload = {
-              gsa_id: gymnast.GSAId,
-              first_name: gymnast.f_name,
-              last_name: gymnast.l_name,
-              date_of_birth: new Date(gymnast.dateOfBirth).toISOString().split('T')[0], // Convert to YYYY-MM-DD
-              club: gymnast.club,
-              district: gymnast.district,
-              level: gymnast.level,
-              age: gymnast.ageGroup,
-              group_id: groupMapping[gymnast.gymnastGroup], // Link to the gymnast group created earlier
-          };
-          const gymnastResponse = await createGymnast(gymnastPayload);
-          if (!gymnastResponse.success) {
-              console.error(`Error creating gymnast ${gymnast.first_name} ${gymnast.last_name}: ${gymnastResponse.message}`);
-          }
+        const gymnastPayload = {
+          gsa_id: gymnast.GSAId,
+          first_name: gymnast.f_name,
+          last_name: gymnast.l_name,
+          date_of_birth: new Date(gymnast.dateOfBirth).toISOString().split('T')[0], // Convert to YYYY-MM-DD
+          club: gymnast.club,
+          district: gymnast.district,
+          level: gymnast.level,
+          age: gymnast.ageGroup,
+          group_id: groupMapping[gymnast.gymnastGroup], // Link to the gymnast group created earlier
+        };
+        console.log("Creating Gymnast Payload:", gymnastPayload);
+        const gymnastResponse = await createGymnast(gymnastPayload);
+        console.log("Gymnast Response:", gymnastResponse);
+  
+        if (!gymnastResponse.success) {
+          console.error(`Error creating gymnast ${gymnast.first_name} ${gymnast.last_name}: ${gymnastResponse.message}`);
+        }
       }
-
+  
       // Create judges
       const storedJudges = JSON.parse(localStorage.getItem('judges')) || [];
       for (const judge of storedJudges) {
-          const judgePayload = {
-              gsa_id: judge.GSAId,
-              first_name: judge.f_name,
-              last_name: judge.l_name,
-              club: judge.club,
-              level: judge.level,
-              head_judge: judge.headJudge === "True", // Convert string to boolean
-              role: judge.role,
-          };
-          const judgeResponse = await createJudge(judgePayload);
-          if (!judgeResponse.success) {
-              console.error(`Error creating judge ${judge.first_name} ${judge.last_name}: ${judgeResponse.message}`);
-          }
+        const judgePayload = {
+          gsa_id: judge.GSAId,
+          first_name: judge.f_name,
+          last_name: judge.l_name,
+          club: judge.club,
+          level: judge.level,
+          head_judge: judge.headJudge === "True", // Convert string to boolean
+          role: judge.role,
+        };
+        console.log("Creating Judge Payload:", judgePayload);
+        const judgeResponse = await createJudge(judgePayload);
+        console.log("Judge Response:", judgeResponse);
+  
+        if (!judgeResponse.success) {
+          console.error(`Error creating judge ${judge.first_name} ${judge.last_name}: ${judgeResponse.message}`);
+        }
       }
-
-      navigate("HomeAdmin");
+  
+      alert("Competition created successfully!");
+      navigate("/homeAdmin");
     } else {
       alert(`Error creating competition: ${response.message}`);
     }

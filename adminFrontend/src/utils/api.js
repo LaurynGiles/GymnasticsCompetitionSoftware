@@ -70,7 +70,7 @@ export const createTimeSlot = async (timeSlotData) => {
 
 export const getSessionsByTimeSlot = async (timeSlotId) => {
     try {
-        const response = await axiosInstance.get(`/sessions/timeslot/${timeSlotId}`);
+        const response = await axiosInstance.get(`/sessions/byTimeSlot/${timeSlotId}`);
         return { success: true, data: response.data };
     } catch (error) {
         console.error("Error fetching sessions by time slot:", error);

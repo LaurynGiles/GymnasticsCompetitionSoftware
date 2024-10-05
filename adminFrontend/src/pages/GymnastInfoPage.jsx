@@ -158,7 +158,6 @@ const GymnastInfoPage = () => {
   };
 
   const getGroupDetails = (groupId) => {
-    console.log(localGroups.find(g => g.id === groupId));
     return localGroups.find(g => g.id === groupId);
   };
 
@@ -230,7 +229,6 @@ const GymnastInfoPage = () => {
                   {gymnasts.map(gymnast => {
                     const group = getGroupDetails(gymnast.gymnastGroup);
                     const groupValid = Boolean(group); 
-                    console.log(groupValid)
                       return (
                         <GymnastTableRow
                           key={gymnast.id}
