@@ -390,7 +390,16 @@ const CompletePage = () => {
           console.error(`Error creating judge ${judge.first_name} ${judge.last_name}: ${judgeResponse.message}`);
         }
       }
-  
+      
+      localStorage.removeItem("competition");
+      localStorage.removeItem("ageGroups");
+      localStorage.removeItem("apparatusEvents");
+      localStorage.removeItem("groups");
+      localStorage.removeItem("gymnasts");
+      localStorage.removeItem("judges");
+      localStorage.removeItem("qualifications");
+      localStorage.removeItem("timeslots");
+
       alert("Competition created successfully!");
       navigate("/homeAdmin");
     } else {

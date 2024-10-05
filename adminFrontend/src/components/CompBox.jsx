@@ -7,30 +7,16 @@
 
   const EventBox = ({ competition_name, start_date, end_date, location, style }) => {
 
-    const { socket } = useNotifications();
     const [statusMessage, setStatusMessage] = useState("");
     const navigate = useNavigate();
 
-    const handleJudgeHome = async () => {
-    //   try {
-    //       const joinResult = await handleJoinGroup(group_id);
-  
-    //       if (joinResult === 'headJudge') {
-    //         setCurrApparatus(apparatus);
-    //         console.log(`Number of gymnasts: ${gymnasts.length}`);
-    //         setTotalGymnasts(gymnasts.length);
-    //         navigate("/lobby");
-    //       }
-  
-    //   } catch (error) {
-    //     console.log(error);
-    //     setError(error || "Error connecting to server");
-    //     setShowError(true);
-    //   }
+    const handleNavigateToResults = () => {
+      navigate("/results");
     };
 
     return (
-      <div className="flex flex-col items-center gap-0 py-0 lg:w-[60%] md:w-[85%] w-[90%] h-full border-0 cursor-pointer hover:border-2 hover:border-glaucous">
+      <div className="flex flex-col items-center gap-0 py-0 lg:w-[60%] md:w-[85%] w-[90%] h-full border-0 cursor-pointer hover:border-2 hover:border-glaucous"
+      onClick={handleNavigateToResults}>
         <div className="flex flex-col items-start gap-2 md:gap-6 px-4 md:px-10 py-4 md:py-8 bg-anti-flash-white rounded-lg w-full h-full">
           <div className="flex items-center justify-center h-[70px] w-[40%] bg-periwinkle rounded-xl md:rounded-3xl px-4">
             <div className="font-montserrat font-medium text-prussian-blue text-xl md:text-2xl text-center">

@@ -6,7 +6,7 @@ import ClockIcon from "../components/ClockIcon";
 import GymnastIcon from "../components/GymnastIcon";
 import BookIcon from "../components/BookIcon";
 import TickIcon from "../components/TickIcon";
-import XIcon from "./XIcon";
+import ExitIcon from "./ExitIcon";
 import { useNavigate } from "react-router-dom";
 
 const NavigationBar = () => {
@@ -24,7 +24,7 @@ const NavigationBar = () => {
         alt="Logo" 
         src="logo.png" 
       />
-      <div className="flex flex-col gap-6 md:gap-8 lg:gap-16">
+      <div className="flex flex-col gap-6 md:gap-12">
         <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded"
           onClick={() => handleNavigation('/createWelcome')}>
           <HomeIcon onClick={() => handleNavigation('/createWelcome')}/>
@@ -54,6 +54,11 @@ const NavigationBar = () => {
           onClick={() => handleNavigation('/completeSetup')}>
           <TickIcon onClick={() => handleNavigation('/completeSetup')}/>
           <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Complete</span>
+        </div>
+        <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded"
+          onClick={() => handleNavigation('/homeAdmin')}>
+          <ExitIcon onClick={() => handleNavigation('/homeAdmin')}/>
+          <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Exit</span>
         </div>
       </div>
     </div>

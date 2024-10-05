@@ -102,8 +102,7 @@ const JudgeTableRow = ({ ID, GSAId, f_name, l_name, club, level, headJudge, role
             <DropdownTableBlock 
               value={headJudge ? "True" : "False"} 
               onChange={handleHeadJudgeChange} 
-              options={["True", "False"]} 
-              title="Head Judge" 
+              options={["True", "False"]}
             />
 
         </>

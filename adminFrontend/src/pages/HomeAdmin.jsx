@@ -19,19 +19,26 @@ const HomeAdmin = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-      const fetchCompetitions = async () => {
-          const response = await getCompetitionsByAdmin(adminInfo.admin_id);
+    const storedCompBoxes = JSON.parse(localStorage.getItem('compBoxes')) || [];
+    setCompBoxes(storedCompBoxes);
+  }, []);
 
-          if (response.success) {
-              setCompBoxes(response.data);
-          } else {
-              setError(response.message);
-          }
-      };
+  // Fetch competitions from the API
+  useEffect(() => {
+    const fetchCompetitions = async () => {
+      const response = await getCompetitionsByAdmin(adminInfo.admin_id);
 
-      fetchCompetitions();
+      if (response.success) {
+        setCompBoxes(response.data);
+        localStorage.setItem('compBoxes', JSON.stringify(response.data)); // Save to local storage
+      } else {
+        setError(response.message);
+      }
+    };
 
+    fetchCompetitions();
   }, [adminInfo.admin_id]);
+
 
   const handleJudgeHome = () => {
       navigate("/createWelcome");

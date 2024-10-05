@@ -5,6 +5,7 @@ import HomeAdmin from './pages/HomeAdmin.jsx';
 import WelcomePage from './pages/WelcomePage.jsx';
 import ConfigPage from './pages/ConfigPage.jsx';
 import TimeSlotPage from './pages/TimeSlotPage.jsx';
+import ResultsPage from './pages/ResultsPage.jsx';
 import GymnastInfoPage from './pages/GymnastInfoPage.jsx';
 import JudgeInfoPage from './pages/JudgeInfoPage.jsx';
 import { NotificationProvider } from './utils/connection.jsx';
@@ -26,7 +27,8 @@ function App() {
           <Route path="/gymnastInfo" element={<GymnastInfoPage/>} />
           <Route path="/judgeInfo" element={<JudgeInfoPage/>} />
           <Route path="/completeSetup" element={<CompletePage/>} />
-        
+          <Route path="/results" element={<ResultsPage/>} />
+
         </Routes>
       </Router>
     </NotificationProvider>
