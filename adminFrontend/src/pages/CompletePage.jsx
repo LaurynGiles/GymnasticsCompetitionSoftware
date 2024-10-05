@@ -309,11 +309,13 @@ const CompletePage = () => {
   
       // Create apparatuses
       const storedApparatuses = JSON.parse(localStorage.getItem('apparatusEvents')) || [];
+      console.log(storedApparatuses)
       const createdApparatusIds = []; // Array to store created apparatus IDs
-  
+      
+
       for (const apparatus of storedApparatuses) {
         const apparatusPayload = {
-          name: apparatus.selected, // Get the name from the selected field
+          apparatus_name: apparatus.selected, // Get the name from the selected field
         };
         console.log("Creating Apparatus Payload:", apparatusPayload);
         const apparatusResponse = await createApparatus(apparatusPayload);
@@ -333,7 +335,7 @@ const CompletePage = () => {
         for (const apparatusId of createdApparatusIds) {
           const eventPayload = {
             group_id: groupId,
-            session_id: sessionId,
+            // session_id: sessionId,
             apparatus_id: apparatusId,
           };
           console.log("Creating Event Payload:", eventPayload);

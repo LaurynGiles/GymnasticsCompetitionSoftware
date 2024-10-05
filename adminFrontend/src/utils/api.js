@@ -108,7 +108,8 @@ export const createGymnastGroup = async (payload) => {
 
 export const createApparatus = async (apparatusName) => {
     try {
-        const response = await axiosInstance.post('/apparatuses/', { name: apparatusName });
+        console.log(`API: ${apparatusName}`);
+        const response = await axiosInstance.post('/apparatuses/', apparatusName );
         return { success: true, data: response.data };
     } catch (error) {
         console.error("Error creating apparatus:", error);
@@ -136,7 +137,7 @@ export const createEvent = async (eventData) => {
 
 export const createGymnast = async (gymnastData) => {
     try {
-        const response = await axios.post('/gymnasts/', gymnastData);
+        const response = await axiosInstance.post('/gymnasts/', gymnastData);
         return { success: true, data: response.data };
     } catch (error) {
         console.error(`Error creating gymnast: ${error}`);
@@ -150,7 +151,7 @@ export const createGymnast = async (gymnastData) => {
 
 export const createJudge = async (judgeData) => {
     try {
-        const response = await axios.post('/judges/', judgeData);
+        const response = await axiosInstance.post('/judges/', judgeData);
         return { success: true, data: response.data };
     } catch (error) {
         console.error(`Error creating judge: ${error}`);
