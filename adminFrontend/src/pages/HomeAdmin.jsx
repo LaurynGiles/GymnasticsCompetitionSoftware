@@ -57,13 +57,7 @@ const HomeAdmin = () => {
             {compBoxes.map(compBox => (
               <CompBox
                 key={compBox.competition_id}
-                competition_name={compBox.competition_name}
-                start_date={compBox.start_date}
-                end_date={compBox.end_date}
-                location={compBox.location}
-                style={compBox.style}
-                setShowError={setShowError}
-                setError={setError}
+                competition={compBox}
               />
             ))}
           </div>

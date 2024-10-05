@@ -25,15 +25,15 @@ export const getActiveTimeSlot = async () => {
 };
 
 
-export const getSessionsByTimeSlot = async (timeSlotId) => {
-    try {
-      const response = await axiosInstance.get(`/sessions/byTimeSlot/${timeSlotId}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching sessions:", error);
-      return [];
-    }
-};
+  export const getSessionsByTimeSlot = async (timeSlotId) => {
+      try {
+        const response = await axiosInstance.get(`/sessions/byTimeSlot/${timeSlotId}`);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching sessions:", error);
+        return [];
+      }
+  };
 
 export const getEventsBySessionIds = async (sessionIds) => {
     try {

@@ -1,6 +1,5 @@
 import e from 'express';
 import db from '../models/index.js';
-import { fetchActiveTimeSlot } from './timeslotController.js';
 
 const { Event, Apparatus, Gymnast, GymnastGroup } = db;
 

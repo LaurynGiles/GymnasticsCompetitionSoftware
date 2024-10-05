@@ -25,8 +25,9 @@ import apparatusRoutes from './routes/apparatusRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import completeRoutes from './routes/completeRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
-import adminAuthRoutes from './routes/adminAuthRoutes.js'
-import qualificationRoutes from './routes/qualificationRoutes.js'
+import adminAuthRoutes from './routes/adminAuthRoutes.js';
+import qualificationRoutes from './routes/qualificationRoutes.js';
+import resultsRoutes from './routes/resultsRoutes.js';
 
 const app = express();
 const allowedOrigins = [
@@ -80,6 +81,7 @@ app.use('/api/complete', completeRoutes);
 app.use('/api', authRoutes);
 app.use('/api/adminLogin', adminAuthRoutes);
 app.use('/api/qualifications', qualificationRoutes);
+app.use('/api/results', resultsRoutes);
 
 function logModelDetails() {
   Object.values(db).forEach(model => {

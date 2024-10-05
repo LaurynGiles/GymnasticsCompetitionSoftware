@@ -1,16 +1,16 @@
   import React, {useState, useEffect} from "react";
-  import TinyBlueButton from "./TinyBlueButton";
-  import ArrowIcon from "./ArrowIcon";
-  // import GymnastList from "./GymnastList";
-  import { useNotifications } from "../utils/connection.jsx";
   import { useNavigate } from "react-router-dom";
+  import { useNotifications } from "../utils/connection.jsx";
 
-  const EventBox = ({ competition_name, start_date, end_date, location, style }) => {
+  const CompBox = ({ competition }) => {
 
+    const { setCompetitionInfo } = useNotifications();
     const [statusMessage, setStatusMessage] = useState("");
     const navigate = useNavigate();
 
     const handleNavigateToResults = () => {
+      setCompetitionInfo(competition);
+      localStorage.setItem('currentCompetition', JSON.stringify(competition));
       navigate("/results");
     };
 
@@ -20,7 +20,7 @@
         <div className="flex flex-col items-start gap-2 md:gap-6 px-4 md:px-10 py-4 md:py-8 bg-anti-flash-white rounded-lg w-full h-full">
           <div className="flex items-center justify-center h-[70px] w-[40%] bg-periwinkle rounded-xl md:rounded-3xl px-4">
             <div className="font-montserrat font-medium text-prussian-blue text-xl md:text-2xl text-center">
-              {competition_name}
+              {competition.competition_name}
             </div>
           </div>
           <div className="flex flex-col w-full py-2 md:py-4 lg:gap-2">
@@ -29,7 +29,7 @@
                 <span className="font-bold">Style:</span>
               </div>
               <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl text-right md:mr-20">
-                {`${style} competition`}
+                {`${competition.style} competition`}
               </div>
             </div>
             <div className="flex justify-between items-center mb-2">
@@ -37,7 +37,7 @@
                 <span className="font-bold">Date:</span>
               </div>
               <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl text-right md:mr-20">
-                {`[${start_date}] - [${end_date}]`}
+                {`[${competition.start_date}] - [${competition.end_date}]`}
               </div>
             </div>
             <div className="flex justify-between items-center mb-2">
@@ -45,7 +45,7 @@
                 <span className="font-bold">Location:</span>
               </div>
               <div className="text-prussian-blue font-montserrat font-medium text-base md:text-xl text-right md:mr-20">
-                {`${location}`}
+                {`${competition.location}`}
               </div>
             </div>
             {statusMessage && 
@@ -59,4 +59,4 @@
     );
   };
 
-  export default EventBox;
+  export default CompBox;

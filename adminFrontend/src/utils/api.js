@@ -162,3 +162,13 @@ export const createJudge = async (judgeData) => {
         }
     }
 };
+
+export const getFinalResults = async (competitionId) => {
+    try {
+      const response = await axiosInstance.get(`/results/${competitionId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching final results:", error);
+      return [];
+    }
+  };

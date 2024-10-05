@@ -9,72 +9,37 @@ import StartButton from "../components/StartButton.jsx";
 import { useNavigate } from "react-router-dom";
 import BarsIcon from "../components/BarsIcon.jsx";
 import XIcon from "../components/XIcon.jsx";
+import { useNotifications } from "../utils/connection.jsx";
+import ResultsTableRow from "../components/ResultsTableRow.jsx";
+import { getFinalResults } from "../utils/api.js";
 
 const ResultsPage = () => {
+
+  const { competitionInfo, setCompetitionInfo } = useNotifications();
+  const [finalResults, setFinalResults] = useState([]);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const navigate = useNavigate();
 
-  const [localTimeslots, setLocalTimeslots] = useState(() => {
-    const savedTimeslots = localStorage.getItem("timeslots");
-    const timeslots = savedTimeslots ? JSON.parse(savedTimeslots).map(slot => ({
-      ...slot,
-      date: slot.date ? new Date(slot.date) : null
-    })) : [];
-
-    if (timeslots.length === 0) {
-      return [{ id: 1, date: null, reportTime: null, compTime: null, awardTime: null, numSessions: null }];
-    }
-    return timeslots;
-  });
+  useEffect(() => {
+    const storedCompetition = JSON.parse(localStorage.getItem('currentCompetition')) || {};
+    setCompetitionInfo(storedCompetition);
+  }, []);
 
   useEffect(() => {
-    // Save timeslots to local storage whenever they change
-    localStorage.setItem("timeslots", JSON.stringify(localTimeslots));
-  }, [localTimeslots]);
+    const storedResults = JSON.parse(localStorage.getItem('finalResults')) || {};
+    setFinalResults(storedResults);
+  }, []);
 
-  const handleContinue = () => {
-    navigate("/gymnastInfo")
-  };
-  
-  const handleAddTimeSlot = () => {
-    // Find the highest ID in the current timeslots
-    const maxId = localTimeslots.reduce((max, slot) => Math.max(max, slot.id), 0);
-    const newId = maxId + 1; // Increment to get the new ID
-
-    const newTimeslot = {
-      id: newId,
-      date: null,
-      reportTime: null,
-      compTime: null,
-      awardTime: null,
-      numSessions: null
+  useEffect(() => {
+    const fetchResults = async () => {
+      const results = await getFinalResults(competitionInfo.competition_id);
+      setFinalResults(results);
+      localStorage.setItem('finalResults', JSON.stringify(results));
     };
+    
+    fetchResults();
+  }, [competitionInfo]);
 
-    const updatedTimeslots = [...localTimeslots, newTimeslot];
-    setLocalTimeslots(updatedTimeslots);
-  };
-
-  const handleUpdateTimeSlot = (id, updatedFields) => {
-    const updatedTimeslots = localTimeslots.map((slot) =>
-      slot.id === id ? { ...slot, ...updatedFields } : slot
-    );
-    setLocalTimeslots(updatedTimeslots);
-  };
-
-  const handleRemoveTimeSlot = (id) => {
-    const updatedTimeslots = localTimeslots.filter(slot => slot.id !== id);
-
-    if (updatedTimeslots.length === 0) {
-      setLocalTimeslots([{ id: 1, date: null, reportTime: null, compTime: null, awardTime: null, numSessions: null }]);
-    } else {
-      // Reassign IDs to ensure continuity
-      const reassignedTimeslots = updatedTimeslots.map((slot, index) => ({
-        ...slot,
-        id: index + 1 // Set IDs starting from 1 and incrementing by 1
-      }));
-      setLocalTimeslots(reassignedTimeslots);
-    }
-  };
 
   return (
     <div className="flex w-full h-screen bg-bright-white">
@@ -83,11 +48,11 @@ const ResultsPage = () => {
         <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)} />
         <div className="w-full max-w-7xl mx-auto gap-10">
           {/* Header */}
-          <PageHeader title="" />
+          <PageHeader title={competitionInfo.competition_name} />
 
           {/* Sessions Configuration */}
           <div className="flex flex-col gap-8">
-            <ConfigHeader text="Timeslots" />
+            <ConfigHeader text="Final Results" />
             <div className="bg-white p-5 rounded-lg w-full">
               <div className="flex flex-col items-center justify-start">
 
@@ -95,47 +60,22 @@ const ResultsPage = () => {
                 <div className="w-full rounded-lg">
                   <div className="flex flex-row gap-10">
                     <div className="w-full">
-                      {localTimeslots.map((slot) => (
-                        <TimeSlotTableRow
-                          key={slot.id}
-                          ID={slot.id}
-                          reportTime={slot.reportTime}
-                          compTime={slot.compTime}
-                          awardTime={slot.awardTime}
-                          date={slot.date}
-                          numSessions={slot.numSessions}
-                          onUpdate={(updatedFields) => handleUpdateTimeSlot(slot.id, updatedFields)}
-                        />
-                      ))}
-                    </div>
-
-                    <div className="flex flex-col items-start">
-                      {localTimeslots.map(slot => (
-                        <div
-                          className={`flex justify-end ${slot.id === 1 ? 'pt-[91px] pb-[15px]' : 'py-[17px]'}`} 
-                          key={slot.id}
-                        >
-                          <XIcon
-                            className="cursor-pointer"
-                            onClick={() => handleRemoveTimeSlot(slot.id)}
-                            isVisible={slot.id !== 1}
-                          />
-                        </div>
-                      ))}
+                    {finalResults.map(result => (
+                      <ResultsTableRow 
+                        key={result.gymnast_id}
+                        gymnast_id={result.gymnast_id}
+                        gymnast_name={result.gymnast_name}
+                        difficulty={result.difficulty}
+                        execution={result.execution}
+                        penalty={result.penalty}
+                      />
+                    ))}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Add Button */}
-          <div className="flex justify-center py-5">
-            <AddButton title="+" onClick={handleAddTimeSlot} />
-          </div>
-        </div>
-        <div className="flex justify-center items-center p-5 bg-bright-white">
-          <StartButton onClick={handleContinue} title={"Continue"} />
         </div>
       </div>
     </div>
