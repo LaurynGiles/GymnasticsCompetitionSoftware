@@ -4,7 +4,7 @@ import SelectBox from "../components/SelectBox";
 import Header from "../components/Header";
 import BlockHeader from "../components/BlockHeader";
 import { useNotifications } from "../utils/connection.jsx";
-import { getCompetitionsByAdmin } from "../utils/api.js";
+import { getCompetitionsByAdmin, getApparatusByCompetition, getQualificationsByCompetition } from "../utils/api.js";
 import CompBox from "../components/CompBox.jsx"
 import { useNavigate } from "react-router-dom";
 import Popup from "../components/Popup.jsx";
@@ -14,6 +14,8 @@ const HomeAdmin = () => {
 
   const { adminInfo } = useNotifications();
   const [compBoxes, setCompBoxes] = useState([]);
+  const [compApparatuses, setCompApparatuses] = useState([]);
+  const [compQualifications, setQualifications] = useState([]);
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
@@ -27,6 +29,28 @@ const HomeAdmin = () => {
   useEffect(() => {
     const fetchCompetitions = async () => {
       const response = await getCompetitionsByAdmin(adminInfo.admin_id);
+
+      if (response.success) {
+        setCompBoxes(response.data);
+        localStorage.setItem('compBoxes', JSON.stringify(response.data)); // Save to local storage
+
+        for (const compBox of compBoxes) {
+          const comp_id = compBox.competition_id;
+
+          const response = await getCompetitionsByAdmin(adminInfo.admin_id);
+
+          if (response.success) {
+            //Code adding qualifications and apparatuses
+          }
+        }
+
+      } else {
+        setError(response.message);
+      }
+    };
+
+    const fetchApparatuses = async () => {
+      const response = await getApparatusByCompetition();
 
       if (response.success) {
         setCompBoxes(response.data);

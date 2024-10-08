@@ -3,33 +3,40 @@ import React from "react";
 import SmallTableBlock from "./SmallTableBlock";
 import LargeTableBlock from "./LargeTableBlock";
 
-const ResultsTableRow = ({ gymnast_id, gymnast_name, difficulty, execution, penalty }) => {
+const ResultsTableRow = ({ gymnast_id, apparatus, gymnast_name, difficulty, execution, penalty, isFirstRow }) => {
 
-    const finalScore = difficulty - execution - penalty;
+  const finalScore = difficulty - execution - penalty;
+
+  // Function to format numbers to three decimal places
+  const formatNumber = (num) => {
+      return num.toFixed(3);
+  };
 
   return (
-    <div className="flex shadow-md justify-start bg-anti-flash-white gap-6 p-2">
-      {/* Conditional rendering based on ID */}
-      {ID === 1 ? (
-        <>
-          <SmallTableBlock text={gymnast_id.toString()} title={"Gymnast number"}/>
-          <LargeTableBlock text={gymnast_name} title={"Gymnast name"} />
-          <LargeTableBlock text={difficulty.toString()} title={"Difficulty score"} />
-          <LargeTableBlock text={execution.toString()} title={"Execution score"} />
-          <LargeTableBlock text={penalty.toString()} title={"Penalty"} />
-          <LargeTableBlock text={finalScore.toString()} title={"Final Score"} /> {/* New block for final score */}
-        </>
-      ) : (
-        <>
-          <SmallTableBlock text={gymnast_id.toString()}/>
-          <LargeTableBlock text={gymnast_name} />
-          <LargeTableBlock text={difficulty.toString()} />
-          <LargeTableBlock text={execution.toString()}/>
-          <LargeTableBlock text={penalty.toString()}/>
-          <LargeTableBlock text={finalScore.toString()} /> {/* New block for final score */}
-        </>
-      )}
-    </div>
+      <div className="flex shadow-md justify-start bg-anti-flash-white gap-6 p-2">
+        {/* Conditional rendering based on ID */}
+        {isFirstRow ? (
+          <>
+            <SmallTableBlock text={gymnast_id.toString()} title={"Gymnast number"}/>
+            <LargeTableBlock text={gymnast_name} title={"Gymnast name"} />
+            <LargeTableBlock text={apparatus} title={"Apparatus"} />
+            <LargeTableBlock text={formatNumber(difficulty)} title={"Difficulty score"} />
+            <LargeTableBlock text={formatNumber(execution)} title={"Execution score"} />
+            <LargeTableBlock text={formatNumber(penalty)} title={"Penalty"} />
+            <LargeTableBlock text={formatNumber(finalScore)} title={"Final Score"} /> {/* New block for final score */}
+          </>
+        ) : (
+          <>
+            <SmallTableBlock text={gymnast_id.toString()}/>
+            <LargeTableBlock text={gymnast_name} />
+            <LargeTableBlock text={apparatus} />
+            <LargeTableBlock text={formatNumber(difficulty)} />
+            <LargeTableBlock text={formatNumber(execution)}/>
+            <LargeTableBlock text={formatNumber(penalty)}/>
+            <LargeTableBlock text={formatNumber(finalScore)} /> {/* New block for final score */}
+          </>
+        )}
+      </div>
   );
 };
 

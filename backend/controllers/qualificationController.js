@@ -25,6 +25,16 @@ export async function findQualification(req, res, next) {
     }
 }
 
+export async function getQualificationsByCompetition(req, res, next) {
+    try {
+        const competitionId = req.params.competitionId;
+        const qualifications = await Qualification.findAll({ where: { competition_id: competitionId } });
+        res.status(200).json(qualifications);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function createQualification(req, res, next) {
     try {
         const newQualification = await Qualification.create(req.body);

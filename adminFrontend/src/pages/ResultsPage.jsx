@@ -33,6 +33,7 @@ const ResultsPage = () => {
   useEffect(() => {
     const fetchResults = async () => {
       const results = await getFinalResults(competitionInfo.competition_id);
+      console.log(results);
       setFinalResults(results);
       localStorage.setItem('finalResults', JSON.stringify(results));
     };
@@ -60,7 +61,7 @@ const ResultsPage = () => {
                 <div className="w-full rounded-lg">
                   <div className="flex flex-row gap-10">
                     <div className="w-full">
-                    {finalResults.map(result => (
+                    {finalResults.map((result, index) => (
                       <ResultsTableRow 
                         key={result.gymnast_id}
                         gymnast_id={result.gymnast_id}
@@ -68,6 +69,7 @@ const ResultsPage = () => {
                         difficulty={result.difficulty}
                         execution={result.execution}
                         penalty={result.penalty}
+                        isFirstRow={index === 0}
                       />
                     ))}
                     </div>

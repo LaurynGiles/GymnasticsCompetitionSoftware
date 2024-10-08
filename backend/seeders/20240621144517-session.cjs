@@ -9,18 +9,18 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      // {
-      //   time_slot_id: 1,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
-      // {
-      //   time_slot_id: 1,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
+      {
+        time_slot_id: 1,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        time_slot_id: 1,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
       {
         time_slot_id: 2,
         completed: false,

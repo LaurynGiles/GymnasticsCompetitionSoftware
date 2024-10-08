@@ -166,9 +166,42 @@ export const createJudge = async (judgeData) => {
 export const getFinalResults = async (competitionId) => {
     try {
       const response = await axiosInstance.get(`/results/${competitionId}`);
-      return response.data;
+      return { success: true, data: response.data };
     } catch (error) {
-      console.error("Error fetching final results:", error);
-      return [];
+        console.error(`Error creating judge: ${error}`);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while fetching results' };
+        }
     }
   };
+
+  export const getApparatusByCompetition = async (competitionId) => {
+    try {
+      const response = await axiosInstance.get(`/apparatuses/competition/${competitionId}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+        console.error(`Error creating judge: ${error}`);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while fetching apparatuses' };
+        }
+    }
+  };
+
+  export const getQualificationsByCompetition = async (competitionId) => {
+    try {
+      const response = await axiosInstance.get(`/qualifications/competition/${competitionId}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+        console.error(`Error creating judge: ${error}`);
+        if (error.response && error.response.data) {
+            return { success: false, message: error.response.data.message };
+        } else {
+            return { success: false, message: 'An error occurred while fetching qualifications' };
+        }
+    }
+  };
+

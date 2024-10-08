@@ -59,62 +59,62 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      // {
-      //   group_id: 3,
-      //   apparatus_id: 1,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
-      // {
-      //   group_id: 3,
-      //   apparatus_id: 2,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
-      // {
-      //   group_id: 3,
-      //   apparatus_id: 3,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
-      // {
-      //   group_id: 3,
-      //   apparatus_id: 4,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
-      // {
-      //   group_id: 4,
-      //   apparatus_id: 1,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
-      // {
-      //   group_id: 4,
-      //   apparatus_id: 2,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
-      // {
-      //   group_id: 4,
-      //   apparatus_id: 3,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // },
-      // {
-      //   group_id: 4,
-      //   apparatus_id: 4,
-      //   completed: false,
-      //   createdAt: new Date(),
-      //   updatedAt: new Date()
-      // }
+      {
+        group_id: 3,
+        apparatus_id: 1,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 3,
+        apparatus_id: 2,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 3,
+        apparatus_id: 3,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 3,
+        apparatus_id: 4,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 4,
+        apparatus_id: 1,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 4,
+        apparatus_id: 2,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 4,
+        apparatus_id: 3,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 4,
+        apparatus_id: 4,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
     ], {});
   },
 

@@ -316,6 +316,7 @@ const CompletePage = () => {
       for (const apparatus of storedApparatuses) {
         const apparatusPayload = {
           apparatus_name: apparatus.selected, // Get the name from the selected field
+          competition_id: createdCompetitionId,
         };
         console.log("Creating Apparatus Payload:", apparatusPayload);
         const apparatusResponse = await createApparatus(apparatusPayload);

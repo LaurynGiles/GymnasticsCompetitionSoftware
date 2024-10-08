@@ -14,6 +14,16 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false,
       },
+      competition_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Competition',
+          key: 'competition_id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

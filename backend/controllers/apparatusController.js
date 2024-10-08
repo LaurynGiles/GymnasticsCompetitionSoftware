@@ -25,6 +25,16 @@ export async function findApparatus(req, res, next) {
     }
 }
 
+export async function getApparatusByCompetition(req, res, next) {
+    try {
+        const competitionId = req.params.competitionId;
+        const apparatus = await Apparatus.findAll({ where: { competition_id: competitionId } });
+        res.status(200).json(apparatus);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function createApparatus(req, res, next) {
     try {
         const newApparatus = await Apparatus.create(req.body);
