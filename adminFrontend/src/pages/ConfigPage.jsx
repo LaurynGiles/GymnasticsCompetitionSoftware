@@ -57,42 +57,85 @@ const ConfigPage = () => {
   const handleAddApparatus = () => {
     setApparatusList((prev) => [
       ...prev,
-      { id: prev.length + 1, selected: '' } // Keep track of selected options
+      { id: prev.length + 1, selected: '', error: false } // Keep track of selected options
     ]);
   };
 
   const handleApparatusChange = (id, value) => {
-    setApparatusList((prev) => 
-      prev.map((item) => (item.id === id ? { ...item, selected: value } : item))
-    );
+    console.log(`${id}: ${value}`);
+
+    setApparatusList((prev) => {
+      const updatedList = prev.map((item) => (item.id === id ? { ...item, selected: value } : item));
+
+      // Check for duplicates
+      const selectedApparatuses = updatedList.map(item => item.selected).filter(Boolean); // Get only selected values
+      const duplicates = selectedApparatuses.filter((item, index) => selectedApparatuses.indexOf(item) !== index);
+      
+      return updatedList.map((item) => ({
+        ...item,
+        error: duplicates.includes(item.selected) // Set error if it's a duplicate
+      }));
+    });
   };
 
   const handleRemoveApparatus = (id) => {
     setApparatusList((prev) => {
       // Filter out the removed apparatus
       const updatedList = prev.filter((item) => item.id !== id);
-      // Renumber the IDs
-      return updatedList.map((item, index) => ({ ...item, id: index + 1 }));
+      
+      // Check for duplicates again after removal
+      const selectedApparatuses = updatedList.map(item => item.selected).filter(Boolean);
+      const duplicates = selectedApparatuses.filter((item, index) => selectedApparatuses.indexOf(item) !== index);
+  
+      // Renumber the IDs and reset error states
+      return updatedList.map((item) => ({
+        ...item,
+        error: duplicates.includes(item.selected) // Reset error if a duplicate is found
+      })).map((item, index) => ({ ...item, id: index + 1 })); // Renumber IDs
     });
   };
 
   const handleAddAgeGroup = () => {
     setAgeGroupList((prev) => [
       ...prev,
-      { id: prev.length + 1,  minAge: null, maxAge: null } // Keep track of selected options
+      { id: prev.length + 1,  minAge: null, maxAge: null, error: false } // Keep track of selected options
     ]);
   };
 
   const handleMinAgeChange = (id, value) => {
-    setAgeGroupList((prev) => 
-      prev.map((item) => (item.id === id ? { ...item, minAge: value } : item))
-    );
+    setAgeGroupList((prev) => {
+      const updatedList = prev.map((item) => (item.id === id ? { ...item, minAge: value } : item));
+      
+      // Check for duplicates
+      const agePairs = updatedList.map(item => `${item.minAge}-${item.maxAge}`);
+      const duplicates = agePairs.filter((pair, index) => agePairs.indexOf(pair) !== index);
+  
+      return updatedList.map((item) => {
+        const isValidAge = item.minAge >= 1 && item.minAge <= 100; // Check if min age is valid
+        return {
+          ...item,
+          error: !isValidAge || duplicates.includes(`${item.minAge}-${item.maxAge}`) // Set error if invalid age or duplicate
+        };
+      });
+    });
   };
-
+  
   const handleMaxAgeChange = (id, value) => {
-    setAgeGroupList((prev) => 
-      prev.map((item) => (item.id === id ? { ...item, maxAge: value } : item))
-    );
+    setAgeGroupList((prev) => {
+      const updatedList = prev.map((item) => (item.id === id ? { ...item, maxAge: value } : item));
+      
+      // Check for duplicates
+      const agePairs = updatedList.map(item => `${item.minAge}-${item.maxAge}`);
+      const duplicates = agePairs.filter((pair, index) => agePairs.indexOf(pair) !== index);
+  
+      return updatedList.map((item) => {
+        const isValidAge = item.maxAge >= 1 && item.maxAge <= 100; // Check if max age is valid
+        return {
+          ...item,
+          error: !isValidAge || duplicates.includes(`${item.minAge}-${item.maxAge}`) // Set error if invalid age or duplicate
+        };
+      });
+    });
   };
 
   const handleRemoveAgeGroup = (id) => {
@@ -100,7 +143,17 @@ const ConfigPage = () => {
       // Filter out the removed age group
       const updatedList = prev.filter((item) => item.id !== id);
       // Renumber the IDs
-      return updatedList.map((item, index) => ({ ...item, id: index + 1 }));
+      const renumberedList = updatedList.map((item, index) => ({ ...item, id: index + 1 }));
+  
+      // Check for duplicates again after removal
+      const agePairs = renumberedList.map(item => `${item.minAge}-${item.maxAge}`);
+      const duplicates = agePairs.filter((pair, index) => agePairs.indexOf(pair) !== index);
+  
+      // Set error flags to false for all items if there are no duplicates
+      return renumberedList.map((item) => ({
+        ...item,
+        error: duplicates.includes(`${item.minAge}-${item.maxAge}`) // Set error if there's a duplicate
+      }));
     });
   };
 
@@ -130,15 +183,16 @@ const ConfigPage = () => {
 
     // Initialize apparatus list with stored values or ensure at least one apparatus
     if (storedApparatus.length > 0) {
+      console.log(storedApparatus);
       setApparatusList(storedApparatus);
     } else {
-      setApparatusList([{ id: 1, selected: '' }]); // Ensure at least one empty item
+      setApparatusList([{ id: 1, selected: '', hasError: false }]); // Ensure at least one empty item
     }
 
     if (storedAgeGroups.length > 0) {
       setAgeGroupList(storedAgeGroups);
     } else {
-      setAgeGroupList([{ id: 1, minAge: null, maxAge: null }]); // Ensure at least one empty item
+      setAgeGroupList([{ id: 1, minAge: null, maxAge: null,  error: false }]); // Ensure at least one empty item
     }
 
   }, [setCompetition, setQualifications, setApparatusList, setAgeGroupList]);
@@ -284,7 +338,7 @@ const ConfigPage = () => {
                       selectedOption={item.selected} 
                       setSelectedOption={(value) => handleApparatusChange(item.id, value)} 
                       options={apparatusOptions} 
-                      hasError={false} 
+                      hasError={item.error}
                     />
                     <XIcon onClick={() => handleRemoveApparatus(item.id)} className="ml-4 cursor-pointer" isVisible={item.id !== 1}/>
                   </div>
@@ -304,11 +358,13 @@ const ConfigPage = () => {
                     <NumberInputLarge 
                       value={item.minAge} 
                       onChange={(value) => handleMinAgeChange(item.id, value)} // Pass the id here
+                      hasError={item.error}
                     />
                     to
                     <NumberInputLarge 
                       value={item.maxAge} 
                       onChange={(value) => handleMaxAgeChange(item.id, value)} // Pass the id here
+                      hasError={item.error}
                     />
                     yrs
                     <XIcon onClick={() => handleRemoveAgeGroup(item.id)} className="ml-4 cursor-pointer" isVisible={item.id !== 1}/>

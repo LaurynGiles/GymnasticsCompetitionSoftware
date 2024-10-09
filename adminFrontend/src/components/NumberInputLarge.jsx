@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-const NumberInputLarge = ({ value, onChange, title }) => {
+const NumberInputLarge = ({ value, onChange, title, hasError }) => {
   const handleChange = (event) => {
     const newValue = event.target.value;
     const parsedValue = newValue === "" ? null : parseInt(newValue, 10);
@@ -20,7 +20,9 @@ const NumberInputLarge = ({ value, onChange, title }) => {
         type="text"
         value={value !== null ? value : ''}
         onChange={handleChange}
-        className="w-[200px] h-[50px] bg-bright-white border text-prussian-blue text-center text-base md:text-xl border-gray-300 rounded-lg"
+        className={`w-[200px] h-[50px] bg-bright-white text-prussian-blue text-center text-base md:text-xl border rounded-lg ${
+          hasError ? 'border-red-500' : 'border-gray-300'
+        }`}
         placeholder="0"
         inputMode="numeric" // Suggests numeric keyboard on mobile devices
         pattern="\d*" // Ensures only digits are accepted in HTML5
@@ -33,6 +35,7 @@ NumberInputLarge.propTypes = {
   value: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   title: PropTypes.string, // Title is optional
+  error: PropTypes.bool, // Add error as a prop
 };
 
 export default NumberInputLarge;

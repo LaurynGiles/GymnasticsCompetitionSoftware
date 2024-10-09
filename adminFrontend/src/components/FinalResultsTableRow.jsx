@@ -20,7 +20,7 @@ const FinalResultsTableRow = ({ gymnast_id, apparatus_list, gymnast_name, final_
             Object.entries(apparatus_list).map(([apparatus_name, apparatus_score]) => (
               <SmallTableBlock 
                 key={apparatus_name}
-                text={apparatus_score.toFixed(3)} // Format the score to 3 decimal places
+                text={apparatus_score === 0 ? "-" : apparatus_score.toFixed(3)} // Format the score to 3 decimal places
                 title={apparatus_name} // Set the title to the apparatus name
               />
             ))
@@ -40,7 +40,7 @@ const FinalResultsTableRow = ({ gymnast_id, apparatus_list, gymnast_name, final_
             Object.entries(apparatus_list).map(([apparatus_name, apparatus_score]) => (
               <SmallTableBlock 
                 key={apparatus_name}
-                text={apparatus_score.toFixed(3)} // Format the score to 3 decimal places
+                text={apparatus_score === 0 ? "-" : apparatus_score.toFixed(3)} // Format the score to 3 decimal places
               />
             ))
           ) : (

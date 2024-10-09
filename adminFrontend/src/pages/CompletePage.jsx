@@ -103,17 +103,53 @@ const CompletePage = () => {
     }
   
     // Validate apparatus events
+    // Validate apparatus events
     const storedApparatusEvents = JSON.parse(localStorage.getItem('apparatusEvents')) || [];
-    const hasValidApparatus = storedApparatusEvents.some(apparatus => apparatus.selected !== '');
+    const apparatusCount = {};
+
+    // Check for duplicates
+    for (const apparatus of storedApparatusEvents) {
+      console.log(apparatus);
+      if (apparatus.selected === "") {
+        console.log("error 1");
+        return false; // Return false if any apparatus name is empty
+      }
+      apparatusCount[apparatus.selected] = (apparatusCount[apparatus.selected] || 0) + 1;
+    }
+    
+    // If any apparatus has been selected more than once, return false
+    if (Object.values(apparatusCount).some(count => count > 1)) {
+      console.log("error 2");
+      return false; // Return false if duplicates found
+    }
+
+    // Validate that at least one apparatus has been selected
+    const hasValidApparatus = storedApparatusEvents.length > 0;
     if (!hasValidApparatus) {
+      console.log("error 3");
       return false; // Return false if no apparatus has been selected
     }
   
     // Validate age groups
     const storedAgeGroups = JSON.parse(localStorage.getItem('ageGroups')) || [];
-    const hasValidAgeGroups = storedAgeGroups.some(group => group.minAge !== null && group.maxAge !== null);
-    if (!hasValidAgeGroups) {
-      return false; // Return false if no age group is defined correctly
+    const agePairs = {};
+    for (const group of storedAgeGroups) {
+      if (group.minAge === null || group.maxAge === null) {
+        console.log("error 4");
+        return false; // Return false if any age group is missing min or max age
+      }
+
+      if (group.minAge < 1 || group.minAge > 100 || group.maxAge < 1 || group.maxAge > 100) {
+        console.log("error 6"); // Log an error for invalid age range
+        return false; // Return false if ages are not within valid range
+      }
+      
+      const pair = `${group.minAge}-${group.maxAge}`;
+      if (agePairs[pair]) {
+        console.log("error 5");
+        return false; // Return false if there are duplicate age pairs
+      }
+      agePairs[pair] = true; // Mark this pair as seen
     }
   
     return true; // Return true if all validations pass

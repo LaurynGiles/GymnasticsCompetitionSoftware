@@ -180,7 +180,7 @@ const GymnastInfoPage = () => {
               <div className={`flex flex-col items-center justify-center gap-4 bg-white p-5 rounded-lg ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
 
                 <div className="w-full ml-4 flex items-center justify-center flex-row gap-1">
-                  <div className="w-full">
+                  <div className="w-full flex flex-col gap-2">
                     {localGroups.map(group => {
                         const timeslot = getTimeslotDetails(group.timeslotId);
                         const timeslotValid = Boolean(timeslot); 
@@ -225,7 +225,7 @@ const GymnastInfoPage = () => {
               
               <div className="flex flex-row gap-4">
 
-                <div className="w-[97%]">
+                <div className="w-[97%] flex flex-col gap-2">
                   {gymnasts.map(gymnast => {
                     const group = getGroupDetails(gymnast.gymnastGroup);
                     const groupValid = Boolean(group); 

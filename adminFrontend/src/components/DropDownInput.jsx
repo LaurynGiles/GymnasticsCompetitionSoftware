@@ -4,6 +4,7 @@ import React from "react";
 const DropdownInput = ({ selectedOption, setSelectedOption, options, hasError }) => {
 
   const handleChange = (e) => {
+    console.log(`Dropdown changed to: ${e.target.value}`); // Log the selected value
     setSelectedOption(e.target.value);
   };
 

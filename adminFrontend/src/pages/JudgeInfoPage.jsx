@@ -92,7 +92,7 @@ const JudgeInfoPage = () => {
               
               <div className="flex flex-row gap-4">
 
-                <div className="rounded-lg w-[97%]">
+                <div className="w-[97%] flex flex-col gap-2">
                   {judges.map(judge => {
                       return (
                         <JudgeTableRow

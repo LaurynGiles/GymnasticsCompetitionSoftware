@@ -94,7 +94,7 @@ const TimeSlotPage = () => {
                 {/* Table Rows */}
                 <div className="w-full rounded-lg">
                   <div className="flex flex-row gap-10">
-                    <div className="w-full">
+                    <div className="w-full flex flex-col gap-2">
                       {localTimeslots.map((slot) => (
                         <TimeSlotTableRow
                           key={slot.id}
