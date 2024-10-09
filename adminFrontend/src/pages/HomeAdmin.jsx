@@ -34,27 +34,6 @@ const HomeAdmin = () => {
         setCompBoxes(response.data);
         localStorage.setItem('compBoxes', JSON.stringify(response.data)); // Save to local storage
 
-        for (const compBox of compBoxes) {
-          const comp_id = compBox.competition_id;
-
-          const response = await getCompetitionsByAdmin(adminInfo.admin_id);
-
-          if (response.success) {
-            //Code adding qualifications and apparatuses
-          }
-        }
-
-      } else {
-        setError(response.message);
-      }
-    };
-
-    const fetchApparatuses = async () => {
-      const response = await getApparatusByCompetition();
-
-      if (response.success) {
-        setCompBoxes(response.data);
-        localStorage.setItem('compBoxes', JSON.stringify(response.data)); // Save to local storage
       } else {
         setError(response.message);
       }

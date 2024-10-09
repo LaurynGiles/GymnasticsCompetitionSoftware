@@ -10,12 +10,12 @@ import { useNavigate } from "react-router-dom";
 import BarsIcon from "../components/BarsIcon.jsx";
 import XIcon from "../components/XIcon.jsx";
 import { useNotifications } from "../utils/connection.jsx";
-import ResultsTableRow from "../components/ResultsTableRow.jsx";
+import FinalResultsTableRow from "../components/FinalResultsTableRow.jsx";
 import { getFinalResults } from "../utils/api.js";
 import Header from "../components/Header.jsx";
 import LargeHeader from "../components/LargeHeader.jsx";
 
-const ResultsPage = () => {
+const FinalResultsPage = () => {
 
   const { competitionInfo, setCompetitionInfo } = useNotifications();
   const [finalResults, setFinalResults] = useState([]);
@@ -55,32 +55,38 @@ const ResultsPage = () => {
     if (!acc[result.session_id]) {
       acc[result.session_id] = {};
     }
-
-    // Group by gymnast level and age group within the session
-    const levelAgeGroupKey = `${result.gymnast_level}-${result.gymnast_age_group}`;
-    if (!acc[result.session_id][levelAgeGroupKey]) {
-      acc[result.session_id][levelAgeGroupKey] = {};
+  
+    // Group by gymnast_id within the session
+    if (!acc[result.session_id][result.gymnast_id]) {
+      acc[result.session_id][result.gymnast_id] = {
+        gymnast_name: result.gymnast_name,
+        apparatusScores: {}, // To hold apparatus scores
+        totalFinalScore: 0, // To hold total final score
+      };
     }
-
-    // Group by apparatus_name within the level/age group
-    if (!acc[result.session_id][levelAgeGroupKey][result.apparatus_name]) {
-      acc[result.session_id][levelAgeGroupKey][result.apparatus_name] = [];
-    }
-
-    acc[result.session_id][levelAgeGroupKey][result.apparatus_name].push(result);
+  
+    // Debugging print statements
+    console.log("Processing result:", result); // Log the current result being processed
+    console.log("Current groupedResults state:", JSON.stringify(acc, null, 2)); // Log the current state of groupedResults
+  
+    // Calculate average execution score
+    const averageExecutionScore = Array.isArray(result.execution) && result.execution.length > 0 
+      ? result.execution.reduce((total, score) => total + score, 0) / result.execution.length 
+      : 0;
+  
+    const allScoresZero = result.difficulty === 0 && averageExecutionScore === 0 && result.penalty === 0;
+  
+    // Calculate final score for this apparatus
+    const finalScore = allScoresZero ? 0 : result.difficulty - averageExecutionScore - result.penalty;
+  
+    // Store apparatus score for the gymnast
+    acc[result.session_id][result.gymnast_id].apparatusScores[result.apparatus_name] = finalScore;
+  
+    // Update total final score for the gymnast
+    acc[result.session_id][result.gymnast_id].totalFinalScore += finalScore;
+  
     return acc;
   }, {});
-
-  const calculateFinalScore = (difficulty, executionScores, penalty) => {
-    const averageExecutionScore = Array.isArray(executionScores) && executionScores.length > 0 
-      ? executionScores.reduce((total, score) => total + score, 0) / executionScores.length 
-      : 0;
-
-    const allScoresZero = difficulty === 0 && averageExecutionScore === 0 && penalty === 0;
-
-    return allScoresZero ? 0 : difficulty - averageExecutionScore - penalty;
-  };
-
 
   return (
     <div className="flex w-full h-screen bg-bright-white">
@@ -93,51 +99,35 @@ const ResultsPage = () => {
 
           {/* Sessions Configuration */}
           <div className="flex flex-col gap-8">
-            <ConfigHeader text="Apparatus Results" />
+            <ConfigHeader text="Final Results" />
             <div className="bg-white p-5 rounded-lg w-full">
               <div className="flex flex-col items-center justify-start">
 
                 {/* Table Rows */}
                 <div className="w-full rounded-lg">
                   <div className="flex flex-row gap-10">
-                    <div className="flex flex-col w-full gap-20">
+                    <div className="flex flex-col w-full gap-10">
 
                     {/* Step 2: Map over grouped results */}
                     {Object.keys(groupedResults).map((sessionId) => (
                         <div className="flex flex-col gap-10" key={sessionId}>
                           <LargeHeader text={`Competition ${sessionId}`} />
 
-                          {Object.keys(groupedResults[sessionId]).map((levelAgeGroupKey) => (
-                            <div className="flex flex-col gap-8" key={levelAgeGroupKey}>
-                              {/* Display Level and Age Group Header if needed */}
-                              <Header text={`Level ${levelAgeGroupKey.replace("-", ": ")} yrs`} /> {/* Optional: Customize display */}
+                          {Object.keys(groupedResults[sessionId]).map((gymnastId) => {
+                            const gymnastData = groupedResults[sessionId][gymnastId];
 
-                              {Object.keys(groupedResults[sessionId][levelAgeGroupKey]).map((apparatusName) => {
-                                // Sort the results by final score within this apparatus group
-                                const sortedResults = groupedResults[sessionId][levelAgeGroupKey][apparatusName].map(result => {
-                                  const finalScore = calculateFinalScore(result.difficulty, result.execution, result.penalty);
-                                  return { ...result, finalScore }; // Add finalScore to the result
-                                }).sort((a, b) => b.finalScore - a.finalScore); // Sort in descending order
-
-                                return (
-                                  <div className="flex flex-col gap-2" key={apparatusName}>
-                                    {sortedResults.map((result, index) => (
-                                      <ResultsTableRow 
-                                        key={index}
-                                        gymnast_id={result.gymnast_id}
-                                        gymnast_name={result.gymnast_name}
-                                        apparatus_name={result.apparatus_name}
-                                        difficulty={result.difficulty}
-                                        execution={result.execution}
-                                        penalty={result.penalty}
-                                        isFirstRow={index === 0}
-                                      />
-                                    ))}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          ))}
+                            return (
+                              <div className="flex flex-col gap-2" key={gymnastId}>
+                                <FinalResultsTableRow 
+                                  gymnast_id={gymnastId}
+                                  gymnast_name={gymnastData.gymnast_name}
+                                  apparatus_list={gymnastData.apparatusScores} // Pass apparatus scores
+                                  final_score={gymnastData.totalFinalScore} // Pass total final score
+                                  isFirstRow={false} // Assuming this is not the first row for the gymnast
+                                />
+                              </div>
+                            );
+                          }).sort((a, b) => b.totalFinalScore - a.totalFinalScore)} {/* Sort by total final score in descending order */}
                         </div>
                       ))}
                       
@@ -153,4 +143,4 @@ const ResultsPage = () => {
   );
 };
 
-export default ResultsPage;
+export default FinalResultsPage;

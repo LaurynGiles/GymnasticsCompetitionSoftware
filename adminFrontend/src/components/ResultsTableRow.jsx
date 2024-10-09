@@ -3,13 +3,20 @@ import React from "react";
 import SmallTableBlock from "./SmallTableBlock";
 import LargeTableBlock from "./LargeTableBlock";
 
-const ResultsTableRow = ({ gymnast_id, apparatus, gymnast_name, difficulty, execution, penalty, isFirstRow }) => {
+const ResultsTableRow = ({ gymnast_id, apparatus_name, gymnast_name, difficulty, execution, penalty, isFirstRow }) => {
 
-  const finalScore = difficulty - execution - penalty;
+  const averageExecutionScore = Array.isArray(execution) && execution.length > 0 
+    ? execution.reduce((total, score) => total + score, 0) / execution.length 
+    : 0;
 
-  // Function to format numbers to three decimal places
-  const formatNumber = (num) => {
-      return num.toFixed(3);
+  const allScoresZero = difficulty === 0 && averageExecutionScore === 0 && penalty === 0;
+
+  // Calculate final score
+  const finalScore = allScoresZero ? 0 : difficulty - averageExecutionScore - penalty;
+
+  // Function to format scores
+  const formatScore = (num) => {
+    return allScoresZero ? "-" : num.toFixed(3);
   };
 
   return (
@@ -19,21 +26,21 @@ const ResultsTableRow = ({ gymnast_id, apparatus, gymnast_name, difficulty, exec
           <>
             <SmallTableBlock text={gymnast_id.toString()} title={"Gymnast number"}/>
             <LargeTableBlock text={gymnast_name} title={"Gymnast name"} />
-            <LargeTableBlock text={apparatus} title={"Apparatus"} />
-            <LargeTableBlock text={formatNumber(difficulty)} title={"Difficulty score"} />
-            <LargeTableBlock text={formatNumber(execution)} title={"Execution score"} />
-            <LargeTableBlock text={formatNumber(penalty)} title={"Penalty"} />
-            <LargeTableBlock text={formatNumber(finalScore)} title={"Final Score"} /> {/* New block for final score */}
+            <LargeTableBlock text={apparatus_name} title={"Apparatus"} />
+            <LargeTableBlock text={formatScore(difficulty)} title={"Difficulty score"} />
+            <LargeTableBlock text={formatScore(averageExecutionScore)} title={"Execution score"} />
+            <LargeTableBlock text={formatScore(penalty)} title={"Penalty"} />
+            <LargeTableBlock text={formatScore(finalScore)} title={"Final Score"} /> {/* New block for final score */}
           </>
         ) : (
           <>
             <SmallTableBlock text={gymnast_id.toString()}/>
             <LargeTableBlock text={gymnast_name} />
-            <LargeTableBlock text={apparatus} />
-            <LargeTableBlock text={formatNumber(difficulty)} />
-            <LargeTableBlock text={formatNumber(execution)}/>
-            <LargeTableBlock text={formatNumber(penalty)}/>
-            <LargeTableBlock text={formatNumber(finalScore)} /> {/* New block for final score */}
+            <LargeTableBlock text={apparatus_name} />
+            <LargeTableBlock text={formatScore(difficulty)} />
+            <LargeTableBlock text={formatScore(averageExecutionScore)}/>
+            <LargeTableBlock text={formatScore(penalty)}/>
+            <LargeTableBlock text={formatScore(finalScore)} /> {/* New block for final score */}
           </>
         )}
       </div>
@@ -43,7 +50,7 @@ const ResultsTableRow = ({ gymnast_id, apparatus, gymnast_name, difficulty, exec
 ResultsTableRow.propTypes = {
     gymnast_id: PropTypes.number.isRequired, // Gymnast ID
     gymnast_name: PropTypes.string.isRequired, // Gymnast name
-    judge_name: PropTypes.string.isRequired, // Judge name
+    apparatus_name: PropTypes.string.isRequired, // Judge name
     difficulty: PropTypes.number.isRequired, // Difficulty score
     execution: PropTypes.number.isRequired, // Execution score
     penalty: PropTypes.number.isRequired, // Penalty score

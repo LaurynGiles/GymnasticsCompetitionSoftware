@@ -74,7 +74,7 @@ module.exports = {
         ethnicity: 'Caucasian',
         group_id: 1,
         level: "1",
-        age: "9-10",
+        age: "7-8",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -89,7 +89,7 @@ module.exports = {
         ethnicity: 'Caucasian',
         group_id: 1,
         level: "1",
-        age: "9-10",
+        age: "7-8",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -104,7 +104,7 @@ module.exports = {
         ethnicity: 'Black',
         group_id: 2,
         level: "1",
-        age: "11-12",
+        age: "9-10",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -119,7 +119,7 @@ module.exports = {
         ethnicity: 'Black',
         group_id: 2,
         level: "1",
-        age: "11-12",
+        age: "9-10",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -134,7 +134,7 @@ module.exports = {
         ethnicity: 'Caucasian',
         group_id: 1,
         level: "1",
-        age: "9-10",
+        age: "7-8",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -149,7 +149,7 @@ module.exports = {
         ethnicity: 'Black',
         group_id: 1,
         level: "1",
-        age: "9-10",
+        age: "7-8",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -164,7 +164,7 @@ module.exports = {
         ethnicity: 'Asian',
         group_id: 3,
         level: "1",
-        age: "9-10",
+        age: "11-12",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -179,7 +179,7 @@ module.exports = {
         ethnicity: 'Hispanic',
         group_id: 3,
         level: "1",
-        age: "9-10",
+        age: "11-12",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -224,7 +224,7 @@ module.exports = {
         ethnicity: 'Asian',
         group_id: 3,
         level: "1",
-        age: "9-10",
+        age: "11-12",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -239,7 +239,7 @@ module.exports = {
         ethnicity: 'Hispanic',
         group_id: 3,
         level: "1",
-        age: "9-10",
+        age: "11-12",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -254,7 +254,7 @@ module.exports = {
         ethnicity: 'Caucasian',
         group_id: 4,
         level: "1",
-        age: "9-10",
+        age: "13-14",
         createdAt: new Date(),
         updatedAt: new Date()
       }

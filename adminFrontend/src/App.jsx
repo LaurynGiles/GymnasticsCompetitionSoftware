@@ -10,6 +10,7 @@ import GymnastInfoPage from './pages/GymnastInfoPage.jsx';
 import JudgeInfoPage from './pages/JudgeInfoPage.jsx';
 import { NotificationProvider } from './utils/connection.jsx';
 import './App.css'
+import FinalResultsPage from './pages/FinalResultsPage.jsx';
 import CompletePage from './pages/CompletePage.jsx';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/judgeInfo" element={<JudgeInfoPage/>} />
           <Route path="/completeSetup" element={<CompletePage/>} />
           <Route path="/results" element={<ResultsPage/>} />
+          <Route path="/finalResults" element={<FinalResultsPage/>} />
 
         </Routes>
       </Router>

@@ -1,7 +1,6 @@
 import db from '../models/index.js';
-const { TimeSlot, Session, Event, Gymnast, Difficulty, Execution, GymnastGroup } = db; // Import necessary models
+const { TimeSlot, Session, Event, Gymnast, Difficulty, Execution, GymnastGroup, Apparatus } = db; // Import necessary models
 
-// Fetch final results based on competition ID
 // Fetch final results based on competition ID
 export async function getFinalResults(req, res, next) {
   try {
@@ -9,6 +8,14 @@ export async function getFinalResults(req, res, next) {
     
     const { competitionId } = req.params;
     console.log("Competition ID:", competitionId); // Log the competition ID
+
+    // Fetch all apparatus for the competition
+    const apparatusList = await Apparatus.findAll({ where: { competition_id: competitionId } });
+    // Create a mapping of apparatus IDs to names
+    const apparatusMapping = apparatusList.reduce((acc, apparatus) => {
+      acc[apparatus.apparatus_id] = apparatus.apparatus_name;
+      return acc;
+    }, {});
 
     // Find all timeslots for the given competition
     const timeslots = await TimeSlot.findAll({
@@ -57,24 +64,26 @@ export async function getFinalResults(req, res, next) {
               const difficultyResults = await Difficulty.findOne({ where: { event_id: event.event_id, gymnast_id: gymnast.gymnast_id } });
               const executionResults = await Execution.findAll({ where: { event_id: event.event_id, gymnast_id: gymnast.gymnast_id } }); // Get all execution results
 
-              // Calculate total and count of execution scores
-              let totalExecutionScore = 0;
-              let executionCount = 0;
-
-              for (const result of executionResults) {
-                totalExecutionScore += result.execution_score; // Sum execution scores
-                executionCount++; // Count the execution results
-              }
-
-              // Calculate average execution score
-              const averageExecutionScore = executionCount > 0 ? totalExecutionScore / executionCount : 0;
+              const executionScores = executionResults.map(execution => execution.execution_score);
+              const judgeIds = executionResults.map(execution => execution.judge_id);
 
               const finalResult = {
+                session_id: session.session_id,
+                timeslot_id: timeslot.time_slot_id,
+                date: timeslot.date,
+                report_time: timeslot.report_time,
+                competition_time: timeslot.competition_time,
+                award_time: timeslot.award_time,
+                session_completed: session.completed,
                 gymnast_id: gymnast.gymnast_id,
                 gymnast_name: `${gymnast.first_name} ${gymnast.last_name}`,
-                apparatus: event.apparatus_id,
+                gymnast_level: gymnast.level,
+                gymnast_age_group: gymnast.age,
+                apparatus_id: event.apparatus_id,
+                apparatus_name: apparatusMapping[event.apparatus_id] || 'Unknown',
                 difficulty: difficultyResults ? difficultyResults.difficulty_score : 0,
-                execution: averageExecutionScore, // Use average execution score
+                execution: executionScores,
+                judges: judgeIds,
                 penalty: difficultyResults ? difficultyResults.penalty_score : 0,
               };
 
