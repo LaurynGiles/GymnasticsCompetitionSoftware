@@ -55,35 +55,39 @@ const FinalResultsPage = () => {
     if (!acc[result.session_id]) {
       acc[result.session_id] = {};
     }
-  
-    // Group by gymnast_id within the session
-    if (!acc[result.session_id][result.gymnast_id]) {
-      acc[result.session_id][result.gymnast_id] = {
+
+    // Create a key for gymnast level and age group
+    const levelAgeGroupKey = `${result.gymnast_level}-${result.gymnast_age_group}`;
+    
+    // Group by level/age group within the session
+    if (!acc[result.session_id][levelAgeGroupKey]) {
+      acc[result.session_id][levelAgeGroupKey] = {};
+    }
+
+    // Group by gymnast_id within the level/age group
+    if (!acc[result.session_id][levelAgeGroupKey][result.gymnast_id]) {
+      acc[result.session_id][levelAgeGroupKey][result.gymnast_id] = {
         gymnast_name: result.gymnast_name,
         apparatusScores: {}, // To hold apparatus scores
         totalFinalScore: 0, // To hold total final score
       };
     }
   
-    // Debugging print statements
-    console.log("Processing result:", result); // Log the current result being processed
-    console.log("Current groupedResults state:", JSON.stringify(acc, null, 2)); // Log the current state of groupedResults
-  
     // Calculate average execution score
     const averageExecutionScore = Array.isArray(result.execution) && result.execution.length > 0 
       ? result.execution.reduce((total, score) => total + score, 0) / result.execution.length 
       : 0;
-  
+
     const allScoresZero = result.difficulty === 0 && averageExecutionScore === 0 && result.penalty === 0;
   
     // Calculate final score for this apparatus
     const finalScore = allScoresZero ? 0 : result.difficulty - averageExecutionScore - result.penalty;
   
     // Store apparatus score for the gymnast
-    acc[result.session_id][result.gymnast_id].apparatusScores[result.apparatus_name] = finalScore;
+    acc[result.session_id][levelAgeGroupKey][result.gymnast_id].apparatusScores[result.apparatus_name] = finalScore;
   
     // Update total final score for the gymnast
-    acc[result.session_id][result.gymnast_id].totalFinalScore += finalScore;
+    acc[result.session_id][levelAgeGroupKey][result.gymnast_id].totalFinalScore += finalScore;
   
     return acc;
   }, {});
@@ -93,7 +97,7 @@ const FinalResultsPage = () => {
       {isNavVisible && <NavigationBarResults />}
       <div className="flex-1 mb-20 bg-bright-white p-5" style={{ marginLeft: isNavVisible ? '18%' : '0', width: isNavVisible ? 'calc(100% - 18%)' : '100%' }}>
         <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)} />
-        <div className="w-full max-w-7xl mx-auto gap-10">
+        <div className="w-full mb-20 max-w-7xl mx-auto gap-10">
           {/* Header */}
           <PageHeader title={competitionInfo.competition_name} />
 
@@ -106,28 +110,34 @@ const FinalResultsPage = () => {
                 {/* Table Rows */}
                 <div className="w-full rounded-lg">
                   <div className="flex flex-row gap-10">
-                    <div className="flex flex-col w-full gap-10">
+                    <div className="flex flex-col w-full gap-20">
 
                     {/* Step 2: Map over grouped results */}
                     {Object.keys(groupedResults).map((sessionId) => (
-                        <div className="flex flex-col gap-10" key={sessionId}>
+                        <div className="flex flex-col gap-6" key={sessionId}>
                           <LargeHeader text={`Competition ${sessionId}`} />
 
-                          {Object.keys(groupedResults[sessionId]).map((gymnastId) => {
-                            const gymnastData = groupedResults[sessionId][gymnastId];
-
-                            return (
-                              <div className="flex flex-col gap-2" key={gymnastId}>
-                                <FinalResultsTableRow 
-                                  gymnast_id={gymnastId}
-                                  gymnast_name={gymnastData.gymnast_name}
-                                  apparatus_list={gymnastData.apparatusScores} // Pass apparatus scores
-                                  final_score={gymnastData.totalFinalScore} // Pass total final score
-                                  isFirstRow={false} // Assuming this is not the first row for the gymnast
-                                />
-                              </div>
-                            );
-                          }).sort((a, b) => b.totalFinalScore - a.totalFinalScore)} {/* Sort by total final score in descending order */}
+                          {/* Map over level and age group */}
+                          {Object.keys(groupedResults[sessionId]).map((levelAgeGroupKey) => (
+                            <div className="flex flex-col gap-2" key={levelAgeGroupKey}>
+                              <Header text={`Level ${levelAgeGroupKey.replace("-", ": ")} yrs`} /> {/* Display Level and Age Group Header */}
+                              
+                              {/* Sort the gymnasts by total final score in descending order */}
+                              {Object.entries(groupedResults[sessionId][levelAgeGroupKey])
+                                .sort(([, a], [, b]) => b.totalFinalScore - a.totalFinalScore) // Sort by totalFinalScore in descending order
+                                .map(([gymnastId, gymnastData], index) => (
+                                  <div className="flex flex-col gap-2" key={gymnastId}>
+                                    <FinalResultsTableRow 
+                                      gymnast_id={gymnastId}
+                                      gymnast_name={gymnastData.gymnast_name}
+                                      apparatus_list={gymnastData.apparatusScores} // Pass apparatus scores
+                                      final_score={gymnastData.totalFinalScore} // Pass total final score
+                                      isFirstRow={index==0} // Set to true only for the first row of the gymnast
+                                    />
+                                  </div>
+                                ))}
+                            </div>
+                          ))}
                         </div>
                       ))}
                       

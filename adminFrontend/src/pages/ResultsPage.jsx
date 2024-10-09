@@ -87,7 +87,7 @@ const ResultsPage = () => {
       {isNavVisible && <NavigationBarResults />}
       <div className="flex-1 mb-20 bg-bright-white p-5" style={{ marginLeft: isNavVisible ? '18%' : '0', width: isNavVisible ? 'calc(100% - 18%)' : '100%' }}>
         <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)} />
-        <div className="w-full max-w-7xl mx-auto gap-10">
+        <div className="w-full mb-20 max-w-7xl mx-auto gap-10">
           {/* Header */}
           <PageHeader title={competitionInfo.competition_name} />
 
