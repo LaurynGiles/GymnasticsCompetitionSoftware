@@ -25,6 +25,24 @@ export async function findGymnast(req, res, next) {
     }
 }
 
+export async function getGymnastsByGroup(req, res, next) {
+    try {
+        const groupId = req.params.group_id;
+        console.log(`GROUP: ${groupId}`);
+
+        // Fetch all gymnasts associated with the given group ID
+        const gymnasts = await Gymnast.findAll({
+            where: { group_id: groupId },
+        });
+
+        console.log(`GYMNASTS: ${gymnasts}`);
+
+        res.status(200).json(gymnasts);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function createGymnast(req, res, next) {
     try {
         const newGymnast = await Gymnast.create(req.body);

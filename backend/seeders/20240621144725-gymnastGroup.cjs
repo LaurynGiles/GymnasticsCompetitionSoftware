@@ -22,6 +22,11 @@ module.exports = {
         session_id: 3,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        session_id: 4,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {});
   },

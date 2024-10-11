@@ -52,7 +52,7 @@ ResultsTableRow.propTypes = {
     gymnast_name: PropTypes.string.isRequired, // Gymnast name
     apparatus_name: PropTypes.string.isRequired, // Judge name
     difficulty: PropTypes.number.isRequired, // Difficulty score
-    execution: PropTypes.number.isRequired, // Execution score
+    execution: PropTypes.array.isRequired, // Execution score
     penalty: PropTypes.number.isRequired, // Penalty score
 };
   

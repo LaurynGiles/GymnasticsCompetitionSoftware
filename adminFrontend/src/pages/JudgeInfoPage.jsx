@@ -94,6 +94,8 @@ const JudgeInfoPage = () => {
 
                 <div className="w-[97%] flex flex-col gap-2">
                   {judges.map(judge => {
+                    console.log(judge.headJudge);
+
                       return (
                         <JudgeTableRow
                             key={judge.id}
@@ -103,7 +105,7 @@ const JudgeInfoPage = () => {
                             l_name={judge.l_name}
                             club={judge.club}
                             level={judge.level}
-                            headJudge={judge.headJudge === "True"}
+                            headJudge={judge.headJudge}
                             role={judge.role}
                             onUpdate={(updatedFields) => handleUpdateJudge(judge.id, updatedFields)}
                         />

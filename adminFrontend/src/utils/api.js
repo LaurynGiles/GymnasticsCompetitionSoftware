@@ -192,16 +192,61 @@ export const getFinalResults = async (competitionId) => {
   };
 
   export const getQualificationsByCompetition = async (competitionId) => {
-    try {
-      const response = await axiosInstance.get(`/qualifications/competition/${competitionId}`);
-      return { success: true, data: response.data };
-    } catch (error) {
-        console.error(`Error creating judge: ${error}`);
-        if (error.response && error.response.data) {
-            return { success: false, message: error.response.data.message };
-        } else {
-            return { success: false, message: 'An error occurred while fetching qualifications' };
+        try {
+        const response = await axiosInstance.get(`/qualifications/competition/${competitionId}`);
+        return { success: true, data: response.data };
+        } catch (error) {
+            console.error(`Error creating judge: ${error}`);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while fetching qualifications' };
+            }
         }
-    }
-  };
+    };
+
+  export const getGymnastGroupsByCompetition = async (competitionId) => {
+        try {
+            const response = await axiosInstance.get(`/gymnastGroups/competition/${competitionId}`);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error("Error fetching gymnast groups by competition:", error);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while fetching gymnast groups' };
+            }
+        }
+    };
+
+
+    export const getGymnastsByGroup = async (group_id) => {
+        try {
+            const response = await axiosInstance.get(`gymnasts/group/${group_id}`);
+            console.log(response);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error("Error fetching gymnasts by group:", error);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while fetching gymnasts' };
+            }
+        }
+    };
+
+    export const updateGymnast = async (gymnastId, gymnastData) => {
+        try {
+            const response = await axiosInstance.put(`/gymnasts/${gymnastId}`, gymnastData);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error("Error updating gymnast:", error);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while updating the gymnast' };
+            }
+        }
+    };
+
 

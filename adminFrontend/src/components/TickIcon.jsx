@@ -7,8 +7,8 @@ const TickIcon = ({onClick}) => {
         fill="none" 
         viewBox="0 0 24 24" 
         strokeWidth="1.5" 
-        stroke="currentColor" 
-        className="w-8 h-8 md:w-8 md:h-8 text-prussian-blue group-hover:text-glaucous"
+        stroke="green" 
+        className="w-8 h-8 md:w-8 md:h-8 text-prussian-blue group-hover:text-glaucous hover:stroke-prussian-blue"
     >
         <path 
           strokeLinecap="round" 

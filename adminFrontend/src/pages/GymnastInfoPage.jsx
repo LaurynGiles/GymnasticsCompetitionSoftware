@@ -62,19 +62,6 @@ const GymnastInfoPage = () => {
     }
   }, [gymnasts]);
 
-  // useEffect(() => {
-  //   // Filter out gymnasts that don't have the required fields
-  //   const validGymnasts = gymnasts.filter(gymnast => 
-  //     gymnast.GSAId && gymnast.name && gymnast.club && gymnast.district &&
-  //     gymnast.level && gymnast.dateOfBirth && gymnast.ageGroup
-  //   );
-  
-  //   if (validGymnasts.length > 0) {
-  //     console.log("Saving valid gymnasts to local storage:", validGymnasts);
-  //     localStorage.setItem("gymnasts", JSON.stringify(validGymnasts));
-  //   }
-  // }, [gymnasts]);
-
   const handleAddGroup = () => {
     const newId = localGroups.length > 0 
       ? Math.max(...localGroups.map(g => g.id)) + 1 
@@ -233,15 +220,15 @@ const GymnastInfoPage = () => {
                         <GymnastTableRow
                           key={gymnast.id}
                           ID={gymnast.id}
-                          GSAId={gymnast.GSAId}
-                          f_name={gymnast.f_name}
-                          l_name={gymnast.l_name}
+                          GSAId={gymnast.gsa_id}
+                          f_name={gymnast.first_name}
+                          l_name={gymnast.last_name}
                           club={gymnast.club}
                           district={gymnast.district}
                           level={gymnast.level}
-                          dateOfBirth={gymnast.dateOfBirth}
-                          ageGroup={gymnast.ageGroup}
-                          gymnastGroup={gymnast.gymnastGroup}
+                          dateOfBirth={gymnast.date_of_birth}
+                          ageGroup={gymnast.age}
+                          gymnastGroup={gymnast.group_id}
                           onUpdate={(updatedFields) => handleUpdateGymnast(gymnast.id, updatedFields)}
                           groupError={!groupValid}
                         />
@@ -252,8 +239,8 @@ const GymnastInfoPage = () => {
                 {/* XIcons for each group */}
                 <div className="flex flex-col items-start">
                   {gymnasts.map(gymnast => (
-                    <div className={`flex justify-end ${gymnast.id === 1 ? 'pt-[88px] pb-[51px]' : 'py-[19px]'}`} key={gymnast.id}>
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} isVisible={gymnast.id !== 1} />
+                    <div className={`flex justify-end ${gymnast.id === 0 ? 'pt-[88px] pb-[51px]' : 'py-[19px]'}`} key={gymnast.id}>
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} isVisible={gymnast.id !== 0} />
                     </div>
                   ))}
                 </div>

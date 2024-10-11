@@ -10,7 +10,7 @@ import SmallTextTableBlock from "./SmallTextTableBlock";
 import XIcon from "./XIcon";
 import DropdownTableBlock from "./DropDownTableBlock";
 
-const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate, groupError, age_options }) => {
+const GymnastDataRow = ({ ID, GSAId, f_name, l_name, club, district, level, dateOfBirth, ageGroup, gymnastGroup, onUpdate, groupError }) => {
 
   const [ageGroupOptions, setAgeGroupOptions] = useState([]);
   const dateOfBirthObj = dateOfBirth ? new Date(dateOfBirth) : null;
@@ -20,33 +20,27 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
     const storedAgeGroups = JSON.parse(localStorage.getItem('ageGroups')) || [];
     
     // Create options in the format of "min-max yrs"
-    const storedOptions = storedAgeGroups.map(group => `${group.minAge}-${group.maxAge} yrs`);
-
-    // Set age group options based on the provided options or stored options
-    if (age_options) {
-      setAgeGroupOptions(age_options); // Use passed options if available
-    } else {
-      setAgeGroupOptions(storedOptions); // Otherwise, use stored age groups
-    }
-  }, [age_options]); // Run again if options prop changes
+    const options = storedAgeGroups.map(group => `${group.minAge}-${group.maxAge} yrs`);
+    setAgeGroupOptions(options);
+  }, []); // Run once on component mount
 
   const handleGSAIDChange = (newGSAID) => {
     const parsedGSAID = newGSAID === "" ? null : parseInt(newGSAID, 10);
     onUpdate({
-      gsa_id: isNaN(parsedGSAID) ? null : parsedGSAID,
+      GSAId: isNaN(parsedGSAID) ? null : parsedGSAID,
     });
   };
 
   const handleFNameChange = (newFName) => {
     onUpdate({
-      first_name: newFName,
+      f_name: newFName,
     });
   };
 
 
   const handleLNameChange = (newLName) => {
     onUpdate({
-      last_name: newLName,
+      l_name: newLName,
     });
   };
 
@@ -71,20 +65,20 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
 
   const handleDOBChange = (newDOB) => {
     onUpdate({
-      date_of_birth: newDOB,
+      dateOfBirth: newDOB,
     });
   };
 
   const handleAgeGroupChange = (newAgeGroup) => {
     onUpdate({
-      age: newAgeGroup,
+      ageGroup: newAgeGroup,
     });
   };
 
   const handleGroupChange = (newGroup) => {
     const parsedGroup = newGroup === "" ? null : parseInt(newGroup, 10);
     onUpdate({
-      group_id: isNaN(parsedGroup) ? null : parsedGroup,
+      gymnastGroup: isNaN(parsedGroup) ? null : parsedGroup,
     });
   };
 
@@ -144,4 +138,4 @@ GymnastTableRow.propTypes = {
   onUpdate: PropTypes.func.isRequired,
 };
 
-export default GymnastTableRow;
+export default GymnastDataRow;

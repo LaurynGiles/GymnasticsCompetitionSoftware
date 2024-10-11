@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllGymnasts, findGymnast, createGymnast, updateGymnast, deleteGymnast, getGymnastsByEvent } from '../controllers/gymnastController.js';
+import { getAllGymnasts, findGymnast, createGymnast, updateGymnast, deleteGymnast, getGymnastsByEvent, getGymnastsByGroup } from '../controllers/gymnastController.js';
 
 const router = express.Router();
 
@@ -8,6 +8,8 @@ router.get('/event/:event_id/gymnasts', getGymnastsByEvent);
 router.get('/', getAllGymnasts);
 
 router.get('/:id', findGymnast);
+
+router.get('/group/:group_id', getGymnastsByGroup);
 
 router.post('/', createGymnast);
 

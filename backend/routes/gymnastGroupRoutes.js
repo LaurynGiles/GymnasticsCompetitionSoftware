@@ -1,11 +1,13 @@
 import express from 'express';
-import { getAllGymnastGroups, findGymnastGroup, createGymnastGroup, updateGymnastGroup, deleteGymnastGroup } from '../controllers/gymnastGroupController.js';
+import { getAllGymnastGroups, findGymnastGroup, createGymnastGroup, updateGymnastGroup, deleteGymnastGroup, getGymnastGroupsByCompetition } from '../controllers/gymnastGroupController.js';
 
 const router = express.Router();
 
 router.get('/', getAllGymnastGroups);
 
 router.get('/:id', findGymnastGroup);
+
+router.get('/competition/:competition_id', getGymnastGroupsByCompetition);
 
 router.post('/', createGymnastGroup);
 
