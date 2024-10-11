@@ -249,4 +249,16 @@ export const getFinalResults = async (competitionId) => {
         }
     };
 
-
+    export const deleteGymnast = async (gymnastId) => {
+        try {
+            const response = await axiosInstance.delete(`/gymnasts/${gymnastId}`);
+            return { success: true, message: 'Gymnast deleted successfully' }; // You can modify this as needed
+        } catch (error) {
+            console.error("Error deleting gymnast:", error);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while deleting the gymnast' };
+            }
+        }
+    };

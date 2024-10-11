@@ -11,11 +11,12 @@ import XIcon from "../components/XIcon.jsx";
 import BarsIcon from "../components/BarsIcon.jsx";
 import StartButton from "../components/StartButton.jsx";
 import { useNavigate } from "react-router-dom";
-import { getGymnastGroupsByCompetition, getGymnastsByGroup, updateGymnast } from "../utils/api.js";
+import { getGymnastGroupsByCompetition, getGymnastsByGroup, updateGymnast, deleteGymnast } from "../utils/api.js";
 import { useNotifications } from "../utils/connection.jsx";
 import GroupTableData from "../components/GroupTableData.jsx";
 import NavigationBarResults from "../components/NavigationBarResults.jsx";
 import TickIcon from "../components/TickIcon.jsx";
+import DeletePopup from "../components/DeletePopup.jsx";
 
 const GymnastDataPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -24,6 +25,8 @@ const GymnastDataPage = () => {
   const [gymnasts, setGymnasts] = useState([]);
   const [ageGroups, setAgeGroups] = useState([]);
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [gymnastToDelete, setGymnastToDelete] = useState(null);
 
   const [competitionInfo, setCompetitionInfo] = useState(() => {
     const savedCompetition = localStorage.getItem("currentCompetition");
@@ -162,25 +165,25 @@ const GymnastDataPage = () => {
     }
   };
 
-  const handleRemoveGymnast = (id) => {
-    let updatedGymnasts = gymnasts.filter(gymnast => gymnast.id !== id);
-    if (updatedGymnasts.length === 0) {
-      updatedGymnasts = [{
-        id: 1,
-        GSAId: null,
-        f_name: "",
-        l_name: "",
-        club: "",
-        district: "",
-        level: null,
-        dateOfBirth: null,
-        ageGroup: "",
-        gymnastGroup: null,
-      }];
-    } else {
-      updatedGymnasts = updatedGymnasts.map((gymnast, index) => ({ ...gymnast, id: index + 1 }));
+  const handleRemoveGymnast = async (id) => {
+    try {
+      const response = await deleteGymnast(id); // Call your delete function from the API
+      if (response.success) {
+        // Update local state to remove the gymnast
+        setGymnasts(prevGymnasts => prevGymnasts.filter(gymnast => gymnast.gymnast_id !== id));
+        console.log("Gymnast removed successfully");
+        // Optionally show a success message
+
+        setShouldRefetch(true);
+
+      } else {
+        console.error("Error deleting gymnast:", response.message);
+        // Show an error message if needed
+      }
+    } catch (error) {
+      console.error("Error occurred while deleting gymnast:", error);
+      // Handle any additional error reporting
     }
-    setGymnasts(updatedGymnasts);
   };
 
   const getGroupDetails = (groupId) => {
@@ -195,6 +198,11 @@ const GymnastDataPage = () => {
     acc[timeSlotId].push(group); // Add the group to the respective time slot array
     return acc;
   }, {});
+
+  const handleShowPopup = (gymnastId) => {
+    setGymnastToDelete(gymnastId);
+    setShowPopup(true);
+  };
 
   return (
     <div className={`flex w-full left-0 h-screen bg-bright-white`}>
@@ -250,7 +258,7 @@ const GymnastDataPage = () => {
                 <div className="flex flex-row gap-4">
 
                   <div className="w-[97%] flex flex-col gap-2">
-                    {gymnasts.map(gymnast => {
+                    {gymnasts.map((gymnast, index) => {
                         // Check if gymnast is updated
                         const updatedGymnast = updatedGymnasts.find(u => u.gymnast_id === gymnast.gymnast_id);
 
@@ -280,6 +288,7 @@ const GymnastDataPage = () => {
                             onUpdate={(updatedFields) => handleUpdateGymnast(dataToDisplay.gymnast_id, updatedFields)}
                             groupError={!groupValid}
                             age_options={ageGroups}
+                            showTitle={index === 0}
                           />
                         );
                       })}
@@ -297,7 +306,7 @@ const GymnastDataPage = () => {
                           {updatedGymnast ? (
                             <TickIcon className="cursor-pointer" onClick={() => handleUpdateGymnastDB(gymnast.gymnast_id)} />
                           ) : (
-                            <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.gymnast_id)} isVisible={true}/>
+                            <XIcon className="cursor-pointer" onClick={() => handleShowPopup(gymnast.gymnast_id)} isVisible={true}/>
                           )}
                       </div>
                       );
@@ -311,9 +320,25 @@ const GymnastDataPage = () => {
               </div>
             </div>
 
+
         </div>
+       
       </div>
+
+    {showPopup && (
+      <DeletePopup
+          message="Are you sure you want to delete this gymnast?"
+          onYes={async () => {
+            handleRemoveGymnast(gymnastToDelete);
+            setShowPopup(false); // Hide the popup after deletion
+          }}
+          onNo={() => setShowPopup(false)} // Just hide the popup on "No"
+        />
+    )}
+      
     </div>
+
+
   );
 };
 
