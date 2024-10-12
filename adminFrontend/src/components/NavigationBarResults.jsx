@@ -41,6 +41,11 @@ const NavigationBarResults = () => {
           <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Gymnast Info</span>
         </div>
         <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded"
+          onClick={() => handleNavigation('/judgeData')}>
+          <BookIcon onClick={() => handleNavigation('/judgeData')}/>
+          <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Judge Info</span>
+        </div>
+        <div className="flex items-center gap-4 md:gap-6 cursor-pointer hover:bg-gray-200 p-2 rounded"
           onClick={() => handleNavigation('/homeAdmin')}>
           <ExitIcon onClick={() => handleNavigation('/homeAdmin')}/>
           <span className="text-prussian-blue text-lg md:text-xl lg:text-2xl font-medium font-montserrat">Exit</span>

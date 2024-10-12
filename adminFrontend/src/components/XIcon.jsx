@@ -13,7 +13,7 @@ const XIcon = ({ onClick, isVisible }) => {
       viewBox="0 0 24 24" 
       strokeWidth="1.5" 
       stroke="currentColor" 
-      className="w-8 h-8 md:w-8 md:h-8 text-prussian-blue hover:text-red-700 items-center"
+      className="w-8 h-8 md:w-8 md:h-8 text-prussian-blue hover:text-red-700 items-center cursor-pointer"
     >
       <path 
         strokeLinecap="round" 

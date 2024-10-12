@@ -13,6 +13,7 @@ import './App.css'
 import FinalResultsPage from './pages/FinalResultsPage.jsx';
 import CompletePage from './pages/CompletePage.jsx';
 import GymnastDataPage from './pages/GymnastDataPage.jsx';
+import JudgeDataPage from './pages/JudgeDataPage.jsx';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/finalResults" element={<FinalResultsPage/>} />
 
           <Route path="/gymnastData" element={<GymnastDataPage/>} />
+          {/* <Route path="/judgeData" element={<JudgeDataPage/>} /> */}
 
         </Routes>
       </Router>

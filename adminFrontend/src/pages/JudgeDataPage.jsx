@@ -11,141 +11,85 @@ import XIcon from "../components/XIcon.jsx";
 import BarsIcon from "../components/BarsIcon.jsx";
 import StartButton from "../components/StartButton.jsx";
 import { useNavigate } from "react-router-dom";
-import { getGymnastGroupsByCompetition, getGymnastsByGroup, updateGymnast, deleteGymnast, createGymnast } from "../utils/api.js";
+import { getGymnastGroupsByCompetition, getGymnastsByGroup, updateGymnast, deleteGymnast } from "../utils/api.js";
 import { useNotifications } from "../utils/connection.jsx";
 import GroupTableData from "../components/GroupTableData.jsx";
 import NavigationBarResults from "../components/NavigationBarResults.jsx";
 import TickIcon from "../components/TickIcon.jsx";
 import DeletePopup from "../components/DeletePopup.jsx";
 
-const GymnastDataPage = () => {
+const JudgeDataPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
   const navigate = useNavigate();
-  const [localGroups, setLocalGroups] = useState([]);
-  const [gymnasts, setGymnasts] = useState([]);
-  const [ageGroups, setAgeGroups] = useState([]);
+  const [judges, setGymnasts] = useState([]);
   const [shouldRefetch, setShouldRefetch] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-
-  const [gymnastToDelete, setGymnastToDelete] = useState(() => {
-    // Initialize newGymnast from local storage if available
-    const storedGymnastToDelete = localStorage.getItem("gymnastToDelete");
-    return storedGymnastToDelete ? JSON.parse(storedGymnastToDelete) : null;
-  });
-
-  const [newGymnast, setNewGymnast] = useState(() => {
-    // Initialize newGymnast from local storage if available
-    const storedNewGymnast = localStorage.getItem("newGymnast");
-    return storedNewGymnast ? JSON.parse(storedNewGymnast) : null;
-  });
+  const [judgeToDelete, setJudgeToDelete] = useState(null);
 
   const [competitionInfo, setCompetitionInfo] = useState(() => {
     const savedCompetition = localStorage.getItem("currentCompetition");
     return savedCompetition ? JSON.parse(savedCompetition) : null;
   });
 
-  const [updatedGymnasts, setUpdatedGymnasts] = useState(() => {
+  const [updatedJudges, setUpdatedJudges] = useState(() => {
     // Load updated gymnasts from local storage if available
-    const storedUpdates = localStorage.getItem("updatedGymnasts");
+    const storedUpdates = localStorage.getItem("updatedJudges");
     return storedUpdates ? JSON.parse(storedUpdates) : [];
   });
 
-  // Fetch gymnast groups when the component mounts
   useEffect(() => {
-    const fetchGymnastGroups = async () => {
-      console.log("here");
-      console.log(competitionInfo);
-      if (competitionInfo && competitionInfo.competition_id) {
-        const response = await getGymnastGroupsByCompetition(competitionInfo.competition_id);
+    // const fetchGymnastsForGroups = async () => {
+    //   const allGymnasts = [];
 
-        console.log(response);
-        if (response.success) {
-          setLocalGroups(response.data);
-        } else {
-          console.error("Error fetching gymnast groups:", response.message);
-        }
-      }
-    };
+    //   for (const group of localGroups) {
+    //     console.log(group.group_id)
+    //     const response = await getGymnastsByGroup(group.group_id);
+    //     if (response.success) {
+    //       allGymnasts.push(...response.data); // Add gymnasts for this group to the array
+    //     } else {
+    //       console.error("Error fetching gymnasts for group:", response.message);
+    //     }
+    //   }
 
-    // Call the fetch function immediately when the component mounts
-    console.log("fetching gymnasts");
-    fetchGymnastGroups();
-  }, []);
+    //   setGymnasts(allGymnasts); // Update state with all gymnasts
+    //   const uniqueAgeGroups = [...new Set(allGymnasts.map(gymnast => gymnast.age))]; // Get unique age groups
+    //   console.log(uniqueAgeGroups);
+    //   setAgeGroups(uniqueAgeGroups); // Set the age groups state
+    // };
 
-  useEffect(() => {
-    const fetchGymnastsForGroups = async () => {
-      const allGymnasts = [];
+    // if (localGroups.length > 0) {
+    //   fetchGymnastsForGroups();
+    //   setShouldRefetch(false);
+    // }
 
-      for (const group of localGroups) {
-        console.log(group.group_id)
-        const response = await getGymnastsByGroup(group.group_id);
-        if (response.success) {
-          allGymnasts.push(...response.data); // Add gymnasts for this group to the array
-        } else {
-          console.error("Error fetching gymnasts for group:", response.message);
-        }
-      }
-
-      setGymnasts(allGymnasts); // Update state with all gymnasts
-      const uniqueAgeGroups = [...new Set(allGymnasts.map(gymnast => gymnast.age))]; // Get unique age groups
-      console.log(uniqueAgeGroups);
-      setAgeGroups(uniqueAgeGroups); // Set the age groups state
-    };
-
-    if (localGroups.length > 0) {
-      fetchGymnastsForGroups();
-      setShouldRefetch(false);
-    }
-
-    console.log(gymnasts);
-  }, [localGroups, shouldRefetch]);
+    // console.log(gymnasts);
+  }, [shouldRefetch]);
 
   const handleAddGymnast = () => {
+    const newId = judges.length > 0 
+      ? Math.max(...judges.map(g => g.id)) + 1 
+      : 1;
 
-    const newGymnast = {
-      gsa_id: null,
-      first_name: "",
-      last_name: "",
+    const newGymnast = { 
+      id: newId,
+      GSAId: null,
+      f_name: "",
+      l_name: "",
       club: "",
       district: "",
       level: null,
-      date_of_birth: null,
-      age: "",
-      group_id: null
+      dateOfBirth: null,
+      ageGroup: "",
+      gymnastGroup: null
     };
-
-    setNewGymnast(newGymnast);
-
-    localStorage.setItem("newGymnast", JSON.stringify(newGymnast));
-  };
-
-  const handleCreateGymnast = async () => {
-    if (newGymnast) {
-      const { gsa_id, first_name, last_name, club, district, date_of_birth, age, group_id } = newGymnast;
-  
-      // Validate required fields
-      if (!gsa_id || !first_name || !last_name || !club || !district || !date_of_birth || !age || group_id === null) {
-        console.error("Invalid gymnast data. All fields must be filled.");
-        return; // Exit if validation fails
-      }
-  
-      const response = await createGymnast(newGymnast);
-      if (response.success) {
-        console.log("Gymnast created successfully:", response.data);
-        setNewGymnast(null); // Reset the newGymnast state
-        localStorage.removeItem("newGymnast"); // Clear from local storage
-        setShouldRefetch(true); // Trigger refetch of gymnasts
-      } else {
-        console.error("Failed to create gymnast:", response.message);
-      }
-    }
+    setGymnasts(prevGymnasts => [...prevGymnasts, newGymnast]);
   };
 
   const handleUpdateGymnast = (id, updatedFields) => {
     console.log(id, updatedFields);
   
     // Find the original gymnast data based on the ID
-    const originalGymnast = gymnasts.find(gymnast => gymnast.gymnast_id === id);
+    const originalGymnast = judges.find(gymnast => gymnast.gymnast_id === id);
   
     // If the gymnast exists, create an updated version
     if (originalGymnast) {
@@ -158,7 +102,7 @@ const GymnastDataPage = () => {
       console.log(updatedGymnast)
   
       // Update the updatedGymnasts list
-      setUpdatedGymnasts(prev => {
+      setUpdatedJudges(prev => {
         const newUpdates = [...prev.filter(g => g.gymnast_id !== updatedGymnast.gymnast_id), updatedGymnast];
         
         // Store updated gymnasts in local storage
@@ -170,32 +114,24 @@ const GymnastDataPage = () => {
 
   const handleUpdateGymnastDB = async (gymnastId) => {
     // Find the updated gymnast details
-    const updatedGymnast = updatedGymnasts.find(u => u.gymnast_id === gymnastId);
-  
+    const updatedGymnast = updatedJudges.find(u => u.gymnast_id === gymnastId);
+    
     if (updatedGymnast) {
-      const { gsa_id, first_name, last_name, club, district, date_of_birth, age, group_id } = updatedGymnast;
-  
-      // Validate required fields
-      if (!gsa_id || !first_name || !last_name || !club || !district || !date_of_birth || !age || group_id === null) {
-        console.error("Invalid gymnast data. All fields must be filled.");
-        return; // Exit if validation fails
-      }
-  
       const response = await updateGymnast(gymnastId, updatedGymnast);
-  
+      
       if (response.success) {
         console.log('Gymnast updated successfully:', response.data);
-  
+        
         // Remove the updated gymnast from the updatedGymnasts list
-        setUpdatedGymnasts(prev => {
+        setUpdatedJudges(prev => {
           const newUpdates = prev.filter(g => g.gymnast_id !== gymnastId);
           // Update local storage
           localStorage.setItem("updatedGymnasts", JSON.stringify(newUpdates));
           return newUpdates;
         });
-  
+
         setShouldRefetch(true);
-  
+
       } else {
         console.error('Failed to update gymnast:', response.message);
         // Here you can show an error message to the user if needed
@@ -206,12 +142,6 @@ const GymnastDataPage = () => {
   };
 
   const handleRemoveGymnast = async (id) => {
-
-    if (!id) {
-      console.error("Invalid gymnast ID. Cannot delete.");
-      return; // Exit if the ID is invalid
-    }
-  
     try {
       const response = await deleteGymnast(id); // Call your delete function from the API
       if (response.success) {
@@ -219,8 +149,9 @@ const GymnastDataPage = () => {
         setGymnasts(prevGymnasts => prevGymnasts.filter(gymnast => gymnast.gymnast_id !== id));
         console.log("Gymnast removed successfully");
         // Optionally show a success message
-  
+
         setShouldRefetch(true);
+
       } else {
         console.error("Error deleting gymnast:", response.message);
         // Show an error message if needed
@@ -232,10 +163,7 @@ const GymnastDataPage = () => {
   };
 
   const getGroupDetails = (groupId) => {
-    console.log(groupId);
-    console.log(localGroups.find(g => g.group_id === groupId))
-    
-    return localGroups.find(g => g.group_id === groupId);
+    return localGroups.find(g => g.id === groupId);
   };
 
   const groupedGroups = localGroups.reduce((acc, group) => {
@@ -248,8 +176,7 @@ const GymnastDataPage = () => {
   }, {});
 
   const handleShowPopup = (gymnastId) => {
-    setGymnastToDelete(gymnastId);
-    localStorage.setItem("gymnastToDelete", JSON.stringify(gymnastId));
+    setJudgeToDelete(gymnastId);
     setShowPopup(true);
   };
 
@@ -259,7 +186,7 @@ const GymnastDataPage = () => {
       
       <div className={`flex-1 mb-20 bg-bright-white p-5`} style={{ marginLeft: isNavVisible ? '18%' : '0', width: isNavVisible ? 'calc(100% - 18%)' : '100%' }}>
         <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)}/>
-        <div className={`w-full ml-20 mb-20 ${isNavVisible ? 'max-w-[1300px]' : 'max-w-[1600px]'}`}>
+        <div className={`w-full ml-20 ${isNavVisible ? 'max-w-[1300px]' : 'max-w-[1600px]'}`}>
           <PageHeader title="Gymnast Info Configuration" />
 
             <div className="flex flex-col mt-16 gap-6">
@@ -307,9 +234,9 @@ const GymnastDataPage = () => {
                 <div className="flex flex-row gap-4">
 
                   <div className="w-[97%] flex flex-col gap-2">
-                    {gymnasts.map((gymnast, index) => {
+                    {judges.map((gymnast, index) => {
                         // Check if gymnast is updated
-                        const updatedGymnast = updatedGymnasts.find(u => u.gymnast_id === gymnast.gymnast_id);
+                        const updatedGymnast = updatedJudges.find(u => u.gymnast_id === gymnast.gymnast_id);
 
                         // Use updated gymnast data if it exists, otherwise use the original gymnast data
                         const dataToDisplay = updatedGymnast || gymnast;
@@ -319,7 +246,7 @@ const GymnastDataPage = () => {
                             ? dataToDisplay.date_of_birth.toISOString() // Convert to ISO string
                             : dataToDisplay.date_of_birth; // Keep as is
 
-                        const group = getGroupDetails(dataToDisplay.group_id);
+                        const group = getGroupDetails(dataToDisplay.gymnastGroup);
                         const groupValid = Boolean(group); 
                         return (
                           <GymnastTableRow
@@ -341,39 +268,13 @@ const GymnastDataPage = () => {
                           />
                         );
                       })}
-                      {newGymnast && (
-                        // Calculate a new ID for the new gymnast
-                        <GymnastTableRow 
-                          key={gymnasts.length + 1} // Assign a new ID based on the current count
-                          ID={gymnasts.length > 0 ? Math.max(...gymnasts.map(g => g.gymnast_id)) + 1 : 1} // Generate a new ID
-                          GSAId={Number(newGymnast.gsa_id)}
-                          f_name={newGymnast.first_name}
-                          l_name={newGymnast.last_name}
-                          club={newGymnast.club}
-                          district={newGymnast.district}
-                          level={Number(newGymnast.level)}
-                          dateOfBirth={newGymnast.date_of_birth}
-                          ageGroup={newGymnast.age}
-                          gymnastGroup={newGymnast.group_id}
-                          onUpdate={(updatedFields) => {
-                            const updatedNewGymnast = { ...newGymnast, ...updatedFields };
-                            setNewGymnast(updatedNewGymnast);
-                            // Update the newGymnast in local storage
-                            localStorage.setItem("newGymnast", JSON.stringify(updatedNewGymnast));
-                          }}
-                          // Check the group validity for the new gymnast
-                          groupError={!Boolean(getGroupDetails(newGymnast.group_id))}
-                          age_options={ageGroups}
-                          showTitle={false} // or any condition you want
-                        />
-                      )}
                   </div>
 
                   {/* XIcons for each group */}
                   <div className="flex flex-col items-start">
-                    {gymnasts.map((gymnast, index) => {
+                    {judges.map((gymnast, index) => {
                       // Check if gymnast is updated
-                      const updatedGymnast = updatedGymnasts.find(u => u.gymnast_id === gymnast.gymnast_id);
+                      const updatedGymnast = updatedJudges.find(u => u.gymnast_id === gymnast.gymnast_id);
 
                       return (
                         <div className={`flex justify-end ${index === 0 ? 'pt-[91px] py-[23px]' : 'py-[23px]'}`} key={index}>
@@ -386,20 +287,12 @@ const GymnastDataPage = () => {
                       </div>
                       );
                     })}
-                    {newGymnast && (
-                      <div className={`flex justify-end pt-[19px]`}>
-                        <TickIcon 
-                          className="cursor-pointer" 
-                          onClick={handleCreateGymnast} // Call create gymnast on click
-                        />
-                      </div>
-                    )}
                   </div>
 
                 </div>
               </div>
               <div className="flex justify-center py-5">
-                <AddButton title="+" onClick={handleAddGymnast} isActive={newGymnast === null}/>
+                <AddButton title="+" onClick={handleAddGymnast} />
               </div>
             </div>
 
@@ -412,7 +305,7 @@ const GymnastDataPage = () => {
       <DeletePopup
           message="Are you sure you want to delete this gymnast?"
           onYes={async () => {
-            handleRemoveGymnast(gymnastToDelete);
+            handleRemoveGymnast(judgeToDelete);
             setShowPopup(false); // Hide the popup after deletion
           }}
           onNo={() => setShowPopup(false)} // Just hide the popup on "No"
@@ -425,4 +318,4 @@ const GymnastDataPage = () => {
   );
 };
 
-export default GymnastDataPage;
+export default JudgeDataPage;
