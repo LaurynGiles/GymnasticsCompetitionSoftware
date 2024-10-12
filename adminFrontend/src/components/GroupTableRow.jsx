@@ -6,7 +6,7 @@ import NumberTableBlock from "./NumberTableBlock";
 import { useNotifications } from "../utils/connection";
 import DropdownTableBlock from "./DropDownTableBlock";
 
-const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, selectedNumSessions, numSessions, onUpdate, error }) => {
+const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, selectedNumSessions, numSessions, onUpdate, error, showTitle }) => {
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -78,7 +78,7 @@ const GroupTableRow = ({ ID, TimeSlotID, date, reportTime, compTime, awardTime, 
   return (
     <div className={`w-full flex justify-start shadow-md px-2 py-2.5 bg-anti-flash-white ${error ? 'border border-red-500' : ''}`}>
       {/* Conditional rendering based on ID */}
-      {ID === 1 ? (
+      {showTitle ? (
         <>
          <SmallTableBlock text={ID.toString()} title={"Group ID"} />
           <NumberTableBlock value={TimeSlotID} onChange={handleTimeSlotIDChange} title={"Timeslot ID"}/>

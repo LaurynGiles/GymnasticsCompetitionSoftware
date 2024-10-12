@@ -5,6 +5,16 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    competition_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Competition',
+        key: 'competition_id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
     gsa_id: {
       type: DataTypes.STRING(20),
       allowNull: false,
@@ -55,6 +65,11 @@ export default (sequelize, DataTypes) => {
     });
     Judge.hasMany(models.Difficulty, {
       foreignKey: 'judge_id',
+    });
+    Judge.belongsTo(models.Competition, {
+      foreignKey: 'competition_id',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     });
   };
 

@@ -41,6 +41,23 @@ export async function findJudgeGsa(req, res, next) {
     }
 }
 
+export async function getJudgesByCompetition(req, res, next) {
+    try {
+        const competitionId = req.params.competitionId; // Get competition ID from URL params
+        const judges = await Judge.findAll({
+            where: { competition_id: competitionId } // Filter judges by competition ID
+        });
+
+        if (judges.length > 0) {
+            res.status(200).json(judges);
+        } else {
+            res.status(404).send('No judges found for this competition');
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function createJudge(req, res, next) {
     try {
         const newJudge = await Judge.create(req.body);

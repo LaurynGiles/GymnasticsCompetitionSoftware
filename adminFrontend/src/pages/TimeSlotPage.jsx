@@ -93,9 +93,9 @@ const TimeSlotPage = () => {
 
                 {/* Table Rows */}
                 <div className="w-full rounded-lg">
-                  <div className="flex flex-row gap-10">
+                  <div className="flex flex-row gap-4">
                     <div className="w-full flex flex-col gap-2">
-                      {localTimeslots.map((slot) => (
+                      {localTimeslots.map((slot, index) => (
                         <TimeSlotTableRow
                           key={slot.id}
                           ID={slot.id}
@@ -105,20 +105,21 @@ const TimeSlotPage = () => {
                           date={slot.date}
                           numSessions={slot.numSessions}
                           onUpdate={(updatedFields) => handleUpdateTimeSlot(slot.id, updatedFields)}
+                          showTitle={index===0}
                         />
                       ))}
                     </div>
 
                     <div className="flex flex-col items-start">
-                      {localTimeslots.map(slot => (
+                      {localTimeslots.map((slot, index) => (
                         <div
-                          className={`flex justify-end ${slot.id === 1 ? 'pt-[91px] pb-[15px]' : 'py-[17px]'}`} 
+                          className={`flex justify-end ${index === 0 ? 'pt-[91px] pb-[19px]' : 'py-[21px]'}`} 
                           key={slot.id}
                         >
                           <XIcon
                             className="cursor-pointer"
                             onClick={() => handleRemoveTimeSlot(slot.id)}
-                            isVisible={slot.id !== 1}
+                            isVisible={index !== 0}
                           />
                         </div>
                       ))}

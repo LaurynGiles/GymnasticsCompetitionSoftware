@@ -411,6 +411,7 @@ const CompletePage = () => {
       const storedJudges = JSON.parse(localStorage.getItem('judges')) || [];
       for (const judge of storedJudges) {
         const judgePayload = {
+          competition_id: createdCompetitionId,
           gsa_id: judge.GSAId,
           first_name: judge.f_name,
           last_name: judge.l_name,

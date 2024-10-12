@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from "react";
-import NavigationBar from "../components/NavigationBar.jsx";
 import ConfigHeader from "../components/ConfigHeader.jsx";
-import AddButton from "../components/AddButton.jsx";
-import GroupHeaders from "../components/GroupHeaders.jsx"; 
+import AddButton from "../components/AddButton.jsx"; 
 import PageHeader from "../components/PageHeader.jsx";
-import GroupTableRow from "../components/GroupTableRow.jsx";
-import GymnastHeaders from "../components/GymnastHeaders.jsx"
-import GymnastTableRow from "../components/GymnastTableRow.jsx";
 import XIcon from "../components/XIcon.jsx";
 import BarsIcon from "../components/BarsIcon.jsx";
-import StartButton from "../components/StartButton.jsx";
 import { useNavigate } from "react-router-dom";
-import { getGymnastGroupsByCompetition, getGymnastsByGroup, updateGymnast, deleteGymnast } from "../utils/api.js";
-import { useNotifications } from "../utils/connection.jsx";
-import GroupTableData from "../components/GroupTableData.jsx";
+import { updateJudge, deleteJudge, createJudge, getJudgesByCompetition } from "../utils/api.js";
 import NavigationBarResults from "../components/NavigationBarResults.jsx";
 import TickIcon from "../components/TickIcon.jsx";
 import DeletePopup from "../components/DeletePopup.jsx";
+import JudgeTableRow from "../components/JudgeTableRow.jsx";
 
 const JudgeDataPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
   const navigate = useNavigate();
-  const [judges, setGymnasts] = useState([]);
+  const [judges, setJudges] = useState([]);
   const [shouldRefetch, setShouldRefetch] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [judgeToDelete, setJudgeToDelete] = useState(null);
+
+  const [judgeToDelete, setJudgeToDelete] = useState(() => {
+    const storedJudgeToDelete = localStorage.getItem("judgeToDelete");
+    return storedJudgeToDelete ? JSON.parse(storedJudgeToDelete) : null;
+  });
+
+  const [newJudge, setNewJudge] = useState(() => {
+    const storedNewJudge = localStorage.getItem("newJudge");
+    return storedNewJudge ? JSON.parse(storedNewJudge) : null;
+  });
 
   const [competitionInfo, setCompetitionInfo] = useState(() => {
     const savedCompetition = localStorage.getItem("currentCompetition");
@@ -32,151 +34,155 @@ const JudgeDataPage = () => {
   });
 
   const [updatedJudges, setUpdatedJudges] = useState(() => {
-    // Load updated gymnasts from local storage if available
     const storedUpdates = localStorage.getItem("updatedJudges");
     return storedUpdates ? JSON.parse(storedUpdates) : [];
   });
 
   useEffect(() => {
-    // const fetchGymnastsForGroups = async () => {
-    //   const allGymnasts = [];
-
-    //   for (const group of localGroups) {
-    //     console.log(group.group_id)
-    //     const response = await getGymnastsByGroup(group.group_id);
-    //     if (response.success) {
-    //       allGymnasts.push(...response.data); // Add gymnasts for this group to the array
-    //     } else {
-    //       console.error("Error fetching gymnasts for group:", response.message);
-    //     }
-    //   }
-
-    //   setGymnasts(allGymnasts); // Update state with all gymnasts
-    //   const uniqueAgeGroups = [...new Set(allGymnasts.map(gymnast => gymnast.age))]; // Get unique age groups
-    //   console.log(uniqueAgeGroups);
-    //   setAgeGroups(uniqueAgeGroups); // Set the age groups state
-    // };
-
-    // if (localGroups.length > 0) {
-    //   fetchGymnastsForGroups();
-    //   setShouldRefetch(false);
-    // }
-
-    // console.log(gymnasts);
-  }, [shouldRefetch]);
-
-  const handleAddGymnast = () => {
-    const newId = judges.length > 0 
-      ? Math.max(...judges.map(g => g.id)) + 1 
-      : 1;
-
-    const newGymnast = { 
-      id: newId,
-      GSAId: null,
-      f_name: "",
-      l_name: "",
-      club: "",
-      district: "",
-      level: null,
-      dateOfBirth: null,
-      ageGroup: "",
-      gymnastGroup: null
+    const fetchJudgesForCompetition = async () => {
+        if (competitionInfo && competitionInfo.competition_id) {
+            const response = await getJudgesByCompetition(competitionInfo.competition_id); // Add this API call
+            if (response.success) {
+                setJudges(response.data);
+            } else {
+                console.error("Error fetching judges:", response.message);
+            }
+        }
     };
-    setGymnasts(prevGymnasts => [...prevGymnasts, newGymnast]);
+
+    fetchJudgesForCompetition();
+
+    setShouldRefetch(false);
+}, [competitionInfo, shouldRefetch]);
+
+  const handleAddJudge = () => {
+
+    const newJudge = {
+        gsa_id: null,
+        competition_id: competitionInfo.competition_id,
+        first_name: "",
+        last_name: "",
+        club: "",
+        district: "",
+        level: "",
+        head_judge: false,
+        role: "E",
+    };
+
+    setNewJudge(newJudge);
+
+    localStorage.setItem("newJudge", JSON.stringify(newJudge));
   };
 
-  const handleUpdateGymnast = (id, updatedFields) => {
+  const handleCreateJudge = async () => {
+    if (newJudge) {
+        const { gsa_id, competition_id, first_name, last_name, club, level, head_judge, role } = newJudge;
+
+        console.log(newJudge);
+  
+      // Validate required fields
+      if (!gsa_id || !competition_id || !first_name || !last_name || !club || !level || role === null) {
+        console.error("Invalid judge data. All fields must be filled.");
+        return; // Exit if validation fails
+      }
+  
+      const response = await createJudge(newJudge);
+      if (response.success) {
+        console.log("Judge created successfully:", response.data);
+        setNewJudge(null); // Reset the newJudge state
+        localStorage.removeItem("newJudge"); // Clear from local storage
+        setShouldRefetch(true); // Trigger refetch of judges
+      } else {
+        console.error("Failed to create judge:", response.message);
+      }
+    }
+  };
+
+  const handleUpdateJudge = (id, updatedFields) => {
     console.log(id, updatedFields);
   
-    // Find the original gymnast data based on the ID
-    const originalGymnast = judges.find(gymnast => gymnast.gymnast_id === id);
+    const originalJudge = judges.find(judge => judge.judge_id === id);
   
-    // If the gymnast exists, create an updated version
-    if (originalGymnast) {
-      // Initialize updatedGymnast with the original gymnast data
-      const updatedGymnast = {
-        ...originalGymnast, // Spread the original data
+    if (originalJudge) {
+      const updatedJudge = {
+        ...originalJudge, // Spread the original data
         ...updatedFields, // Spread the updated fields
       };
 
-      console.log(updatedGymnast)
+      console.log(updatedJudge)
   
-      // Update the updatedGymnasts list
       setUpdatedJudges(prev => {
-        const newUpdates = [...prev.filter(g => g.gymnast_id !== updatedGymnast.gymnast_id), updatedGymnast];
+        const newUpdates = [...prev.filter(g => g.judge_id !== updatedJudge.judge_id), updatedJudge];
         
-        // Store updated gymnasts in local storage
-        localStorage.setItem("updatedGymnasts", JSON.stringify(newUpdates));
+        localStorage.setItem("updatedJudges", JSON.stringify(newUpdates));
         return newUpdates;
       });
     }
   };
 
-  const handleUpdateGymnastDB = async (gymnastId) => {
-    // Find the updated gymnast details
-    const updatedGymnast = updatedJudges.find(u => u.gymnast_id === gymnastId);
-    
-    if (updatedGymnast) {
-      const response = await updateGymnast(gymnastId, updatedGymnast);
-      
+  const handleUpdateJudgeDB = async (judgeId) => {
+    const updatedJudge = updatedJudges.find(u => u.judge_id === judgeId);
+  
+    if (updatedJudge) {
+        const { gsa_id, first_name, last_name, club, level, head_judge, role } = updatedJudge;
+
+        if (!gsa_id || !first_name || !last_name || !club || !level || role === null) {
+          console.log()
+          console.error("Invalid judge data. All fields must be filled.");
+          return; // Exit if validation fails
+        }
+  
+      const response = await updateJudge(judgeId, updatedJudge);
+  
       if (response.success) {
-        console.log('Gymnast updated successfully:', response.data);
-        
-        // Remove the updated gymnast from the updatedGymnasts list
+        console.log('Judge updated successfully:', response.data);
+  
         setUpdatedJudges(prev => {
-          const newUpdates = prev.filter(g => g.gymnast_id !== gymnastId);
+          const newUpdates = prev.filter(g => g.judge_id !== judgeId);
           // Update local storage
-          localStorage.setItem("updatedGymnasts", JSON.stringify(newUpdates));
+          localStorage.setItem("updatedJudges", JSON.stringify(newUpdates));
           return newUpdates;
         });
-
+  
         setShouldRefetch(true);
-
+  
       } else {
-        console.error('Failed to update gymnast:', response.message);
+        console.error('Failed to update judge:', response.message);
         // Here you can show an error message to the user if needed
       }
     } else {
-      console.error('No updated gymnast found for ID:', gymnastId);
+      console.error('No updated judge found for ID:', judgeId);
     }
   };
 
-  const handleRemoveGymnast = async (id) => {
+  const handleRemoveJudge = async (id) => {
+
+    if (!id) {
+      console.error("Invalid judge ID. Cannot delete.");
+      return; // Exit if the ID is invalid
+    }
+  
     try {
-      const response = await deleteGymnast(id); // Call your delete function from the API
+      const response = await deleteJudge(id); // Call your delete function from the API
       if (response.success) {
-        // Update local state to remove the gymnast
-        setGymnasts(prevGymnasts => prevGymnasts.filter(gymnast => gymnast.gymnast_id !== id));
-        console.log("Gymnast removed successfully");
+        setJudges(prevJudges => prevJudges.filter(judge => judge.judge_id !== id));
+        console.log("Judge removed successfully");
         // Optionally show a success message
-
+  
         setShouldRefetch(true);
-
       } else {
-        console.error("Error deleting gymnast:", response.message);
+        console.error("Error deleting judge:", response.message);
         // Show an error message if needed
       }
     } catch (error) {
-      console.error("Error occurred while deleting gymnast:", error);
+      console.error("Error occurred while deleting judge:", error);
       // Handle any additional error reporting
     }
   };
 
-  const getGroupDetails = (groupId) => {
-    return localGroups.find(g => g.id === groupId);
-  };
-
-  const groupedGroups = localGroups.reduce((acc, group) => {
-    const timeSlotId = group.Session?.time_slot_id; // Assuming time_slot_id is in the group object
-    if (!acc[timeSlotId]) {
-      acc[timeSlotId] = []; // Create an array for this time slot if it doesn't exist
-    }
-    acc[timeSlotId].push(group); // Add the group to the respective time slot array
-    return acc;
-  }, {});
-
-  const handleShowPopup = (gymnastId) => {
-    setJudgeToDelete(gymnastId);
+  const handleShowPopup = (judgeId) => {
+    setJudgeToDelete(judgeId);
+    localStorage.setItem("judgeToDelete", JSON.stringify(judgeId));
     setShowPopup(true);
   };
 
@@ -186,47 +192,11 @@ const JudgeDataPage = () => {
       
       <div className={`flex-1 mb-20 bg-bright-white p-5`} style={{ marginLeft: isNavVisible ? '18%' : '0', width: isNavVisible ? 'calc(100% - 18%)' : '100%' }}>
         <BarsIcon onClick={() => setIsNavVisible(!isNavVisible)}/>
-        <div className={`w-full ml-20 ${isNavVisible ? 'max-w-[1300px]' : 'max-w-[1600px]'}`}>
-          <PageHeader title="Gymnast Info Configuration" />
+        <div className={`w-full ml-20 mb-20 ${isNavVisible ? 'max-w-[1300px]' : 'max-w-[1600px]'}`}>
+          <PageHeader title="Judge Info Configuration" />
 
             <div className="flex flex-col mt-16 gap-6">
-              <div className="flex flex-col items-start">
-                  <ConfigHeader text="Gymnast Groups" />
-              </div>
-
-              <div className="flex flex-col items-center">
-
-                  <div className={`flex flex-col items-center justify-center gap-10 bg-white p-5 rounded-lg ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
-                      {Object.keys(groupedGroups).map((timeSlotId) => (
-                      <div key={timeSlotId} className="w-full ml-4 flex items-center justify-center flex-row gap-1">
-                        <div className="w-full flex flex-col gap-2">
-                          {/* Sort the groups by sessionLabel before rendering */}
-                          {groupedGroups[timeSlotId]
-                            .sort((a, b) => (a.sessionLabel > b.sessionLabel ? 1 : -1)) // Sorting by sessionLabel
-                            .map((group, index) => {
-                              const timeSlot = group.Session?.TimeSlot; // Accessing the time slot data
-                              return (
-                                <GroupTableData
-                                  key={group.group_id}
-                                  groupId={group.group_id}
-                                  sessionLabel={group.sessionLabel}
-                                  date={timeSlot?.date || ''}
-                                  reportTime={timeSlot?.report_time || ''}
-                                  compTime={timeSlot?.competition_time || ''}
-                                  awardTime={timeSlot?.award_time || ''}
-                                  isFirstRow={index === 0} // Set isFirstRow to true for the first row
-                                />
-                              );
-                            })}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col mt-16 gap-6">
-              <ConfigHeader text="Gymnasts" />
+              <ConfigHeader text="Judges" />
 
 
               <div className={`flex flex-col bg-white p-5 rounded-lg `}>
@@ -234,65 +204,78 @@ const JudgeDataPage = () => {
                 <div className="flex flex-row gap-4">
 
                   <div className="w-[97%] flex flex-col gap-2">
-                    {judges.map((gymnast, index) => {
-                        // Check if gymnast is updated
-                        const updatedGymnast = updatedJudges.find(u => u.gymnast_id === gymnast.gymnast_id);
+                    {judges.map((judge, index) => {
+                        console.log(judge);
+                        const updatedJudge = updatedJudges.find(u => u.judge_id === judge.judge_id);
 
-                        // Use updated gymnast data if it exists, otherwise use the original gymnast data
-                        const dataToDisplay = updatedGymnast || gymnast;
+                        const dataToDisplay = updatedJudge || judge;
 
-                        const formattedDateOfBirth = 
-                          dataToDisplay.date_of_birth instanceof Date 
-                            ? dataToDisplay.date_of_birth.toISOString() // Convert to ISO string
-                            : dataToDisplay.date_of_birth; // Keep as is
-
-                        const group = getGroupDetails(dataToDisplay.gymnastGroup);
-                        const groupValid = Boolean(group); 
                         return (
-                          <GymnastTableRow
-                            key={dataToDisplay.gymnast_id}
-                            ID={dataToDisplay.gymnast_id}
+                          <JudgeTableRow
+                            key={dataToDisplay.judge_id}
+                            ID={dataToDisplay.judge_id}
                             GSAId={Number(dataToDisplay.gsa_id)}
                             f_name={dataToDisplay.first_name}
                             l_name={dataToDisplay.last_name}
                             club={dataToDisplay.club}
-                            district={dataToDisplay.district}
                             level={Number(dataToDisplay.level)}
-                            dateOfBirth={formattedDateOfBirth}
-                            ageGroup={dataToDisplay.age}
-                            gymnastGroup={dataToDisplay.group_id}
-                            onUpdate={(updatedFields) => handleUpdateGymnast(dataToDisplay.gymnast_id, updatedFields)}
-                            groupError={!groupValid}
-                            age_options={ageGroups}
+                            headJudge={dataToDisplay.head_judge}
+                            role={dataToDisplay.role}
+                            onUpdate={(updatedFields) => handleUpdateJudge(dataToDisplay.judge_id, updatedFields)}
                             showTitle={index === 0}
                           />
                         );
                       })}
+                      {newJudge && (
+                        <JudgeTableRow 
+                          key={judges.length + 1} // Assign a new ID based on the current count
+                          ID={judges.length > 0 ? Math.max(...judges.map(g => g.judge_id)) + 1 : 1} // Generate a new ID
+                          GSAId={Number(newJudge.gsa_id)}
+                          f_name={newJudge.first_name}
+                          l_name={newJudge.last_name}
+                          club={newJudge.club}
+                          level={Number(newJudge.level)}
+                          headJudge={newJudge.head_judge}
+                          onUpdate={(updatedFields) => {
+                            const updatedNewJudge = { ...newJudge, ...updatedFields };
+                            setNewJudge(updatedNewJudge);
+                            localStorage.setItem("newJudge", JSON.stringify(updatedNewJudge));
+                          }}
+                          showTitle={false} // or any condition you want
+                        />
+                      )}
                   </div>
 
                   {/* XIcons for each group */}
                   <div className="flex flex-col items-start">
-                    {judges.map((gymnast, index) => {
-                      // Check if gymnast is updated
-                      const updatedGymnast = updatedJudges.find(u => u.gymnast_id === gymnast.gymnast_id);
+                    {judges.map((judge, index) => {
+                      const updatedJudge = updatedJudges.find(u => u.judge_id === judge.judge_id);
 
                       return (
-                        <div className={`flex justify-end ${index === 0 ? 'pt-[91px] py-[23px]' : 'py-[23px]'}`} key={index}>
+                        <div className={`flex justify-end ${index === 0 ? 'pt-[60px] py-[23px]' : 'py-[23px]'}`} key={index}>
                          {/* Conditionally render TickIcon or XIcon */}
-                          {updatedGymnast ? (
-                            <TickIcon className="cursor-pointer" onClick={() => handleUpdateGymnastDB(gymnast.gymnast_id)} />
+                          {updatedJudge ? (
+                            <TickIcon className="cursor-pointer" onClick={() => handleUpdateJudgeDB(judge.judge_id)} />
                           ) : (
-                            <XIcon className="cursor-pointer" onClick={() => handleShowPopup(gymnast.gymnast_id)} isVisible={true}/>
+                            <XIcon className="cursor-pointer" onClick={() => handleShowPopup(judge.judge_id)} isVisible={true}/>
                           )}
                       </div>
                       );
                     })}
+                    {newJudge && (
+                      <div className={`flex justify-end pt-[19px]`}>
+                        <TickIcon 
+                          className="cursor-pointer" 
+                          onClick={handleCreateJudge} // Call create judge on click
+                        />
+                      </div>
+                    )}
                   </div>
 
                 </div>
               </div>
               <div className="flex justify-center py-5">
-                <AddButton title="+" onClick={handleAddGymnast} />
+                <AddButton title="+" onClick={handleAddJudge} isActive={newJudge === null}/>
               </div>
             </div>
 
@@ -303,9 +286,9 @@ const JudgeDataPage = () => {
 
     {showPopup && (
       <DeletePopup
-          message="Are you sure you want to delete this gymnast?"
+          message="Are you sure you want to delete this judge?"
           onYes={async () => {
-            handleRemoveGymnast(judgeToDelete);
+            handleRemoveJudge(judgeToDelete);
             setShowPopup(false); // Hide the popup after deletion
           }}
           onNo={() => setShowPopup(false)} // Just hide the popup on "No"

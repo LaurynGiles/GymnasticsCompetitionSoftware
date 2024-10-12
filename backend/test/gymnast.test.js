@@ -804,7 +804,8 @@ describe('API Tests', () => {
 
         it('should create a new apparatus', (done) => {
             const apparatus1 = {
-                apparatus_name: "Floor"
+                apparatus_name: "Floor",
+                competition_id: 1
             };
 
             server.request.execute(app)
@@ -817,7 +818,8 @@ describe('API Tests', () => {
                 });
 
             const apparatus2 = {
-                apparatus_name: "High Bar"
+                apparatus_name: "High Bar",
+                competition_id: 1
             };
 
             server.request.execute(app)
@@ -830,7 +832,8 @@ describe('API Tests', () => {
                 });
 
             const apparatus3 = {
-                apparatus_name: "Parallel bar"
+                apparatus_name: "Parallel bar",
+                competition_id: 1
             };
     
             server.request.execute(app)
@@ -857,7 +860,7 @@ describe('API Tests', () => {
 
         it('should update a apparatus', (done) => {
             const updatedApparatus = {
-                apparatus_name: "Vault"
+                apparatus_name: "Vault",
             };
     
             server.request.execute(app)
@@ -898,6 +901,7 @@ describe('API Tests', () => {
 
         it('should create a new judge', (done) => {
             const judge1 = {
+                competition_id: 1,
                 gsa_id: 'J123456',
                 first_name: 'Alice',
                 last_name: 'Brown',
@@ -920,6 +924,7 @@ describe('API Tests', () => {
                 });
 
             const judge2 = {
+                competition_id: 1,
                 gsa_id: 'J654321',
                 first_name: 'Bob',
                 last_name: 'Smith',
@@ -942,6 +947,7 @@ describe('API Tests', () => {
                 });
 
             const judge3 = {
+                competition_id: 1,
                 gsa_id: 'J789012',
                 first_name: 'Carol',
                 last_name: 'Jones',

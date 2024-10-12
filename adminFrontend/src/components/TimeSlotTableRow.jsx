@@ -5,7 +5,7 @@ import DateTableBlock from "./DateTableBlock";
 import TimeTableBlock from "./TimeTableBlock";
 import DropdownTableBlock from "./DropDownTableBlock"
 
-const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, numSessions, onUpdate }) => {
+const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, numSessions, onUpdate, showTitle }) => {
 
   const handleDateChange = (date) => {
     onUpdate({ date });
@@ -33,7 +33,7 @@ const TimeSlotTableRow = ({ ID, date, reportTime, compTime, awardTime, numSessio
   return (
     <div className="flex shadow-md justify-start bg-anti-flash-white gap-6 p-2">
       {/* Conditional rendering based on ID */}
-      {ID === 1 ? (
+      {showTitle ? (
         <>
           <SmallTableBlock text={ID.toString()} title={"Time Slot ID"} />
           <DateTableBlock date={date} setDate={handleDateChange} title={"Date"}/>

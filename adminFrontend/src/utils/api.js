@@ -262,3 +262,46 @@ export const getFinalResults = async (competitionId) => {
             }
         }
     };
+
+    export const getJudgesByCompetition = async (competitionId) => {
+        try {
+            const response = await axiosInstance.get(`/judges/competition/${competitionId}`); // Use the new endpoint
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error("Error fetching judges:", error);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while fetching judges' };
+            }
+        }
+    };
+
+    export const updateJudge = async (judgeId, judgeData) => {
+        try {
+            const response = await axiosInstance.put(`/judges/${judgeId}`, judgeData);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error(`Error updating judge: ${error}`);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while updating the judge' };
+            }
+        }
+    };
+
+    export const deleteJudge = async (judgeId) => {
+        try {
+            const response = await axiosInstance.delete(`/judges/${judgeId}`);
+            return { success: true };
+        } catch (error) {
+            console.error(`Error deleting judge: ${error}`);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while deleting the judge' };
+            }
+        }
+    };
+    

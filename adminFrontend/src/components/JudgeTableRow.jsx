@@ -5,24 +5,25 @@ import NumberTableBlock from "./NumberTableBlock";
 import TextTableBlock from "./TextTableBlock";
 import DropdownTableBlock from "./DropDownTableBlock";
 
-const JudgeTableRow = ({ ID, GSAId, f_name, l_name, club, level, headJudge, role, onUpdate }) => {
+const JudgeTableRow = ({ ID, GSAId, f_name, l_name, club, level, headJudge, role, onUpdate, showTitle }) => {
 
   const handleGSAIDChange = (newGSAID) => {
+    console.log(newGSAID);
     const parsedGSAID = newGSAID === "" ? null : parseInt(newGSAID, 10);
     onUpdate({
-      GSAId: isNaN(parsedGSAID) ? null : parsedGSAID,
+      gsa_id: isNaN(parsedGSAID) ? null : parsedGSAID,
     });
   };
 
   const handleFirstNameChange = (newFirstName) => {
     onUpdate({
-      f_name: newFirstName,
+      first_name: newFirstName,
     });
   };
 
   const handleLastNameChange = (newLastName) => {
     onUpdate({
-      l_name: newLastName,
+      last_name: newLastName,
     });
   };
 
@@ -49,14 +50,14 @@ const JudgeTableRow = ({ ID, GSAId, f_name, l_name, club, level, headJudge, role
     // Convert the string value to a boolean
     const isHeadJudge = newHeadJudge === "True";
     onUpdate({
-      headJudge: isHeadJudge,
+      head_judge: isHeadJudge,
     });
   };
 
   return (
     <div className="flex shadow-md justify-start bg-anti-flash-white px-4 gap-2 py-2.5">
       {/* Conditional rendering based on ID */}
-      {ID === 1 ? (
+      {showTitle ? (
         <>
             <SmallTableBlock text={ID.toString()} title={"Judge ID"}/>
             <NumberTableBlock value={GSAId} onChange={handleGSAIDChange} title={"GSA ID"}/>

@@ -20,8 +20,8 @@ const JudgeInfoPage = () => {
     const parsedJudges = savedJudges ? JSON.parse(savedJudges).map(judge => ({
       ...judge,
       level: Number(judge.level),
-      GSAId: Number(judge.GSAId), // Ensure GSAId is a number
-    })) : [{ id: 1, GSAId: null, f_name: "", l_name: "", club: "", level: null, headJudge: false, role: "" }];
+      gsa_id: Number(judge.gsa_id), // Ensure GSAId is a number
+    })) : [{ id: 1, gsa_Id: null, first_name: "", last_name: "", club: "", level: null, head_judge: false, role: "" }];
 
     return parsedJudges;
   });
@@ -41,12 +41,12 @@ const JudgeInfoPage = () => {
 
     const newJudge = { 
       id: newId,
-      GSAId: null,
-      f_name: "",
-      l_name: "",
+      gsa_id: null,
+      first_name: "",
+      last_name: "",
       club: "",
       level: null,
-      headJudge: false,
+      head_judge: false,
       role: ""
     };
     setJudges(prevJudges => [...prevJudges, newJudge]);
@@ -66,7 +66,7 @@ const JudgeInfoPage = () => {
     const updatedJudges = judges.filter(judge => judge.id !== id);
     // Check if the list is empty, if so add the default judge back
     if (updatedJudges.length === 0) {
-      updatedJudges.push({ id: 1, GSAId: null, f_name: "", l_name: "", club: "", level: null, headJudge: false, role: "" });
+      updatedJudges.push({ id: 1, gsa_id: null, first_name: "", last_name: "", club: "", level: null, head_judge: false, role: "" });
     }
     setJudges(updatedJudges);
   };
@@ -93,21 +93,22 @@ const JudgeInfoPage = () => {
               <div className="flex flex-row gap-4">
 
                 <div className="w-[97%] flex flex-col gap-2">
-                  {judges.map(judge => {
-                    console.log(judge.headJudge);
+                  {judges.map((judge, index) => {
+                    console.log(judge.head_judge);
 
                       return (
                         <JudgeTableRow
                             key={judge.id}
                             ID={judge.id}
-                            GSAId={judge.GSAId}
-                            f_name={judge.f_name}
-                            l_name={judge.l_name}
+                            GSAId={judge.gsa_id}
+                            f_name={judge.first_name}
+                            l_name={judge.last_name}
                             club={judge.club}
                             level={judge.level}
-                            headJudge={judge.headJudge}
+                            headJudge={judge.head_judge}
                             role={judge.role}
                             onUpdate={(updatedFields) => handleUpdateJudge(judge.id, updatedFields)}
+                            showTitle={index===0}
                         />
                       );
                     })}
@@ -115,12 +116,12 @@ const JudgeInfoPage = () => {
 
                 {/* XIcons for each group */}
                 <div className="flex flex-col items-start">
-                {judges.map(judge => (
+                {judges.map((judge, index) => (
                     <div
-                      className={`flex justify-end ${judge.id === 1 ? 'pt-[60px] pb-[51px]' : 'py-[19px]'}`} 
+                      className={`flex justify-end ${index === 0 ? 'pt-[60px] pb-[54px]' : 'py-[23px]'}`} 
                       key={judge.id}
                     >
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveJudge(judge.id)} isVisible={judge.id!==1}/>
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveJudge(judge.id)} isVisible={index!==0}/>
                     </div>
                   ))}
                 </div>

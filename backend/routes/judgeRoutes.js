@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllJudges, findJudge, createJudge, updateJudge, deleteJudge, findJudgeGsa } from '../controllers/judgeController.js';
+import { getAllJudges, findJudge, createJudge, updateJudge, deleteJudge, findJudgeGsa, getJudgesByCompetition } from '../controllers/judgeController.js';
 
 const router = express.Router();
 
@@ -8,6 +8,8 @@ router.get('/', getAllJudges);
 router.get('/id/:id', findJudge);
 
 router.get('/gsa/:gsa_id', findJudgeGsa);
+
+router.get('/competition/:competitionId', getJudgesByCompetition);
 
 router.post('/', createJudge);
 

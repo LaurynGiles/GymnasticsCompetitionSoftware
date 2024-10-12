@@ -31,6 +31,8 @@ const GymnastTableRow = ({ ID, GSAId, f_name, l_name, club, district, level, dat
   }, [age_options]); // Run again if options prop changes
 
   const handleGSAIDChange = (newGSAID) => {
+    console.log(newGSAID);
+    
     const parsedGSAID = newGSAID === "" ? null : parseInt(newGSAID, 10);
     onUpdate({
       gsa_id: isNaN(parsedGSAID) ? null : parsedGSAID,

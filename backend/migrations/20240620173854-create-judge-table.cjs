@@ -10,6 +10,16 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
+      competition_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Competition',
+          key: 'competition_id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
       gsa_id: {
         type: Sequelize.STRING(20),
         allowNull: false,

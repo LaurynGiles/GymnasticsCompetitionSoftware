@@ -34,7 +34,7 @@ function App() {
           <Route path="/finalResults" element={<FinalResultsPage/>} />
 
           <Route path="/gymnastData" element={<GymnastDataPage/>} />
-          {/* <Route path="/judgeData" element={<JudgeDataPage/>} /> */}
+          <Route path="/judgeData" element={<JudgeDataPage/>} />
 
         </Routes>
       </Router>

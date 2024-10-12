@@ -31,20 +31,20 @@ const GymnastInfoPage = () => {
     const gymnasts = savedGymnasts ? JSON.parse(savedGymnasts).map(gymnast => ({
       ...gymnast,
       level: Number(gymnast.level),
-      GSAId: Number(gymnast.GSAId),
+      gsa_id: Number(gymnast.gsa_id),
     })) : [];
     return gymnasts.length === 0
       ? [{
           id: 1,
-          GSAId: null,
-          f_name: "",
-          l_name: "",
+          gsa_id: null,
+          first_name: "",
+          last_name: "",
           club: "",
           district: "",
           level: null,
-          dateOfBirth: null,
-          ageGroup: "",
-          gymnastGroup: null,
+          date_of_birth: null,
+          age: "",
+          group_id: null,
         }]
       : gymnasts;
   });
@@ -82,15 +82,15 @@ const GymnastInfoPage = () => {
 
     const newGymnast = { 
       id: newId,
-      GSAId: null,
-      f_name: "",
-      l_name: "",
+      gsa_id: null,
+      first_name: "",
+      last_name: "",
       club: "",
       district: "",
       level: null,
-      dateOfBirth: null,
-      ageGroup: "",
-      gymnastGroup: null
+      date_of_birth: null,
+      age: "",
+      group_id: null
     };
     setGymnasts(prevGymnasts => [...prevGymnasts, newGymnast]);
   };
@@ -124,15 +124,15 @@ const GymnastInfoPage = () => {
     if (updatedGymnasts.length === 0) {
       updatedGymnasts = [{
         id: 1,
-        GSAId: null,
-        f_name: "",
-        l_name: "",
+        gsa_id: null,
+        first_name: "",
+        last_name: "",
         club: "",
         district: "",
         level: null,
-        dateOfBirth: null,
-        ageGroup: "",
-        gymnastGroup: null,
+        date_of_birth: null,
+        age: "",
+        group_id: null,
       }];
     } else {
       updatedGymnasts = updatedGymnasts.map((gymnast, index) => ({ ...gymnast, id: index + 1 }));
@@ -166,9 +166,9 @@ const GymnastInfoPage = () => {
 
               <div className={`flex flex-col items-center justify-center gap-4 bg-white p-5 rounded-lg ${isNavVisible ? 'w-full' : 'w-[80%]'}`}>
 
-                <div className="w-full ml-4 flex items-center justify-center flex-row gap-1">
+                <div className="w-full ml-4 flex items-center justify-center flex-row gap-4">
                   <div className="w-full flex flex-col gap-2">
-                    {localGroups.map(group => {
+                    {localGroups.map((group, index) => {
                         const timeslot = getTimeslotDetails(group.timeslotId);
                         const timeslotValid = Boolean(timeslot); 
                         return (
@@ -184,14 +184,15 @@ const GymnastInfoPage = () => {
                             selectedNumSessions={group.selectedNumSessions}
                             onUpdate={(updatedFields) => handleUpdateGroup(group.id, updatedFields)}
                             error={!timeslotValid}
+                            showTitle={index===0}
                           />
                         );
                       })}
                   </div>
                   <div className="flex flex-col items-start">
-                    {localGroups.map(group => (
-                      <div className={`flex justify-end ${group.id === 1 ? 'pt-[60px] pb-[67px]' : 'py-[20px]'}`} key={group.id}>
-                        <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} isVisible={group.id !== 1} />
+                    {localGroups.map((group, index) => (
+                      <div className={`flex justify-end ${index === 0 ? 'pt-[60px] pb-[75px]' : 'py-[23px]'}`} key={group.id}>
+                        <XIcon className="cursor-pointer" onClick={() => handleRemoveGroup(group.id)} isVisible={index !== 0} />
                       </div>
                     ))}
                   </div>
@@ -208,13 +209,13 @@ const GymnastInfoPage = () => {
             <ConfigHeader text="Gymnasts" />
 
 
-            <div className={`flex flex-col bg-white p-5 rounded-lg `}>
+            <div className={`flex flex-col bg-white p-5 rounded-lg gap-4 `}>
               
               <div className="flex flex-row gap-4">
 
                 <div className="w-[97%] flex flex-col gap-2">
-                  {gymnasts.map(gymnast => {
-                    const group = getGroupDetails(gymnast.gymnastGroup);
+                  {gymnasts.map((gymnast, index) => {
+                    const group = getGroupDetails(gymnast.group_id);
                     const groupValid = Boolean(group); 
                       return (
                         <GymnastTableRow
@@ -231,6 +232,7 @@ const GymnastInfoPage = () => {
                           gymnastGroup={gymnast.group_id}
                           onUpdate={(updatedFields) => handleUpdateGymnast(gymnast.id, updatedFields)}
                           groupError={!groupValid}
+                          showTitle={index===0}
                         />
                       );
                     })}
@@ -238,9 +240,9 @@ const GymnastInfoPage = () => {
 
                 {/* XIcons for each group */}
                 <div className="flex flex-col items-start">
-                  {gymnasts.map(gymnast => (
-                    <div className={`flex justify-end ${gymnast.id === 0 ? 'pt-[88px] pb-[51px]' : 'py-[19px]'}`} key={gymnast.id}>
-                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} isVisible={gymnast.id !== 0} />
+                  {gymnasts.map((gymnast, index) => (
+                    <div className={`flex justify-end ${index === 0 ? 'pt-[88px] pb-[55px]' : 'py-[23px]'}`} key={gymnast.id}>
+                      <XIcon className="cursor-pointer" onClick={() => handleRemoveGymnast(gymnast.id)} isVisible={index !== 0} />
                     </div>
                   ))}
                 </div>
