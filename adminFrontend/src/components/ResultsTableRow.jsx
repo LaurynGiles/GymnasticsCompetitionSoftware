@@ -27,8 +27,8 @@ const ResultsTableRow = ({ gymnast_id, apparatus_name, gymnast_name, difficulty,
             <SmallTableBlock text={gymnast_id.toString()} title={"Gymnast number"}/>
             <LargeTableBlock text={gymnast_name} title={"Gymnast name"} />
             <LargeTableBlock text={apparatus_name} title={"Apparatus"} />
-            <LargeTableBlock text={formatScore(difficulty)} title={"Difficulty score"} />
-            <LargeTableBlock text={formatScore(averageExecutionScore)} title={"Execution score"} />
+            <LargeTableBlock text={formatScore(difficulty)} title={"Difficulty"} />
+            <LargeTableBlock text={formatScore(averageExecutionScore)} title={"Execution"} />
             <LargeTableBlock text={formatScore(penalty)} title={"Penalty"} />
             <LargeTableBlock text={formatScore(finalScore)} title={"Final Score"} /> {/* New block for final score */}
           </>

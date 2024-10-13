@@ -17,6 +17,8 @@ const JudgeDataPage = () => {
   const [judges, setJudges] = useState([]);
   const [shouldRefetch, setShouldRefetch] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [judgeToDelete, setJudgeToDelete] = useState(() => {
     const storedJudgeToDelete = localStorage.getItem("judgeToDelete");
@@ -45,7 +47,9 @@ const JudgeDataPage = () => {
             if (response.success) {
                 setJudges(response.data);
             } else {
-                console.error("Error fetching judges:", response.message);
+              setErrorMessage("Error fetching judges.")
+              setShowErrorMessage(true);
+              console.error("Error fetching judges:", response.message);
             }
         }
     };
@@ -82,6 +86,8 @@ const JudgeDataPage = () => {
   
       // Validate required fields
       if (!gsa_id || !competition_id || !first_name || !last_name || !club || !level || role === null) {
+        setErrorMessage("Invalid judge data. All fields must be filled.")
+        setShowErrorMessage(true);
         console.error("Invalid judge data. All fields must be filled.");
         return; // Exit if validation fails
       }
@@ -89,10 +95,14 @@ const JudgeDataPage = () => {
       const response = await createJudge(newJudge);
       if (response.success) {
         console.log("Judge created successfully:", response.data);
+        setErrorMessage("Judge created successfully.")
+        setShowErrorMessage(true);
         setNewJudge(null); // Reset the newJudge state
         localStorage.removeItem("newJudge"); // Clear from local storage
         setShouldRefetch(true); // Trigger refetch of judges
       } else {
+        setErrorMessage("An error occurred, failed to create judge.");
+        setShowErrorMessage(true);
         console.error("Failed to create judge:", response.message);
       }
     }
@@ -127,7 +137,8 @@ const JudgeDataPage = () => {
         const { gsa_id, first_name, last_name, club, level, head_judge, role } = updatedJudge;
 
         if (!gsa_id || !first_name || !last_name || !club || !level || role === null) {
-          console.log()
+          setErrorMessage("Invalid judge data. All fields must be filled.")
+          setShowErrorMessage(true);
           console.error("Invalid judge data. All fields must be filled.");
           return; // Exit if validation fails
         }
@@ -135,6 +146,8 @@ const JudgeDataPage = () => {
       const response = await updateJudge(judgeId, updatedJudge);
   
       if (response.success) {
+        setErrorMessage("Judge updated successfully.")
+        setShowErrorMessage(true);
         console.log('Judge updated successfully:', response.data);
   
         setUpdatedJudges(prev => {
@@ -147,10 +160,14 @@ const JudgeDataPage = () => {
         setShouldRefetch(true);
   
       } else {
+        setErrorMessage("An error occurred, failed to update judge.");
+        setShowErrorMessage(true);
         console.error('Failed to update judge:', response.message);
         // Here you can show an error message to the user if needed
       }
     } else {
+      setErrorMessage("An error occurred, failed to create judge. Invalid judge ID.");
+      setShowErrorMessage(true);
       console.error('No updated judge found for ID:', judgeId);
     }
   };
@@ -158,6 +175,8 @@ const JudgeDataPage = () => {
   const handleRemoveJudge = async (id) => {
 
     if (!id) {
+      setErrorMessage("An error occurred, failed to delete judge. Invalid judge ID.");
+      setShowErrorMessage(true);
       console.error("Invalid judge ID. Cannot delete.");
       return; // Exit if the ID is invalid
     }
@@ -166,15 +185,21 @@ const JudgeDataPage = () => {
       const response = await deleteJudge(id); // Call your delete function from the API
       if (response.success) {
         setJudges(prevJudges => prevJudges.filter(judge => judge.judge_id !== id));
+        setErrorMessage("Judge deleted successfully.")
+        setShowErrorMessage(true);
         console.log("Judge removed successfully");
         // Optionally show a success message
   
         setShouldRefetch(true);
       } else {
         console.error("Error deleting judge:", response.message);
+        setErrorMessage("An error occurred, failed to delete judge.");
+        setShowErrorMessage(true);
         // Show an error message if needed
       }
     } catch (error) {
+      setErrorMessage("An error occurred, failed to delete judge.");
+      setShowErrorMessage(true);
       console.error("Error occurred while deleting judge:", error);
       // Handle any additional error reporting
     }
@@ -294,6 +319,12 @@ const JudgeDataPage = () => {
           onNo={() => setShowPopup(false)} // Just hide the popup on "No"
         />
     )}
+    {showErrorMessage && (
+        <Popup
+            message={errorMessage}
+            onClose={() => setShowErrorMessage(false)} // Just hide the popup on "No"
+          />
+      )}
       
     </div>
 

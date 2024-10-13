@@ -14,6 +14,7 @@ import ResultsTableRow from "../components/ResultsTableRow.jsx";
 import { getFinalResults } from "../utils/api.js";
 import Header from "../components/Header.jsx";
 import LargeHeader from "../components/LargeHeader.jsx";
+import JudgeScoreTableRow from "../components/JudgeScoreTableRow.jsx"
 
 const ResultsPage = () => {
 
@@ -122,16 +123,24 @@ const ResultsPage = () => {
                                 return (
                                   <div className="flex flex-col gap-2" key={apparatusName}>
                                     {sortedResults.map((result, index) => (
-                                      <ResultsTableRow 
-                                        key={index}
-                                        gymnast_id={result.gymnast_id}
-                                        gymnast_name={result.gymnast_name}
-                                        apparatus_name={result.apparatus_name}
-                                        difficulty={result.difficulty}
-                                        execution={result.execution}
-                                        penalty={result.penalty}
-                                        isFirstRow={index === 0}
-                                      />
+                                      <div key={result.gymnast_id}>
+                                        <ResultsTableRow 
+                                          key={index}
+                                          gymnast_id={result.gymnast_id}
+                                          gymnast_name={result.gymnast_name}
+                                          apparatus_name={result.apparatus_name}
+                                          difficulty={result.difficulty}
+                                          execution={result.execution}
+                                          penalty={result.penalty}
+                                          isFirstRow={index === 0}
+                                        />
+                                        <JudgeScoreTableRow 
+                                          key={index}
+                                          gymnast_id={result.gymnast_id}
+                                          executions={result.execution}
+                                          judges={result.judges}
+                                        />
+                                      </div>
                                     ))}
                                   </div>
                                 );

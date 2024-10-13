@@ -14,6 +14,7 @@ import FinalResultsTableRow from "../components/FinalResultsTableRow.jsx";
 import { getFinalResults } from "../utils/api.js";
 import Header from "../components/Header.jsx";
 import LargeHeader from "../components/LargeHeader.jsx";
+import EditIcon from "../components/EditIcon.jsx";
 
 const FinalResultsPage = () => {
 
@@ -112,8 +113,8 @@ const FinalResultsPage = () => {
                   <div className="flex flex-row gap-10">
                     <div className="flex flex-col w-full gap-20">
 
-                    {/* Step 2: Map over grouped results */}
-                    {Object.keys(groupedResults).map((sessionId) => (
+                      {/* Step 2: Map over grouped results */}
+                      {Object.keys(groupedResults).map((sessionId) => (
                         <div className="flex flex-col gap-6" key={sessionId}>
                           <LargeHeader text={`Competition ${sessionId}`} />
 
@@ -122,20 +123,36 @@ const FinalResultsPage = () => {
                             <div className="flex flex-col gap-2" key={levelAgeGroupKey}>
                               <Header text={`Level ${levelAgeGroupKey.replace("-", ": ")} yrs`} /> {/* Display Level and Age Group Header */}
                               
-                              {/* Sort the gymnasts by total final score in descending order */}
-                              {Object.entries(groupedResults[sessionId][levelAgeGroupKey])
-                                .sort(([, a], [, b]) => b.totalFinalScore - a.totalFinalScore) // Sort by totalFinalScore in descending order
-                                .map(([gymnastId, gymnastData], index) => (
-                                  <div className="flex flex-col gap-2" key={gymnastId}>
-                                    <FinalResultsTableRow 
-                                      gymnast_id={gymnastId}
-                                      gymnast_name={gymnastData.gymnast_name}
-                                      apparatus_list={gymnastData.apparatusScores} // Pass apparatus scores
-                                      final_score={gymnastData.totalFinalScore} // Pass total final score
-                                      isFirstRow={index==0} // Set to true only for the first row of the gymnast
-                                    />
-                                  </div>
-                                ))}
+                              {/* Container for Results and Edit Icons */}
+                              <div className="flex flex-row gap-4">
+                                {/* Column for Final Results */}
+                                <div className="flex flex-col gap-2 w-full">
+                                  {/* Sort the gymnasts by total final score in descending order */}
+                                  {Object.entries(groupedResults[sessionId][levelAgeGroupKey])
+                                    .sort(([, a], [, b]) => b.totalFinalScore - a.totalFinalScore) // Sort by totalFinalScore in descending order
+                                    .map(([gymnastId, gymnastData], index) => (
+                                      <FinalResultsTableRow 
+                                        key={gymnastId}
+                                        gymnast_id={gymnastId}
+                                        gymnast_name={gymnastData.gymnast_name}
+                                        apparatus_list={gymnastData.apparatusScores} // Pass apparatus scores
+                                        final_score={gymnastData.totalFinalScore} // Pass total final score
+                                        isFirstRow={index === 0} // Set to true only for the first row of the gymnast
+                                      />
+                                    ))}
+                                </div>
+
+                                {/* Column for Edit Icons */}
+                                {/* <div className="flex flex-col gap-2">
+                                  {Object.entries(groupedResults[sessionId][levelAgeGroupKey])
+                                    .sort(([, a], [, b]) => b.totalFinalScore - a.totalFinalScore) // Sort by totalFinalScore in descending order
+                                    .map(([gymnastId, gymnastData], index) => (
+                                      <div className={`flex justify-end ${index === 0 ? 'pt-[84px] py-[17px]' : 'py-[17px]'}`} key={gymnastId}>
+                                        <EditIcon />
+                                      </div>
+                                    ))}
+                                </div> */}
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -144,6 +161,8 @@ const FinalResultsPage = () => {
                     </div>
                   </div>
                 </div>
+
+
               </div>
             </div>
           </div>

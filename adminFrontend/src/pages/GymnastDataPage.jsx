@@ -17,6 +17,7 @@ import GroupTableData from "../components/GroupTableData.jsx";
 import NavigationBarResults from "../components/NavigationBarResults.jsx";
 import TickIcon from "../components/TickIcon.jsx";
 import DeletePopup from "../components/DeletePopup.jsx";
+import Popup from "../components/Popup.jsx";
 
 const GymnastDataPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -26,6 +27,8 @@ const GymnastDataPage = () => {
   const [ageGroups, setAgeGroups] = useState([]);
   const [shouldRefetch, setShouldRefetch] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [gymnastToDelete, setGymnastToDelete] = useState(() => {
     // Initialize newGymnast from local storage if available
@@ -62,6 +65,8 @@ const GymnastDataPage = () => {
         if (response.success) {
           setLocalGroups(response.data);
         } else {
+          setErrorMessage("Error fetching gymnast groups.")
+          setShowErrorMessage(true);
           console.error("Error fetching gymnast groups:", response.message);
         }
       }
@@ -82,6 +87,8 @@ const GymnastDataPage = () => {
         if (response.success) {
           allGymnasts.push(...response.data); // Add gymnasts for this group to the array
         } else {
+          setErrorMessage("Error fetching gymnasts.")
+          setShowErrorMessage(true);
           console.error("Error fetching gymnasts for group:", response.message);
         }
       }
@@ -125,6 +132,8 @@ const GymnastDataPage = () => {
   
       // Validate required fields
       if (!gsa_id || !first_name || !last_name || !club || !district || !date_of_birth || !age || group_id === null) {
+        setErrorMessage("Invalid gymnast data. All fields must be filled.")
+        setShowErrorMessage(true);
         console.error("Invalid gymnast data. All fields must be filled.");
         return; // Exit if validation fails
       }
@@ -132,10 +141,15 @@ const GymnastDataPage = () => {
       const response = await createGymnast(newGymnast);
       if (response.success) {
         console.log("Gymnast created successfully:", response.data);
+        setErrorMessage("Gymnast created successfully.")
+        setShowErrorMessage(true);
+
         setNewGymnast(null); // Reset the newGymnast state
         localStorage.removeItem("newGymnast"); // Clear from local storage
         setShouldRefetch(true); // Trigger refetch of gymnasts
       } else {
+        setErrorMessage("An error occurred, failed to create gymnast.");
+        setShowErrorMessage(true);
         console.error("Failed to create gymnast:", response.message);
       }
     }
@@ -177,6 +191,8 @@ const GymnastDataPage = () => {
   
       // Validate required fields
       if (!gsa_id || !first_name || !last_name || !club || !district || !date_of_birth || !age || group_id === null) {
+        setErrorMessage("Invalid gymnast data. All fields must be filled.")
+        setShowErrorMessage(true);
         console.error("Invalid gymnast data. All fields must be filled.");
         return; // Exit if validation fails
       }
@@ -184,6 +200,8 @@ const GymnastDataPage = () => {
       const response = await updateGymnast(gymnastId, updatedGymnast);
   
       if (response.success) {
+        setErrorMessage("Gymnast updated successfully.")
+        setShowErrorMessage(true);
         console.log('Gymnast updated successfully:', response.data);
   
         // Remove the updated gymnast from the updatedGymnasts list
@@ -197,10 +215,14 @@ const GymnastDataPage = () => {
         setShouldRefetch(true);
   
       } else {
+        setErrorMessage("An error occurred, failed to update gymnast.");
+        setShowErrorMessage(true);
         console.error('Failed to update gymnast:', response.message);
         // Here you can show an error message to the user if needed
       }
     } else {
+      setErrorMessage("An error occurred, failed to update gymnast. Invalid gymnast ID.");
+      setShowErrorMessage(true);
       console.error('No updated gymnast found for ID:', gymnastId);
     }
   };
@@ -208,6 +230,8 @@ const GymnastDataPage = () => {
   const handleRemoveGymnast = async (id) => {
 
     if (!id) {
+      setErrorMessage("An error occurred, failed to delete gymnast. Invalid gymnast ID.");
+      setShowErrorMessage(true);
       console.error("Invalid gymnast ID. Cannot delete.");
       return; // Exit if the ID is invalid
     }
@@ -217,15 +241,22 @@ const GymnastDataPage = () => {
       if (response.success) {
         // Update local state to remove the gymnast
         setGymnasts(prevGymnasts => prevGymnasts.filter(gymnast => gymnast.gymnast_id !== id));
+        setErrorMessage("Gymnast deleted successfully.");
+        setShowErrorMessage(true);
+
         console.log("Gymnast removed successfully");
         // Optionally show a success message
   
         setShouldRefetch(true);
       } else {
+        setErrorMessage("An error occurred, failed to delete gymnast.");
+        setShowErrorMessage(true);
         console.error("Error deleting gymnast:", response.message);
         // Show an error message if needed
       }
     } catch (error) {
+      setErrorMessage("An error occurred, failed to delete gymnast.");
+      setShowErrorMessage(true);
       console.error("Error occurred while deleting gymnast:", error);
       // Handle any additional error reporting
     }
@@ -408,16 +439,22 @@ const GymnastDataPage = () => {
        
       </div>
 
-    {showPopup && (
-      <DeletePopup
-          message="Are you sure you want to delete this gymnast?"
-          onYes={async () => {
-            handleRemoveGymnast(gymnastToDelete);
-            setShowPopup(false); // Hide the popup after deletion
-          }}
-          onNo={() => setShowPopup(false)} // Just hide the popup on "No"
-        />
-    )}
+      {showPopup && (
+        <DeletePopup
+            message="Are you sure you want to delete this gymnast?"
+            onYes={async () => {
+              handleRemoveGymnast(gymnastToDelete);
+              setShowPopup(false); // Hide the popup after deletion
+            }}
+            onNo={() => setShowPopup(false)} // Just hide the popup on "No"
+          />
+      )}
+      {showErrorMessage && (
+        <Popup
+            message={errorMessage}
+            onClose={() => setShowErrorMessage(false)} // Just hide the popup on "No"
+          />
+      )}
       
     </div>
 
