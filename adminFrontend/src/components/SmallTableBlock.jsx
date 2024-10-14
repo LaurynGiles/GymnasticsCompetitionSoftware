@@ -18,7 +18,6 @@ const SmallTableBlock = ({ text, title }) => {
 };
 
 SmallTableBlock.propTypes = {
-  text: PropTypes.string.isRequired, // Make text required
   title: PropTypes.string, // Title is optional
 };
 

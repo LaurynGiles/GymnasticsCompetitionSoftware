@@ -66,10 +66,13 @@ export async function getFinalResults(req, res, next) {
 
               const executionScores = executionResults.map(execution => execution.execution_score);
               const judgeIds = executionResults.map(execution => execution.judge_id);
+              // const difficultyJudge = difficultyResults.judge_id;
+              // console.log(difficultyJudge);
 
               const finalResult = {
                 session_id: session.session_id,
                 timeslot_id: timeslot.time_slot_id,
+                event_id: event.event_id,
                 date: timeslot.date,
                 report_time: timeslot.report_time,
                 competition_time: timeslot.competition_time,
@@ -85,6 +88,7 @@ export async function getFinalResults(req, res, next) {
                 execution: executionScores,
                 judges: judgeIds,
                 penalty: difficultyResults ? difficultyResults.penalty_score : 0,
+                difficulty_judge: difficultyResults ? difficultyResults.judge_id : null,
               };
 
               finalResults.push(finalResult);

@@ -3,7 +3,7 @@ import React from "react";
 import SmallTableBlock from "./SmallTableBlock";
 import LargeTableBlock from "./LargeTableBlock";
 
-const ResultsTableRow = ({ gymnast_id, judges, executions }) => {
+const JudgeScoreTableRow = ({ judges, executions }) => {
   return (
     <div className="flex shadow-md justify-center bg-bright-white gap-2 pt-2">
 
@@ -19,10 +19,9 @@ const ResultsTableRow = ({ gymnast_id, judges, executions }) => {
   );
 };
 
-ResultsTableRow.propTypes = {
-  gymnast_id: PropTypes.number.isRequired, // Gymnast ID
+JudgeScoreTableRow.propTypes = {
   judges: PropTypes.array.isRequired, // Array of judge IDs
   executions: PropTypes.array.isRequired, // Array of execution deductions
 };
 
-export default ResultsTableRow;
+export default JudgeScoreTableRow;

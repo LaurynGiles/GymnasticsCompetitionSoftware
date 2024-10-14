@@ -304,4 +304,38 @@ export const getFinalResults = async (competitionId) => {
             }
         }
     };
+
+    export const updateDifficulty = async (eventId, gymnastId, judgeId, updatedData) => {
+        try {
+            // Make PUT request to the backend to update the difficulty and penalty scores
+            const response = await axiosInstance.put(`/difficulties/${eventId}/${gymnastId}/${judgeId}`, updatedData);
+            
+            return { success: true, data: response.data }; // Return the updated Difficulty record
+        } catch (error) {
+            console.error("Error updating Difficulty:", error);
+            
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while updating Difficulty' };
+            }
+        }
+    };
+
+    export const updateExecution = async (eventId, gymnastId, judgeId, updatedData) => {
+        try {
+            // Make PUT request to the backend to update the execution score
+            const response = await axiosInstance.put(`/executions/${eventId}/${gymnastId}/${judgeId}`, updatedData);
+            
+            return { success: true, data: response.data }; // Return the updated Execution record
+        } catch (error) {
+            console.error("Error updating Execution:", error);
+            
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while updating Execution' };
+            }
+        }
+    };
     
