@@ -3,7 +3,7 @@ import React from "react";
 import SmallTableBlock from "./SmallTableBlock";
 import LargeTableBlock from "./LargeTableBlock";
 
-const ResultsTableRow = ({ gymnast_id, apparatus_name, gymnast_name, difficulty, execution, penalty, isFirstRow }) => {
+const ResultsTableRow = ({ gymnast_id, apparatus_name, gymnast_name, difficulty, execution, penalty, onClick, isFirstRow }) => {
 
   const averageExecutionScore = Array.isArray(execution) && execution.length > 0 
     ? execution.reduce((total, score) => total + score, 0) / execution.length 
@@ -20,7 +20,8 @@ const ResultsTableRow = ({ gymnast_id, apparatus_name, gymnast_name, difficulty,
   };
 
   return (
-      <div className="flex shadow-md justify-start bg-anti-flash-white gap-6 p-2">
+      <div className="flex shadow-md hover:shadow-lg hover:cursor-pointer justify-start bg-anti-flash-white gap-6 p-2"
+        onClick={onClick}>
         {/* Conditional rendering based on ID */}
         {isFirstRow ? (
           <>

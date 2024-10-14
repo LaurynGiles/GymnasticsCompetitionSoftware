@@ -5,7 +5,7 @@ import LargeTableBlock from "./LargeTableBlock";
 
 const ResultsTableRow = ({ gymnast_id, judges, executions }) => {
   return (
-    <div className="flex shadow-md justify-center bg-anti-flash-white gap-6 p-2">
+    <div className="flex shadow-md justify-center bg-bright-white gap-2 pt-2">
 
       {/* Mapping judges and executions */}
       {judges.map((judgeId, index) => (
