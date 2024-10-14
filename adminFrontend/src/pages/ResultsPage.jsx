@@ -111,7 +111,7 @@ const ResultsPage = () => {
 
       setClickedRows(prev => ({
         ...prev,
-        [key]: !prev[key] // Toggle the clicked state for the specific gymnastId-apparatusName key
+        [key]: true // Toggle the clicked state for the specific gymnastId-apparatusName key
       }));
     
     setEditRows((prev) => {
@@ -240,9 +240,10 @@ const ResultsPage = () => {
 
         const key = `${gymnast_id}-${apparatus_name}`;
 
+        console.log(key);
         setClickedRows(prev => ({
           ...prev,
-          [key]: !prev[key] // Toggle the clicked state for the specific gymnastId-apparatusName key
+          [key]: false // Toggle the clicked state for the specific gymnastId-apparatusName key
         }));
   
       } else {
