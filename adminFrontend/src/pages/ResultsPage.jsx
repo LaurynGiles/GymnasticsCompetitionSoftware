@@ -19,6 +19,7 @@ import EditIcon from "../components/EditIcon.jsx";
 import ResultsEditTableRow from "../components/ResultsEditTableRow.jsx";
 import TickIcon from "../components/TickIcon.jsx";
 import JudgeEditTableRow from "../components/JudgeEditTableRow.jsx";
+import Popup from "../components/Popup.jsx";
 
 const ResultsPage = () => {
 
@@ -27,6 +28,9 @@ const ResultsPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [clickedRows, setClickedRows] = useState({});
   const [reloadPage, setReloadPage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [editRows, setEditRows] = useState(() => {
     // Load the edited rows from localStorage
     const storedEditRows = localStorage.getItem("editedResult");
@@ -49,12 +53,14 @@ const ResultsPage = () => {
       const results = await getFinalResults(competitionInfo.competition_id);
       console.log('Fetched Results:', results.data); // Check the output here
     
-      if (Array.isArray(results.data)) {
+      if (results.success) {
         setFinalResults(results.data);
         localStorage.setItem('finalResults', JSON.stringify(results.data));
         // setClickedRows(new Array(results.data.length).fill(false));
       } else {
-        console.error('Fetched results are not an array:', results.data);
+        setErrorMessage("Error fetching results.")
+        setShowErrorMessage(true);
+        console.error('Error fetching results:', results.data);
       }
     };
 
@@ -164,6 +170,8 @@ const ResultsPage = () => {
   
     // If the result for the key doesn't exist, exit the function
     if (!result) {
+      setErrorMessage("Error finding updated rows.")
+      setShowErrorMessage(true);
       console.error('No edited result found for the provided key:', key);
       return;
     }
@@ -172,6 +180,8 @@ const ResultsPage = () => {
     const {
       event_id, gymnast_id, apparatus_name, difficulty_judge: judge_id, difficulty, penalty, execution, judges
     } = result;
+
+    console.log(difficulty, penalty);
   
     // Parse difficulty and penalty in case they are strings
     const parsedDifficulty = typeof difficulty === 'string' ? parseFloat(difficulty) : difficulty;
@@ -179,6 +189,8 @@ const ResultsPage = () => {
   
     // Ensure that the parsed values are numbers before proceeding
     if (isNaN(parsedDifficulty) || isNaN(parsedPenalty)) {
+      setErrorMessage("Invalid input: Difficulty and penalty scores must be valid numbers.")
+      setShowErrorMessage(true);
       console.error('Invalid input: Difficulty and penalty scores must be valid numbers.');
       return;
     }
@@ -213,17 +225,27 @@ const ResultsPage = () => {
                 const executionResponse = await updateExecution(event_id, gymnast_id, judgeId, executionData);
   
                 if (executionResponse.success) {
+                  setErrorMessage("The final results were updated successfully.")
+                  setShowErrorMessage(true);
                   console.log(`Execution score updated successfully for Judge ${judgeId}:`, executionResponse.data);
                 } else {
+                  setErrorMessage(`Error updating execution score for Judge ${judgeId}.`);
+                  setShowErrorMessage(true);
                   console.error(`Error updating execution score for Judge ${judgeId}:`, executionResponse.message);
                 }
               } catch (error) {
+                setErrorMessage(`Error updating execution score for Judge ${judgeId}.`);
+                setShowErrorMessage(true);
                 console.error(`An error occurred while updating execution score for Judge ${judgeId}:`, error);
               }
             } else {
+              setErrorMessage(`Error updating execution score for Judge ${judgeId}.`);
+              setShowErrorMessage(true);
               console.error(`Invalid execution score for Judge ${judgeId}: ${execution[i]}`);
             }
           } else {
+            setErrorMessage(`Error updating execution score. Invalid judge ID.`);
+            setShowErrorMessage(true);
             console.error(`Invalid judge ID: Judge ID cannot be null for execution score update`);
           }
         }
@@ -247,9 +269,13 @@ const ResultsPage = () => {
         }));
   
       } else {
+        setErrorMessage(`Error updating difficulty score.`);
+        setShowErrorMessage(true);
         console.error('Error updating difficulty:', response.message);
       }
     } catch (error) {
+      setErrorMessage(`An error occurred while updating the difficulty score.`);
+      setShowErrorMessage(true);
       console.error('An error occurred while updating the difficulty score:', error);
     }
   };
@@ -399,6 +425,12 @@ const ResultsPage = () => {
           </div>
         </div>
       </div>
+      {showErrorMessage && (
+        <Popup
+            message={errorMessage}
+            onClose={() => setShowErrorMessage(false)} // Just hide the popup on "No"
+          />
+      )}
     </div>
   );
 };

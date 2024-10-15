@@ -21,7 +21,9 @@ const FinalResultsPage = () => {
   const { competitionInfo, setCompetitionInfo } = useNotifications();
   const [finalResults, setFinalResults] = useState([]);
   const [isNavVisible, setIsNavVisible] = useState(true);
-  const navigate = useNavigate();
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
 
   useEffect(() => {
     const storedCompetition = JSON.parse(localStorage.getItem('currentCompetition')) || {};
@@ -43,6 +45,8 @@ const FinalResultsPage = () => {
         setFinalResults(results.data);
         localStorage.setItem('finalResults', JSON.stringify(results.data));
       } else {
+        setErrorMessage("Error fetching results.")
+        setShowErrorMessage(true);
         console.error('Fetched results are not an array:', results.data);
       }
     };
@@ -141,23 +145,11 @@ const FinalResultsPage = () => {
                                       />
                                     ))}
                                 </div>
-
-                                {/* Column for Edit Icons */}
-                                {/* <div className="flex flex-col gap-2">
-                                  {Object.entries(groupedResults[sessionId][levelAgeGroupKey])
-                                    .sort(([, a], [, b]) => b.totalFinalScore - a.totalFinalScore) // Sort by totalFinalScore in descending order
-                                    .map(([gymnastId, gymnastData], index) => (
-                                      <div className={`flex justify-end ${index === 0 ? 'pt-[84px] py-[17px]' : 'py-[17px]'}`} key={gymnastId}>
-                                        <EditIcon />
-                                      </div>
-                                    ))}
-                                </div> */}
                               </div>
                             </div>
                           ))}
                         </div>
                       ))}
-                      
                     </div>
                   </div>
                 </div>
@@ -168,6 +160,12 @@ const FinalResultsPage = () => {
           </div>
         </div>
       </div>
+      {showErrorMessage && (
+        <Popup
+            message={errorMessage}
+            onClose={() => setShowErrorMessage(false)} // Just hide the popup on "No"
+          />
+      )}
     </div>
   );
 };
