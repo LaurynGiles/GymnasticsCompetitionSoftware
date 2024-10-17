@@ -453,9 +453,9 @@ const ConfigPage = () => {
             </div>
           </div>
         
-          <div className="flex justify-center items-center p-5 bg-bright-white">
+          {/* <div className="flex justify-center items-center p-5 bg-bright-white">
           <StartButton onClick={handleContinue} title={"Continue"}/>
-          </div>
+          </div> */}
           
         </div>
         

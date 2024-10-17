@@ -59,7 +59,7 @@ const WelcomePage = () => {
             </p>
           </div>
         </div>
-        <StartButton title={"Get Started"} onClick={handleJudgeHome}/>
+        {/* <StartButton title={"Get Started"} onClick={handleJudgeHome}/> */}
       </div>
     </div>
   );

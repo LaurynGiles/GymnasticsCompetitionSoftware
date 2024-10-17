@@ -9,6 +9,11 @@ import XIcon from "../components/XIcon";
 import BarsIcon from "../components/BarsIcon";
 import StartButton from "../components/StartButton";
 import { useNavigate } from "react-router-dom";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import Papa from 'papaparse'; 
+import UploadLink from "../components/UploadLink";
+import DownloadLink from "../components/DownloadLink";
 
 const JudgeInfoPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -75,6 +80,94 @@ const JudgeInfoPage = () => {
     navigate("/completeSetup")
   };
 
+  // Function to generate the Excel template for judges
+  const generateJudgeTemplate = () => {
+    const worksheetData = [
+      ['GSA ID', 'First Name', 'Last Name', 'Club', 'Level', 'Head Judge (true/false)', 'Role (E/D)'],
+      ['12345', 'John', 'Doe', 'Club 1', '1', 'true', 'E'], // Sample row
+      ['67890', 'Jane', 'Smith', 'Club 2', '2', 'false', 'D'], // Sample row
+    ];
+
+    // Create the worksheet and workbook
+    const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Apply text formatting
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        const cellAddress = XLSX.utils.encode_cell({c: C, r: R});
+        if (!ws[cellAddress]) continue;
+        ws[cellAddress].z = '@'; // Text format for all cells
+      }
+    }
+
+    // Create workbook and append the worksheet
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Judges");
+
+    // Export the workbook as an Excel file
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, "Judge_Template.xlsx");
+  };
+
+  // Function to handle file upload for judges
+const handleJudgeUpload = (e) => {
+  console.log('Uploading judges');
+  const file = e.target.files[0];
+
+  if (!file) {
+    console.error("No file selected");
+    return;
+  }
+
+  Papa.parse(file, {
+    complete: (results) => {
+      const parsedData = results.data;
+
+      setJudges(prevJudges => {
+        // Find the highest existing ID in the current judge list
+        const highestId = prevJudges.length > 0 
+          ? Math.max(...prevJudges.map(judge => judge.id)) 
+          : 0;
+
+        
+        const filteredData = parsedData.slice(1).filter(row => {
+          return row.some(value => value !== null && value.trim() !== '');
+        });
+
+        // Map CSV rows to judge data, adding a unique ID for each judge
+        const judgesFromCSV = filteredData.map((row, index) => {
+          // Validate role
+          const validRole = ['E', 'D'].includes(row[6]) ? row[6] : ''; // Must be 'E' or 'D', else set to empty string
+
+          // Validate head judge field (must be 'true' or 'false')
+          const validHeadJudge = row[5] === 'true' ? true : row[5] === 'false' ? false : false;
+
+          return {
+            id: highestId + index + 1, // Generate a new ID based on the current highest ID
+            gsa_id: row[0] ? Number(row[0]) : null, // Convert GSA ID to a number
+            first_name: row[1],
+            last_name: row[2],
+            club: row[3],
+            level: row[4] ? Number(row[4]) : null, // Convert level to a number
+            head_judge: validHeadJudge, // Validated head_judge value
+            role: validRole, // Validated role value
+          };
+        });
+
+        // Filter out empty rows where all fields are blank
+        const filteredJudges = judgesFromCSV.filter(judge => Object.values(judge).some(value => value !== null && value !== ''));
+
+        // Return the updated judge list with the new CSV data appended
+        return [...prevJudges, ...filteredJudges];
+      });
+    },
+    header: false,
+  });
+};
+
+
   return (
     <div className={`flex w-full left-0 h-screen bg-bright-white`}>
       {isNavVisible && <NavigationBar />}
@@ -85,7 +178,11 @@ const JudgeInfoPage = () => {
           <PageHeader title="Judge Info Configuration" />
 
           <div className="flex flex-col gap-10">
-            <ConfigHeader text="Judges" />
+          <div className="flex flex-row items-end justify-start gap-10">
+              <ConfigHeader text="Judges" />
+              <DownloadLink onClick={generateJudgeTemplate} />
+              <UploadLink onFileChange={handleJudgeUpload} fileInputId="judgeFileInput" /> {/* Unique ID for groups */}
+            </div>
 
 
             <div className={`flex flex-col gap-4 bg-white p-5 rounded-lg`}>
@@ -135,9 +232,9 @@ const JudgeInfoPage = () => {
 
         </div>
 
-        <div className="flex justify-center items-center p-5 bg-bright-white">
+        {/* <div className="flex justify-center items-center p-5 bg-bright-white">
           <StartButton onClick={handleContinue} title={"Continue"} />
-        </div>
+        </div> */}
       </div>
     </div>
   );
