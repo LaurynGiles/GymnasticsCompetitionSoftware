@@ -27,6 +27,8 @@ const SubmissionHeadJudges = () => {
   const [rotateArrow, setRotateArrow] = useState({});
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showSubmitPopup, setShowSubmitPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [navigateOnClose, setNavigateOnClose] = useState(false);
   const [requestName, setRequestName] = useState("All");
   const [judgeId, setJudgeId] = useState(null);
@@ -79,7 +81,6 @@ const SubmissionHeadJudges = () => {
       submitScores();
     }
 
- 
   };
 
   const handleClosePopup = () => {
@@ -89,40 +90,84 @@ const SubmissionHeadJudges = () => {
     }
   };
 
-  const submitScores = async () => {
+  // const submitScores = async () => {
 
+  //   try {
+  //     const difficultyResponse = await submitDifficulty(groupId, judgeInfo.judge_id, nextGymnast.gymnast_id, startScore, penalty);
+  //     console.log("Difficulty submitted:", difficultyResponse);
+  //   } catch (error) {
+  //     console.error("Failed to submit difficulty:", error);
+  //   }
+
+  //   receivedDeductions.forEach(async (judge) => {
+  //     try {
+  //       const executionResponse = await submitExecution(groupId, judge.judgeId, nextGymnast.gymnast_id, judge.deduction, penalty);
+  //       console.log(`Execution submitted for judge ${judge.judgeId}:`, executionResponse);
+  //     } catch (error) {
+  //       console.error(`Failed to submit execution for judge ${judge.judgeId}:`, error);
+  //     }
+  //   });
+
+  //   socket.emit('finalScoreSubmitted', { groupId, finalScore: (startScore - penalty - averageDeduction).toFixed(3) });
+    
+  //   // setDeductionTotal(null);
+  //   // setPenalty(null);
+  //   // setFinalScore(null);
+  //   // setStartScore(null);
+  //   setReceivedDeductions([]);
+
+  //   // localStorage.setItem("values", []);
+  //   // localStorage.setItem("total", 0.0);
+  //   // localStorage.setItem("startScore", 0.0);
+  //   // localStorage.setItem("penalty", 0.0);
+
+  //   setShowSubmitPopup(true);
+  //   setNavigateOnClose(true);
+  // }
+
+  const submitScores = async () => {
     try {
+      // Step 1: Submit Difficulty Score
       const difficultyResponse = await submitDifficulty(groupId, judgeInfo.judge_id, nextGymnast.gymnast_id, startScore, penalty);
       console.log("Difficulty submitted:", difficultyResponse);
+  
+      // Step 2: If difficulty submission succeeds, submit deductions
+      await Promise.all(receivedDeductions.map(async (judge) => {
+        try {
+          const executionResponse = await submitExecution(groupId, judge.judgeId, nextGymnast.gymnast_id, judge.deduction, penalty);
+          console.log(`Execution submitted for judge ${judge.judgeId}:`, executionResponse);
+        } catch (error) {
+          console.error(`Failed to submit execution for judge ${judge.judgeId}:`, error);
+          throw error; // If any deduction submission fails, stop further processing
+        }
+      }));
+  
+      // Step 3: Emit final score submission event if all submissions succeed
+      const finalScore = (startScore - penalty - averageDeduction).toFixed(3);
+      socket.emit('finalScoreSubmitted', { groupId, finalScore });
+      console.log('Final score submitted:', finalScore);
+  
+      // Step 4: Reset states and local storage
+      setDeductionTotal(null);
+      setPenalty(null);
+      setFinalScore(null);
+      setStartScore(null);
+      setReceivedDeductions([]);
+      localStorage.setItem("values", []);
+      localStorage.setItem("total", 0.0);
+      localStorage.setItem("startScore", 0.0);
+      localStorage.setItem("penalty", 0.0);
+
+      setShowSubmitPopup(true);
+      setNavigateOnClose(true);
+  
     } catch (error) {
-      console.error("Failed to submit difficulty:", error);
+      // Handle failure of either difficulty or execution submissions
+      setErrorMessage("An error occurred when submitting the final score.");
+      setShowErrorPopup(true);
+      console.error("Error during score submission process:", error);
     }
-
-    receivedDeductions.forEach(async (judge) => {
-      try {
-        const executionResponse = await submitExecution(groupId, judge.judgeId, nextGymnast.gymnast_id, judge.deduction, penalty);
-        console.log(`Execution submitted for judge ${judge.judgeId}:`, executionResponse);
-      } catch (error) {
-        console.error(`Failed to submit execution for judge ${judge.judgeId}:`, error);
-      }
-    });
-
-    socket.emit('finalScoreSubmitted', { groupId, finalScore: (startScore - penalty - averageDeduction).toFixed(3) });
-    
-    // setDeductionTotal(null);
-    // setPenalty(null);
-    // setFinalScore(null);
-    // setStartScore(null);
-    setReceivedDeductions([]);
-
-    // localStorage.setItem("values", []);
-    // localStorage.setItem("total", 0.0);
-    // localStorage.setItem("startScore", 0.0);
-    // localStorage.setItem("penalty", 0.0);
-
-    setShowSubmitPopup(true);
-    setNavigateOnClose(true);
-  }
+  };
 
   const handleLeaveGroup = () => {
     setLeaveGroup(false);
@@ -224,6 +269,7 @@ const SubmissionHeadJudges = () => {
         </div>
       </div>
       {showRequestPopup && <Popup message={`Request sent to ${requestName}`} onClose={() => setShowRequestPopup(false)} />}
+      {showErrorPopup && <Popup message={errorMessage} onClose={() => setShowErrorPopup(false)} />}
       {showSubmitPopup && <Popup message={"Submitted final score"} onClose={handleClosePopup} />}
       {leaveGroup && <LeavePopup message={"Are you sure that you want to leave the judging table."} onYes={handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}
       {confirmSubmit && <LeavePopup message={"The number of deductions you have received does not match the number of judges at the table, please confirm that you want to submit this score."} onYes={submitScores} onNo={() => setConfirmSubmit(false)}/>}

@@ -27,6 +27,7 @@ export const NotificationProvider = ({ children }) => {
   const [finalScore, setFinalScore] = useState(null);
   const [showResubmissionPopup, setShowResubmissionPopup] = useState(false);
   const [resubmissionApproved, setResubmissionApproved] = useState(false);
+  const [resubmissionRejected, setResubmissionRejected] = useState(false);
   const [judgingStarted, setJudgingStarted] = useState(false);
   const [totalGymnasts, setTotalGymnasts] = useState(0);
   const [eventEnded, setEventEnded] = useState(false);
@@ -36,9 +37,9 @@ export const NotificationProvider = ({ children }) => {
     setSocket(socketConnection);
 
     socketConnection.on("judgeDisconnected", ({ judge_id, group_id }) => {
-        console.log(`Judge ${judge_id} disconnected from group ${group_id}`);
+      console.log(`Judge ${judge_id} disconnected from group ${group_id}`);
           
-        setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judge_id));
+      setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judge_id));
     });
 
     socketConnection.on("judgeLeaveGroup", ({ judge_id, judge_fname, judge_lname, group_id}) => {
@@ -144,7 +145,7 @@ export const NotificationProvider = ({ children }) => {
     socketConnection.on("resubmissionRejected", (message) => {
       addNotification({ type: "reject", message, sender: "system", time: new Date().toLocaleTimeString() });
       localStorage.setItem("resubmitButtonClicked", false)
-      setResubmissionApproved(false);
+      setResubmissionRejected(true);
     });
 
     /** SET HEAD OF GROUP and GROUP ID back to normal when leaving a group */
@@ -249,6 +250,8 @@ export const NotificationProvider = ({ children }) => {
       resubmissionRequests,
       resubmissionApproved,
       setResubmissionApproved,
+      resubmissionRejected,
+      setResubmissionRejected,
       judgingStarted,
       setJudgingStarted,
       totalGymnasts,

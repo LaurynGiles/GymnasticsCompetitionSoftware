@@ -11,7 +11,7 @@ import Popup from "../components/Popup.jsx";
 const ScoreCardJudges = () => {
 
   const { setHeadOfGroup, setJudgingStarted, setCurrApparatus, setNextGymnast, setPenalty, setStartScore, setDeductionTotal, setFinalScore, socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, eventEnded, setEventEnded, nextGymnast, navigateToCalculations,
-     setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup, resubmissionApproved, setResubmissionApproved } = useNotifications();
+     setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup, resubmissionApproved, setResubmissionApproved, resubmissionRejected, setResubmissionRejected } = useNotifications();
   const [leaveGroup, setLeaveGroup] = useState(false);
   const navigate = useNavigate(); 
   const [showFinalScorePopup, setShowFinalScorePopup] = useState(false);
@@ -44,6 +44,11 @@ const ScoreCardJudges = () => {
     localStorage.setItem("resubmitButtonClicked", false)
     setResubmissionApproved(false);
     navigate("/calculationsjudges");
+  };
+
+  const closeRejectedPop = () => {
+    localStorage.setItem("resubmitButtonClicked", false)
+    setResubmissionRejected(false);
   };
 
   const closeEndPop = () => {
@@ -99,7 +104,10 @@ const ScoreCardJudges = () => {
             <Popup message="The head judge is requesting a resubmission of your deductions." onClose={closeResubmitPop} />
           )}
           {resubmissionApproved &&  (
-            <Popup message="The head judge had approved your score resubmission." onClose={closeApprovedPop} />
+            <Popup message="The head judge has approved your score resubmission." onClose={closeApprovedPop} />
+          )}
+          {resubmissionRejected &&  (
+            <Popup message="The head judge has rejected your score resubmission." onClose={closeRejectedPop} />
           )}
           {
             eventEnded && (

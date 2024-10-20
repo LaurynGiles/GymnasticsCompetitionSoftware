@@ -29,6 +29,7 @@ const SmallSelectBox = ({ option , setOption, setJudgeId }) => {
   const handleOptionClick = (selectedOption) => {
     setOption(selectedOption);
     if (setJudgeId) {
+      console.log(`Setting judge id to ${judgeMap[selectedOption]}`);
       setJudgeId(judgeMap[selectedOption]); // Set the judge ID in the parent component
     }
     setShowPopup(false);

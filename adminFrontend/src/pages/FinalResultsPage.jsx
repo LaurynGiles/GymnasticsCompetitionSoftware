@@ -18,7 +18,7 @@ import EditIcon from "../components/EditIcon.jsx";
 
 const FinalResultsPage = () => {
 
-  const { competitionInfo, setCompetitionInfo } = useNotifications();
+  const { competitionInfo, setCompetitionInfo, resultsUpdated, setResultsUpdated } = useNotifications();
   const [finalResults, setFinalResults] = useState([]);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -36,23 +36,44 @@ const FinalResultsPage = () => {
     setFinalResults(storedResults);
   }, []);
 
+  // Fetch results when competition info is updated
   useEffect(() => {
     const fetchResults = async () => {
       const results = await getFinalResults(competitionInfo.competition_id);
-      console.log('Fetched Results:', results.data); // Check the output here
-    
       if (Array.isArray(results.data)) {
         setFinalResults(results.data);
         localStorage.setItem('finalResults', JSON.stringify(results.data));
       } else {
-        setErrorMessage("Error fetching results.")
+        setErrorMessage("Error fetching results.");
         setShowErrorMessage(true);
-        console.error('Fetched results are not an array:', results.data);
       }
     };
-    
-    fetchResults();
+
+    if (competitionInfo.competition_id) {
+      fetchResults();
+    }
   }, [competitionInfo]);
+
+  // Watch for resultsUpdated flag
+  useEffect(() => {
+    const fetchUpdatedResults = async () => {
+      if (resultsUpdated) {
+        const results = await getFinalResults(competitionInfo.competition_id);
+        if (Array.isArray(results.data)) {
+          setFinalResults(results.data);
+          localStorage.setItem('finalResults', JSON.stringify(results.data));
+        } else {
+          setErrorMessage("Error fetching updated results.");
+          setShowErrorMessage(true);
+        }
+
+        // Reset resultsUpdated flag after fetching
+        setResultsUpdated(false);
+      }
+    };
+
+    fetchUpdatedResults();
+  }, [resultsUpdated, competitionInfo.competition_id, setResultsUpdated]);
 
    // Step 1: Group results by session, then by gymnast level/age group, and then by apparatus
    const groupedResults = finalResults.reduce((acc, result) => {
@@ -137,7 +158,7 @@ const FinalResultsPage = () => {
                                     .map(([gymnastId, gymnastData], index) => (
                                       <FinalResultsTableRow 
                                         key={gymnastId}
-                                        gymnast_id={gymnastId}
+                                        gymnast_id={Number(gymnastId)}
                                         gymnast_name={gymnastData.gymnast_name}
                                         apparatus_list={gymnastData.apparatusScores} // Pass apparatus scores
                                         final_score={gymnastData.totalFinalScore} // Pass total final score

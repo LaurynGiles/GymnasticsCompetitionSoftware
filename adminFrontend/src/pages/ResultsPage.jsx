@@ -23,7 +23,7 @@ import Popup from "../components/Popup.jsx";
 
 const ResultsPage = () => {
 
-  const { competitionInfo, setCompetitionInfo } = useNotifications();
+  const { competitionInfo, setCompetitionInfo, resultsUpdated, setResultsUpdated } = useNotifications();
   const [finalResults, setFinalResults] = useState([]);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [clickedRows, setClickedRows] = useState({});
@@ -48,6 +48,7 @@ const ResultsPage = () => {
     setFinalResults(storedResults);
   }, []);
 
+  // Fetch results based on competition info or reloadPage flag
   useEffect(() => {
     const fetchResults = async () => {
       const results = await getFinalResults(competitionInfo.competition_id);
@@ -56,18 +57,39 @@ const ResultsPage = () => {
       if (results.success) {
         setFinalResults(results.data);
         localStorage.setItem('finalResults', JSON.stringify(results.data));
-        // setClickedRows(new Array(results.data.length).fill(false));
       } else {
-        setErrorMessage("Error fetching results.")
+        setErrorMessage("Error fetching results.");
         setShowErrorMessage(true);
         console.error('Error fetching results:', results.data);
       }
     };
 
     setReloadPage(false);
-    
-    fetchResults();
+    if (competitionInfo.competition_id) {
+      fetchResults();
+    }
   }, [competitionInfo, reloadPage]);
+
+  // Watch for resultsUpdated flag
+  useEffect(() => {
+    const fetchUpdatedResults = async () => {
+      if (resultsUpdated) {
+        const results = await getFinalResults(competitionInfo.competition_id);
+        if (results.success) {
+          setFinalResults(results.data);
+          localStorage.setItem('finalResults', JSON.stringify(results.data));
+        } else {
+          setErrorMessage("Error fetching updated results.");
+          setShowErrorMessage(true);
+        }
+
+        // Reset resultsUpdated flag after fetching
+        setResultsUpdated(false);
+      }
+    };
+
+    fetchUpdatedResults();
+  }, [resultsUpdated, competitionInfo.competition_id, setResultsUpdated]);
 
    // Step 1: Group results by session, then by gymnast level/age group, and then by apparatus
    const groupedResults = finalResults.reduce((acc, result) => {

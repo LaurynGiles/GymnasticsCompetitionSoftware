@@ -32,10 +32,17 @@ io.on('connection', (socket) => {
       loggedInAdmins.set(admin_id, socket.id);
       
       console.log(`Admin ${username} logged in.`);
+      console.log(`Admins: ${loggedInAdmins.get(admin_id)}`);
       callback({ success: true, admin_id, username });
     }
   });
 
+  socket.on('adminLogout', ({ admin_id }) => {
+    if (loggedInAdmins.has(admin_id)) {
+      loggedInAdmins.delete(admin_id);
+      console.log(`Admin ${admin_id} logged out.`);
+    }
+  });
 
   socket.on('login', ({ judge_id, judge_fname, judge_lname }, callback) => {
     console.log("Trying to log in judge");
@@ -210,14 +217,30 @@ io.on('connection', (socket) => {
 
   socket.on('finalScoreSubmitted', ({ groupId, finalScore }) => {
     console.log(`Final score received from group ${groupId}: ${finalScore}`);
-
-    // Optionally, broadcast this to all clients in the same group
+  
+    // Broadcast the final score to all clients in the group
     socket.to(`group_${groupId}`).emit('updateFinalScore', { finalScore });
-
+    
+    console.log(loggedInAdmins.size);
+    // Notify all logged-in admins that results have been updated
+    for (const [admin_id] of loggedInAdmins.entries()) {
+      console.log(`Admin found: ${admin_id}, ${loggedInAdmins.get(admin_id)}`);
+      io.to(loggedInAdmins.get(admin_id)).emit('resultsUpdated');
+      console.log(`Notified admin ${admin_id} that results have been updated.`);
+    }
   });
 
   socket.on('disconnect', () => {
     console.log('A user disconnected', socket.id);
+
+        // Check if it was an admin
+    for (const [admin_id, adminSocketId] of loggedInAdmins.entries()) {
+      if (adminSocketId === socket.id) {
+        loggedInAdmins.delete(admin_id);
+        console.log(`Admin ${admin_id} disconnected`);
+        return;
+      }
+    }
 
     let disconnectedJudgeId = null;
     let groupIdToNotify = null;
@@ -307,7 +330,7 @@ io.on('connection', (socket) => {
   socket.on('rejectResubmissionRequest', ({ groupId, socketId }) => {
     if (socketId) {
       io.to(socketId).emit('resubmissionRejected', 'Your resubmission request was rejected by the head judge.');
-      console.log(`Resubmission request rejected for judge ${judgeId} in group ${groupId}`);
+      console.log(`Resubmission request rejected in group ${groupId}`);
     }
   });
 

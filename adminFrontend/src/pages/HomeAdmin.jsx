@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 // import NavigationBarDefault from "../components/NavigationBarDefault";
 import SelectBox from "../components/SelectBox";
 import Header from "../components/Header";
-import BlockHeader from "../components/BlockHeader";
+import HomeBlockHeader from "../components/HomeBlockHeader";
 import { useNotifications } from "../utils/connection.jsx";
 import { getCompetitionsByAdmin, getApparatusByCompetition, getQualificationsByCompetition } from "../utils/api.js";
 import CompBox from "../components/CompBox.jsx"
@@ -12,7 +12,7 @@ import PlusIcon from "../components/PlusIcon.jsx";
 
 const HomeAdmin = () => {
 
-  const { adminInfo } = useNotifications();
+  const { adminInfo, socket } = useNotifications();
   const [compBoxes, setCompBoxes] = useState([]);
   const [compApparatuses, setCompApparatuses] = useState([]);
   const [compQualifications, setQualifications] = useState([]);
@@ -47,10 +47,21 @@ const HomeAdmin = () => {
       navigate("/createWelcome");
   };
 
+  const logout = () => {
+    if (socket && adminInfo) {
+      socket.emit("adminLogout", { admin_id: adminInfo.admin_id }); // Emit logout event
+      console.log(`Admin ${adminInfo.admin_id} logged out`);
+    }
+
+    // Clear any relevant local data
+    localStorage.removeItem("compBoxes");
+    navigate("/login"); // Navigate back to the admin login page
+  };
+
   return (
       <div className="bg-bright-white w-full h-screen">
         <div className="flex flex-col items-center overflow-y-auto w-full pt-10 pb-10 gap-10">
-          <BlockHeader text="Administrator Competitions"/>
+          <HomeBlockHeader text="Administrator Competitions" exitOnClick={logout}/>
           
           <div className="w-full md:px-[20%] px-4 text-left">
               <Header text="Select a Competition"/>
