@@ -157,13 +157,25 @@ const GymnastInfoPage = () => {
   const generateGymnastTemplate = () => {
     const worksheetData = [
       ['GSA ID', 'First Name', 'Last Name', 'Date of Birth', 'Club', 'District', 'Level', 'Age Group', 'Group ID'],
-      ['123456', 'John', 'Doe', '2005-05-15', 'Club 1', 'District 2', '1', '7-8', '1'], // Sample row
+      ['123456', 'John', 'Jones', '2005-05-15', 'Club 1', 'District 2', '1', '7-8', '1'], // Sample row
       ['654321', 'Jane', 'Smith', '2006-06-20', 'Club 2', 'District 1', '2', '9-10', '1'], // Sample row
       ['', '', '', 'YYYY-MM-DD', '', '', '', '', ''] // Blank row
     ];
 
     // Create the worksheet and workbook
     const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    ws['!cols'] = [
+      { wch: 10 }, // GSA ID
+      { wch: 15 }, // First Name
+      { wch: 15 }, // Last Name
+      { wch: 15 }, // Date of Birth
+      { wch: 20 }, // Club
+      { wch: 15 }, // District
+      { wch: 10 }, // Level
+      { wch: 10 }, // Age Group
+      { wch: 10 }, // Group ID
+    ];
 
     // Apply text formatting to all cells except Date of Birth
     const range = XLSX.utils.decode_range(ws['!ref']);
@@ -193,14 +205,19 @@ const GymnastInfoPage = () => {
 
   const generateGroupTemplate = () => {
     const worksheetData = [
-      ['Timeslot ID', 'Selected Num Sessions'],
+      ['Timeslot ID', 'Selected Competition'],
       ['1', 'A'], // Sample row
       ['2', 'B'], // Sample row
       ['3', 'C'], // Sample row
     ];
-  
+
     // Create the worksheet and workbook
     const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    ws['!cols'] = [
+      { wch: 15 }, // Timeslot ID
+      { wch: 20 }, // Selected Num Sessions
+    ];
   
     // Apply text formatting
     const range = XLSX.utils.decode_range(ws['!ref']);
@@ -239,6 +256,14 @@ const handleGymnastUpload = (e) => {
   // Create options in the format of "min-max yrs"
   const storedOptions = storedAgeGroups.map(group => `${group.minAge}-${group.maxAge} yrs`);
 
+  // Helper function to format date as "YYYY-MM-DD"
+  const formatDate = (dateStr) => {
+    if (!dateStr) return null;
+    const dateObj = new Date(dateStr);
+    if (isNaN(dateObj.getTime())) return null; // Invalid date check
+    return dateObj; // Return formatted date (YYYY-MM-DD)
+  };
+
   Papa.parse(file, {
     complete: (results) => {
       const parsedData = results.data;
@@ -266,7 +291,7 @@ const handleGymnastUpload = (e) => {
             gsa_id: row[0] ? Number(row[0]) : null, // Convert GSA ID to a number
             first_name: row[1],
             last_name: row[2],
-            date_of_birth: row[3], // Ensure this is formatted as "YYYY-MM-DD"
+            date_of_birth: formatDate(row[3]), // Format the date to "YYYY-MM-DD"
             club: row[4],
             district: row[5],
             level: row[6] ? Number(row[6]) : null, // Convert level to a number
@@ -282,6 +307,7 @@ const handleGymnastUpload = (e) => {
     header: false,
   });
 };
+
 
   const handleGroupUpload = (e) => {
     console.log('Uploading groups');

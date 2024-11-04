@@ -10,7 +10,7 @@ import CompletionStatus from "../components/CompletionStatus.jsx";
 const CompletePage = () => {
 
   const navigate = useNavigate();
-  const { adminInfo } = useNotifications();
+  const adminInfo = JSON.parse(localStorage.getItem('adminInfo'));
 
   const [storedCompetition, setCompetition] = useState({});
   const [storedTimeSlots, setStoredTimeSlots] = useState([]);
@@ -79,12 +79,43 @@ const CompletePage = () => {
 
   const validateJudgePage = () => {
     const storedJudges = JSON.parse(localStorage.getItem('judges')) || [];
-    
+  
     // Check that every judge has all required fields filled
-    return storedJudges.every(judge => 
-      judge.GSAId && judge.f_name && judge.l_name && judge.club && 
-      judge.level !== null && judge.headJudge && judge.role
-    );
+    return storedJudges.every((judge, index) => {
+      console.log(`Validating judge at index ${index}:`, judge);
+  
+      if (!judge.gsa_id) {
+        console.log(`Judge at index ${index} has an invalid or missing GSA ID`);
+        return false;
+      }
+      if (!judge.first_name) {
+        console.log(`Judge at index ${index} has an invalid or missing first name`);
+        return false;
+      }
+      if (!judge.last_name) {
+        console.log(`Judge at index ${index} has an invalid or missing last name`);
+        return false;
+      }
+      if (!judge.club) {
+        console.log(`Judge at index ${index} has an invalid or missing club`);
+        return false;
+      }
+      if (judge.level === null || judge.level === undefined) {
+        console.log(`Judge at index ${index} has an invalid or missing level`);
+        return false;
+      }
+      if (!judge.head_judge === null || judge.head_judge === undefined) {
+        console.log(`Judge at index ${index} has an invalid or missing head judge status`);
+        return false;
+      }
+      if (!judge.role) {
+        console.log(`Judge at index ${index} has an invalid or missing role`);
+        return false;
+      }
+  
+      console.log(`Judge at index ${index} is valid`);
+      return true;
+    });
   };
 
   const validateConfigPage = () => {
@@ -131,7 +162,7 @@ const CompletePage = () => {
     }
   
     // Validate age groups
-    const storedAgeGroups = JSON.parse(localStorage.getItem('ageGroups')) || [];
+    const storedAgeGroups = JSON.parse(localStorage.getItem('age')) || [];
     const agePairs = {};
     for (const group of storedAgeGroups) {
       if (group.minAge === null || group.maxAge === null) {
@@ -179,8 +210,8 @@ const CompletePage = () => {
     const validGroupIds = storedGroups.map(group => group.id);
     for (const gymnast of storedGymnasts) {
       const requiredFields = [
-        "GSAId", "f_name", "l_name", "club", 
-        "district", "level", "dateOfBirth", "ageGroup", "gymnastGroup"
+        "gsa_id", "first_name", "last_name", "club", 
+        "district", "level", "date_of_birth", "age", "group_id"
       ];
 
       for (const field of requiredFields) {
@@ -193,7 +224,7 @@ const CompletePage = () => {
       }
 
       // Check if the gymnast's group ID is valid
-      if (gymnast.gymnastGroup !== null && !validGroupIds.includes(gymnast.gymnastGroup)) {
+      if (gymnast.group_id !== null && !validGroupIds.includes(gymnast.group_id)) {
         console.log("problem 4");
         return false; // Invalid gymnastGroup ID
       }
@@ -211,7 +242,7 @@ const CompletePage = () => {
   
     const storedCompetition = JSON.parse(localStorage.getItem('competition')) || {};
     console.log("Stored Competition Data:", storedCompetition);
-  
+    console.log("Admin info:", adminInfo);
     // Create the competition payload
     const payload = {
       admin_id: adminInfo.admin_id,
@@ -388,15 +419,15 @@ const CompletePage = () => {
       const storedGymnasts = JSON.parse(localStorage.getItem('gymnasts')) || [];
       for (const gymnast of storedGymnasts) {
         const gymnastPayload = {
-          gsa_id: gymnast.GSAId,
-          first_name: gymnast.f_name,
-          last_name: gymnast.l_name,
-          date_of_birth: new Date(gymnast.dateOfBirth).toISOString().split('T')[0], // Convert to YYYY-MM-DD
+          gsa_id: gymnast.gsa_id,
+          first_name: gymnast.first_name,
+          last_name: gymnast.last_name,
+          date_of_birth: new Date(gymnast.date_of_birth).toISOString().split('T')[0], // Convert to YYYY-MM-DD
           club: gymnast.club,
           district: gymnast.district,
           level: gymnast.level,
-          age: gymnast.ageGroup,
-          group_id: groupMapping[gymnast.gymnastGroup], // Link to the gymnast group created earlier
+          age: gymnast.age ? gymnast.age.replace(' yrs', '') : '',
+          group_id: groupMapping[gymnast.group_id], // Link to the gymnast group created earlier
         };
         console.log("Creating Gymnast Payload:", gymnastPayload);
         const gymnastResponse = await createGymnast(gymnastPayload);
@@ -412,12 +443,12 @@ const CompletePage = () => {
       for (const judge of storedJudges) {
         const judgePayload = {
           competition_id: createdCompetitionId,
-          gsa_id: judge.GSAId,
-          first_name: judge.f_name,
-          last_name: judge.l_name,
+          gsa_id: judge.gsa_id,
+          first_name: judge.first_name,
+          last_name: judge.last_name,
           club: judge.club,
           level: judge.level,
-          head_judge: judge.headJudge === "True", // Convert string to boolean
+          head_judge: judge.head_judge === "True", // Convert string to boolean
           role: judge.role,
         };
         console.log("Creating Judge Payload:", judgePayload);

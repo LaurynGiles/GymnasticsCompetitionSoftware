@@ -26,7 +26,7 @@ const JudgeInfoPage = () => {
       ...judge,
       level: Number(judge.level),
       gsa_id: Number(judge.gsa_id), // Ensure GSAId is a number
-    })) : [{ id: 1, gsa_Id: null, first_name: "", last_name: "", club: "", level: null, head_judge: false, role: "" }];
+    })) : [{ id: 1, gsa_id: null, first_name: "", last_name: "", club: "", level: null, head_judge: false, role: "" }];
 
     return parsedJudges;
   });
@@ -84,12 +84,23 @@ const JudgeInfoPage = () => {
   const generateJudgeTemplate = () => {
     const worksheetData = [
       ['GSA ID', 'First Name', 'Last Name', 'Club', 'Level', 'Head Judge (true/false)', 'Role (E/D)'],
-      ['12345', 'John', 'Doe', 'Club 1', '1', 'true', 'E'], // Sample row
+      ['12345', 'John', 'Jones', 'Club 1', '1', 'true', 'E'], // Sample row
       ['67890', 'Jane', 'Smith', 'Club 2', '2', 'false', 'D'], // Sample row
     ];
 
     // Create the worksheet and workbook
     const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+      // Set column widths
+    ws['!cols'] = [
+      { wch: 10 }, // GSA ID
+      { wch: 15 }, // First Name
+      { wch: 15 }, // Last Name
+      { wch: 20 }, // Club
+      { wch: 10 }, // Level
+      { wch: 20 }, // Head Judge (true/false)
+      { wch: 10 }, // Role (E/D)
+    ];
 
     // Apply text formatting
     const range = XLSX.utils.decode_range(ws['!ref']);

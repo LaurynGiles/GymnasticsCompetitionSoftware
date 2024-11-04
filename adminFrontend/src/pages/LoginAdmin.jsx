@@ -28,6 +28,8 @@ const LoginAdmin = () => {
         const { admin_id, username, first_name, last_name, contact_number, email } = response.data;
         setAdminInfo({ admin_id, username, first_name, last_name, contact_number, email });
 
+        localStorage.setItem('adminInfo', JSON.stringify({ admin_id, username, first_name, last_name, contact_number, email }));
+
         console.log(admin_id);
         console.log(username);
         console.log(first_name);
@@ -55,11 +57,6 @@ const LoginAdmin = () => {
       setErrorMessage('Authentication error');
     }
 
-    // if (username == "admin" && password == "1234") {
-    //   navigate('/homejudges');
-    // } else {
-    //   setErrorMessage('Incorrect username or password');
-    // }
   };
 
   return (
