@@ -6,12 +6,15 @@ const PORT = process.env.PORT || 5000;
 
 const server = http.createServer(app);
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*';
+
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175',],
+    origin: allowedOrigins === '*' ? '*' : allowedOrigins,
     methods: ['GET', 'POST'],
   },
 });
+
 
 const loggedInJudges = new Map();
 const loggedInAdmins = new Map();

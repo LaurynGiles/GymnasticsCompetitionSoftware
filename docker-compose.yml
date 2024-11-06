@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  admin-frontend:
+    build:
+      context: ./adminFrontend
+      dockerfile: Dockerfile
+    ports:
+      - "5174:80" # Map host port 5174 to container port 80
+    networks:
+      - app-network
+
+  judge-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80" # Map host port 5173 to container port 80
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - ALLOWED_ORIGINS=*
+    ports:
+      - "5000:5000" # Map host port 5000 to container port 5000
+    networks:
+      - app-network
+    volumes:
+      - ./backend:/app # Mount backend source code for hot-reloading in development
+    depends_on:
+      - db
+
+  db:
+    image: nouchka/sqlite3
+    container_name: sqlite
+    volumes:
+      - ./backend/database_development.sqlite:/data/database_development.sqlite
+      - ./backend/database_test.sqlite:/data/database_test.sqlite
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
