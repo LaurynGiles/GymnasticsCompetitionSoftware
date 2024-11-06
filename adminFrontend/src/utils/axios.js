@@ -5,4 +5,9 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
+// const axiosInstance = axios.create({
+//     baseURL: 'http://backend:5000/api',
+//     withCredentials: true,
+// });
+
 export default axiosInstance;

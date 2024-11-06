@@ -28,6 +28,20 @@ export const NotificationProvider = ({ children }) => {
     };
   }, []);
 
+  // useEffect(() => {
+  //   const socketConnection = io("http://backend:5000"); // Use the Docker service name "backend"
+  //   setSocket(socketConnection);
+
+  //   socketConnection.on('resultsUpdated', () => {
+  //     console.log("Database results have been updated.");
+  //     setResultsUpdated(true); // Set flag to true when results are updated
+  //   });
+
+  //   return () => {
+  //     socketConnection.close();
+  //   };
+  // }, []);
+
   const addNotification = (notification) => {
     setNotifications((prev) => [notification, ...prev]);
   };

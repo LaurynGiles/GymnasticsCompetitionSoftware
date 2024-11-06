@@ -30,21 +30,39 @@ import qualificationRoutes from './routes/qualificationRoutes.js';
 import resultsRoutes from './routes/resultsRoutes.js';
 
 const app = express();
-const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*';
+// const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['*'];
 
-//Middleware
+// //Middleware
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(cors({
+//   origin: function (origin, callback) {
+//       if (allowedOrigins.includes('*') || !origin || allowedOrigins.includes(origin)) {
+//           callback(null, true);
+//       } else {
+//           callback(new Error('Not allowed by CORS'));
+//       }
+//   },
+//   credentials: true
+// }));
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS === '*' ? '*' : process.env.ALLOWED_ORIGINS.split(',');
+
+// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
   origin: function (origin, callback) {
-      if (allowedOrigins === '*' || !origin || allowedOrigins.includes(origin)) {
-          callback(null, true);
-      } else {
-          callback(new Error('Not allowed by CORS'));
-      }
+    // Allow any origin if allowedOrigins is '*'
+    if (allowedOrigins === '*' || !origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
   },
-  credentials: true
+  credentials: true,
 }));
+
 
 // const crypto = require('crypto');
 const secret = crypto.randomBytes(64).toString('hex');
