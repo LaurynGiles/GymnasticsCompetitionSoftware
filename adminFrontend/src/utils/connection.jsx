@@ -14,22 +14,8 @@ export const NotificationProvider = ({ children }) => {
   const [competitionInfo, setCompetitionInfo] = useState({}); 
   const [resultsUpdated, setResultsUpdated] = useState(false);
 
-  useEffect(() => {
-    const socketConnection = io("http://localhost:5000");
-    setSocket(socketConnection);
-
-    socketConnection.on('resultsUpdated', () => {
-      console.log("Database results have been updated.");
-      setResultsUpdated(true); // Set flag to true when results are updated
-    });
-
-    return () => {
-      socketConnection.close();
-    };
-  }, []);
-
   // useEffect(() => {
-  //   const socketConnection = io("http://backend:5000"); // Use the Docker service name "backend"
+  //   const socketConnection = io("http://localhost:5000");
   //   setSocket(socketConnection);
 
   //   socketConnection.on('resultsUpdated', () => {
@@ -41,6 +27,20 @@ export const NotificationProvider = ({ children }) => {
   //     socketConnection.close();
   //   };
   // }, []);
+
+  useEffect(() => {
+    const socketConnection = io("http://backend:5000"); // Use the Docker service name "backend"
+    setSocket(socketConnection);
+
+    socketConnection.on('resultsUpdated', () => {
+      console.log("Database results have been updated.");
+      setResultsUpdated(true); // Set flag to true when results are updated
+    });
+
+    return () => {
+      socketConnection.close();
+    };
+  }, []);
 
   const addNotification = (notification) => {
     setNotifications((prev) => [notification, ...prev]);
