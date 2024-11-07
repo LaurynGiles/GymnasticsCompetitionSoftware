@@ -33,7 +33,8 @@ export const NotificationProvider = ({ children }) => {
   const [eventEnded, setEventEnded] = useState(false);
 
   useEffect(() => {
-    const socketConnection = io("http://localhost:5000");
+    // const socketConnection = io("http://localhost:5000");
+    const socketConnection = io("http://backend:5000");
     setSocket(socketConnection);
 
     socketConnection.on("judgeDisconnected", ({ judge_id, group_id }) => {
