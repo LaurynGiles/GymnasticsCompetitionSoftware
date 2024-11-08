@@ -1,5 +1,5 @@
 # Base image for building React applications
-FROM node:16 AS build
+FROM node:18 AS build
 
 # Set environment variable to production
 ENV NODE_ENV=production
