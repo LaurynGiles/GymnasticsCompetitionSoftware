@@ -6,7 +6,7 @@ import axios from 'axios';
 // });
 
 const axiosInstance = axios.create({
-    baseURL: 'http://backend:5000/api',
+    baseURL: 'https://gymnasticscompetitionsoftware.onrender.com/api',
     withCredentials: true,
 });
 

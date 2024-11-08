@@ -34,7 +34,7 @@ export const NotificationProvider = ({ children }) => {
 
   useEffect(() => {
     // const socketConnection = io("http://localhost:5000");
-    const socketConnection = io("http://backend:5000");
+    const socketConnection = io("https://gymnasticscompetitionsoftware.onrender.com");
     setSocket(socketConnection);
 
     socketConnection.on("judgeDisconnected", ({ judge_id, group_id }) => {

@@ -8,20 +8,21 @@ const server = http.createServer(app);
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*';
 
-// const io = new Server(server, {
-//   cors: {
-//     origin: allowedOrigins === '*' ? '*' : allowedOrigins,
-//     methods: ['GET', 'POST'],
-//   },
-// });
-
 const io = new Server(server, {
   cors: {
-      origin: ['http://localhost:5174', 'http://localhost:5173', 'http://backend:5000'],
-      methods: ['GET', 'POST'],
-      credentials: true,
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
+
+// const io = new Server(server, {
+//   cors: {
+//       origin: ['http://localhost:5174', 'http://localhost:5173', 'http://localhost:5000'],
+//       methods: ['GET', 'POST'],
+//       credentials: true,
+//   },
+// });
 
 const loggedInJudges = new Map();
 const loggedInAdmins = new Map();
