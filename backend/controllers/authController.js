@@ -8,6 +8,6 @@ export const login = (req, res, next) => {
         if (!judge) {
             return res.status(400).json({ message: info.message });
         }
-        res.status(200).json({ judge_id: judge.judge_id, role: judge.role, head_judge: judge.head_judge, judge_fname: judge.first_name, judge_lname: judge.last_name });
+        res.status(200).json({judge});
     })(req, res, next);
 };

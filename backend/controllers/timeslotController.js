@@ -84,22 +84,27 @@ export async function fetchActiveTimeSlot() {
     }
   }
 
-export async function getActiveTimeSlot(req, res, next) {
+  export async function getActiveTimeSlot(req, res, next) {
     try {
+      const { competition_id } = req.params; // Retrieve competition_id from request parameters
+
       const activeTimeSlot = await TimeSlot.findOne({
-        where: { completed: false },
+        where: {
+          completed: false,
+          competition_id, // Filter by competition_id
+        },
         order: [
           ['date', 'ASC'],
-          ['competition_time', 'ASC']
-        ]
+          ['competition_time', 'ASC'],
+        ],
       });
-  
+
       if (activeTimeSlot) {
         return res.status(200).json(activeTimeSlot);
       } else {
-        return res.status(404).json({ message: 'No active TimeSlot found' });
+        return res.status(404).json({ message: 'No active TimeSlot found for this competition' });
       }
     } catch (error) {
       next(error);
     }
-  }
+}

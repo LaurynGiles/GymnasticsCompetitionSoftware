@@ -14,16 +14,16 @@ export const loginJudge = async (gsa_id) => {
     }
 };
 
-export const getActiveTimeSlot = async () => {
-    try {
-      const response = await axiosInstance.get('/timeslots/active');
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching active time slot:", error);
-      return [];
-    }
+export const getActiveTimeSlot = async (competition_id) => {
+  try {
+    const response = await axiosInstance.get(`/timeslots/active/${competition_id}`);
+    console.log("ACTIVE TIMESLOT:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching active time slot:", error);
+    return [];
+  }
 };
-
 
   export const getSessionsByTimeSlot = async (timeSlotId) => {
       try {
@@ -57,15 +57,15 @@ export const getGymnastsByEvent = async (event_id, session_id) => {
   }
 }
 
-export const getAllApps = async () => {
+export const getAllApps = async (competition_id) => {
   try {
-    const response = await axiosInstance.get(`/apparatuses/`);
+    const response = await axiosInstance.get(`/apparatuses/competition/${competition_id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching apparatuses:', error);
     return [];
   }
-}
+};
 
 export const getEventsBySessionAndApparatus = async (sessionId, apparatusId) => {
   try {

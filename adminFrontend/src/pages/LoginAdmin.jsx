@@ -5,6 +5,7 @@ import SmallLogo from "../components/SmallLogo";
 import { useNavigate } from "react-router-dom";
 import { loginAdmin } from "../utils/api.js";
 import { useNotifications } from "../utils/connection.jsx";
+import RegisterLink from "../components/RegisterLink.jsx";
 
 const LoginAdmin = () => {
   const [username, setUsername] = useState("");
@@ -64,9 +65,9 @@ const LoginAdmin = () => {
       <div className="w-full h-[40%] flex">
         <SmallLogo />
       </div>
-      <div className="flex-grow flex items-center justify-center w-full h-[100%]">
-          <div className="flex flex-col items-center bg-glaucous w-full px-4 gap-10">
-            <div className="flex flex-col items-center gap-8">
+      <div className="w-full flex items-center justify-center w-full h-[100%]">
+          <div className="w-full flex flex-col items-center bg-glaucous w-full px-4 gap-14">
+            <div className="w-full flex flex-col items-center gap-8">
               {errorMessage && (
                 <div className="text-red-500 text-center w-full">{errorMessage}</div>
               )}
@@ -74,7 +75,9 @@ const LoginAdmin = () => {
               <InputBox number={password} setNumber={setPassword} hasError={!!errorMessage} title={"Password"}/>
             </div>
               <BlueButton title="Login" onClick={handleLogin}/>
+              <RegisterLink />
           </div>
+          
       </div>
     </div>
   );

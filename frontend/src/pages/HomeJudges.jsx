@@ -10,37 +10,20 @@ import { useNavigate } from "react-router-dom";
 import Popup from "../components/Popup.jsx";
 
 const HomeJudges = () => {
+  const { navigateToCalculations, setNavigateToCalculations, setDeductionTotal, setFinalScore, setJoinStatus } = useNotifications();
 
-  const { judgeInfo, navigateToCalculations, setNavigateToCalculations, setDeductionTotal, setFinalScore, setJoinStatus } = useNotifications();
-
+  const [judgeInfo, setJudgeInfo] = useState(null);
   const [compOptions, setCompOptions] = useState([]);
   const [apparatusOptions, setApparatusOptions] = useState([]);
   const [comp, setComp] = useState("");
   const [apparatusMap, setApparatusMap] = useState({});
-  const [apparatus, setApparatus] = useState("")
+  const [apparatus, setApparatus] = useState("");
   const [apparatusId, setApparatusId] = useState(null);
   const [eventBoxes, setEventBoxes] = useState([]);
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
   const [noSelect, setNoSelect] = useState(false);
-
-  const saveStateToLocalStorage = () => {
-    console.log(comp);
-    console.log(apparatus);
-    console.log(apparatusId);
-    if (comp && apparatus && apparatusId) {
-      console.log("Saving state");
-      const state = {
-        comp,
-        apparatus,
-        apparatusId,
-        noSelect
-      };
-
-      localStorage.setItem('homeJudgesState', JSON.stringify(state));
-    }
-  };
 
   useEffect(() => {
     if (navigateToCalculations) {
@@ -53,11 +36,15 @@ const HomeJudges = () => {
   }, [navigateToCalculations, navigate, setNavigateToCalculations]);
 
   useEffect(() => {
+    const storedJudgeInfo = JSON.parse(localStorage.getItem("judgeInfo"));
+    if (storedJudgeInfo) {
+      setJudgeInfo(storedJudgeInfo);
+      setComp(storedJudgeInfo.competition_id);
+    }
+
     const loadStateFromLocalStorage = () => {
       const savedState = localStorage.getItem('homeJudgesState');
-      console.log(savedState);
       if (savedState) {
-        console.log("Loading state");
         const state = JSON.parse(savedState);
         setComp(state.comp || "");
         setApparatus(state.apparatus || "");
@@ -67,38 +54,48 @@ const HomeJudges = () => {
     };
 
     loadStateFromLocalStorage();
+  }, []);
 
+  useEffect(() => {
     const fetchData = async () => {
-        const activeTimeSlot = await getActiveTimeSlot();
+      if (!judgeInfo?.competition_id) return;
 
-        if (activeTimeSlot) {
-          const sessions = await getSessionsByTimeSlot(activeTimeSlot.time_slot_id);
-          const apps = await getAllApps();
-          const setSessions = new Set(sessions.map(session => session.session_id));
-          const newApparatusMap = apps.reduce((acc, app) => ({ ...acc, [app.apparatus_name]: app.apparatus_id }), {});
+      const activeTimeSlot = await getActiveTimeSlot(judgeInfo.competition_id);
 
-          setCompOptions(Array.from(setSessions));
-          setApparatusOptions(Object.keys(newApparatusMap));
-          setApparatusMap(newApparatusMap);
+      if (activeTimeSlot) {
+        const sessions = await getSessionsByTimeSlot(activeTimeSlot.time_slot_id);
+        const apps = await getAllApps(judgeInfo.competition_id);
+        const setSessions = new Set(sessions.map(session => session.session_id));
+        const newApparatusMap = apps.reduce((acc, app) => ({ ...acc, [app.apparatus_name]: app.apparatus_id }), {});
 
-          // Set defaults only if no saved state exists
-          if (!localStorage.getItem('homeJudgesState')) {
-            setComp(setSessions.size > 0 ? setSessions.values().next().value : "");
-            if (Object.keys(newApparatusMap).length > 0) {
-              const firstApp = Object.keys(newApparatusMap)[0];
-              setApparatus(firstApp);
-              setApparatusId(newApparatusMap[firstApp]);
-            }
+        setCompOptions(Array.from(setSessions));
+        setApparatusOptions(Object.keys(newApparatusMap));
+        setApparatusMap(newApparatusMap);
+
+        if (!localStorage.getItem('homeJudgesState')) {
+          setComp(setSessions.size > 0 ? setSessions.values().next().value : "");
+          if (Object.keys(newApparatusMap).length > 0) {
+            const firstApp = Object.keys(newApparatusMap)[0];
+            setApparatus(firstApp);
+            setApparatusId(newApparatusMap[firstApp]);
           }
-
         }
+      }
     };
 
     fetchData();
-  
-    return saveStateToLocalStorage;
+  }, [judgeInfo]);
 
-  }, []);
+  useEffect(() => {
+    saveStateToLocalStorage();
+  }, [comp, apparatus, apparatusId, noSelect]);
+
+  const saveStateToLocalStorage = () => {
+    if (comp && apparatus && apparatusId) {
+      const state = { comp, apparatus, apparatusId, noSelect };
+      localStorage.setItem('homeJudgesState', JSON.stringify(state));
+    }
+  };
 
   useEffect(() => {
     if (comp && apparatusId) {
@@ -130,10 +127,14 @@ const HomeJudges = () => {
           </div>
           
           <div className="w-full md:px-[20%] px-4 text-left">
-            {!judgeInfo.head_judge ? (
-              <Header text="Join a judging table"/>
+            {judgeInfo ? (
+              judgeInfo.head_judge ? (
+                <Header text="Start a judging table" />
+              ) : (
+                <Header text="Join a judging table" />
+              )
             ) : (
-              <Header text="Start a judging table"/>
+              <Header text="Loading judge information..." />
             )}
           </div>
   

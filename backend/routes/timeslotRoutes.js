@@ -3,7 +3,7 @@ import { getAllTimeSlots, findTimeSlot, createTimeSlot, updateTimeSlot, deleteTi
 
 const router = express.Router();
 
-router.get('/active', getActiveTimeSlot);
+router.get('/active/:competition_id', getActiveTimeSlot);
 
 router.get('/', getAllTimeSlots);
 

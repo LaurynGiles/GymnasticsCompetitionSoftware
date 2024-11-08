@@ -3,22 +3,21 @@ import SettingsIcon from "./SettingsIcon";
 import ExitIcon from "./ExitIcon";
 import QRIcon from "./QRIcon";
 import { useNavigate } from "react-router-dom";
+import HomeIcon from "./HomeIcon";
 
-const HomeBlockHeader = ({ text, exitOnClick }) => {
+const QRBlockHeader = ({ text }) => {
 
   const navigate = useNavigate();
 
-  const handleQRCodeClick = () => {
-    navigate("/qrcode");
+  const handleHomeClick = () => {
+    navigate("/homeAdmin");
   };
 
   return (
     <div className="w-[90%] px-16 py-2 md:py-4 bg-light-periwinkle rounded-lg flex items-center justify-between">
       {/* Left Icons */}
       <div className="flex items-center gap-2 md:gap-4">
-        <ExitIcon onClick={exitOnClick} />
-        <SettingsIcon />
-        <QRIcon onClick={handleQRCodeClick} />
+        <HomeIcon onClick={handleHomeClick}/>
       </div>
       
       {/* Center Text */}
@@ -28,14 +27,8 @@ const HomeBlockHeader = ({ text, exitOnClick }) => {
         </p>
       </div>
 
-      {/* Right Placeholder for Centering */}
-      <div className="flex items-center gap-2 md:gap-4" style={{ visibility: 'hidden' }}>
-        <ExitIcon />
-        <SettingsIcon />
-        <QRIcon />
-      </div>
     </div>
   );
 };
 
-export default HomeBlockHeader;
+export default QRBlockHeader;
