@@ -40,3 +40,6 @@ Thumbs.db
 logs
 *.log
 npm-debug.log*
+
+#DB files
+*.sqlite
