@@ -12,17 +12,51 @@ const LoginJudges = () => {
   const navigate = useNavigate();
   const { setJudgeInfo, socket } = useNotifications();
 
-  // useEffect(() => {
-    // localStorage.clear();
-    // localStorage.setItem("layout", 0);
-  // }, []);
-
   const handleLogin = async () => {
     try {
       const response = await loginJudge(number);
       if (response.success) {
-        const { judge_id, role, head_judge, judge_fname, judge_lname } = response.data;
-        setJudgeInfo({ judge_id, role, head_judge, judge_fname, judge_lname });
+        console.log(response.data.judge)
+        console.log(response.data);
+
+        const {
+          judge_id,
+          competition_id,
+          gsa_id,
+          club,
+          contact_number,
+          createdAt,
+          email,
+          first_name: judge_fname,  // Renaming first_name to judge_fname
+          gender,
+          head_judge,
+          last_name: judge_lname,    // Renaming last_name to judge_lname
+          level,
+          role,
+          updatedAt
+        } = response.data.judge;
+
+        const judgeInfo = {
+          judge_id,
+          competition_id,
+          gsa_id,
+          club,
+          contact_number,
+          createdAt,
+          email,
+          judge_fname,  // Using renamed variable
+          gender,
+          head_judge,
+          judge_lname,  // Using renamed variable
+          level,
+          role,
+          updatedAt
+        };
+
+        // Set judge info in state and save it to local storage
+        setJudgeInfo(judgeInfo);
+
+        localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
 
         console.log(judge_id);
         console.log(role);

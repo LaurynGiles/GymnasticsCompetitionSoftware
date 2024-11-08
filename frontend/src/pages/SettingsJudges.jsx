@@ -14,26 +14,21 @@ export const SettingsJudges = () => {
   const location = useLocation();
   const prevPage = location.state?.currPage || "/homejudges";
   const [selectedOption, setSelectedOption] = useState(0);
+  const [judgeInfo, setJudgeInfo] = useState(null);
   const navigate = useNavigate();
-  const { socket, judgeInfo } = useNotifications();
+  const { socket } = useNotifications();
 
   useEffect(() => {
+    // Retrieve judgeInfo from localStorage
+    const storedJudgeInfo = localStorage.getItem("judgeInfo");
+    if (storedJudgeInfo) {
+      setJudgeInfo(JSON.parse(storedJudgeInfo));
+    }
+
     const storedLayout = localStorage.getItem("layout");
     if (storedLayout !== null) {
       setSelectedOption(Number(storedLayout));
     }
-
-    const handleStorageChange = (e) => {
-      if (e.key === "layout") {
-        setSelectedOption(Number(e.newValue) || 0);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
   }, []);
 
   const handleSelectOption = (index) => {
@@ -141,7 +136,14 @@ export const SettingsJudges = () => {
         <div className="w-full pt-[75px] pb-[50px] px-4 md:px-8 h-full overflow-y-auto">
           <div className="w-full flex flex-col items-center gap-8">
             <Header text={"User information"} />
-            <UserInfo number={"548657"} name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`} email={"deb@gmail.com"} license={"Category A"} />
+            {judgeInfo && (
+              <UserInfo
+                number={judgeInfo.gsa_id}
+                name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`}
+                email={judgeInfo.email}
+                level={judgeInfo.level}
+              />
+            )}
             <Header text={"Layout Settings"} />
             {renderLayoutSettings()}
             <Header text={"Logout"} />
