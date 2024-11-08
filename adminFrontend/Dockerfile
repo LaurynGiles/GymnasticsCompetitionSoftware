@@ -10,7 +10,6 @@ WORKDIR /app
 # Copy package.json and package-lock.json (if present) and install dependencies
 COPY package*.json ./
 RUN npm install --include=dev
-RUN npm install
 
 # Copy source code
 COPY . .
