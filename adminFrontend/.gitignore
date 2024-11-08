@@ -1,0 +1,67 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Dependency directories
+/node_modules
+
+# Database
+database.sqlite
+
+# Build files
+/build
+/dist
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE/Editor files
+/.vscode
+/.idea
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Anima
+.anima
+
+# Optional REPL history
+.node_repl_history
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
+
+#Log files
+logs
+*.log
+npm-debug.log*
