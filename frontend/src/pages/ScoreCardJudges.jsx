@@ -11,7 +11,7 @@ import Popup from "../components/Popup.jsx";
 const ScoreCardJudges = () => {
 
   const { setHeadOfGroup, setJudgingStarted, setCurrApparatus, setNextGymnast, setPenalty, setStartScore, setDeductionTotal, setFinalScore, socket, groupId, judgeInfo, deductionTotal, startScore, penalty, finalScore, eventEnded, setEventEnded, nextGymnast, navigateToCalculations,
-     setNavigateToCalculations, showResubmissionPopup, setShowResubmissionPopup, resubmissionApproved, setResubmissionApproved, resubmissionRejected, setResubmissionRejected } = useNotifications();
+     setNavigateToCalculations, resubmissionMessage, showResubmissionPopup, sameGymnast, setSameGymnast, setShowResubmissionPopup, resubmissionApproved, setResubmissionApproved, resubmissionRejected, setResubmissionRejected } = useNotifications();
   const [leaveGroup, setLeaveGroup] = useState(false);
   const navigate = useNavigate(); 
   const [showFinalScorePopup, setShowFinalScorePopup] = useState(false);
@@ -28,10 +28,18 @@ const ScoreCardJudges = () => {
   };
 
   const closeNavPop = () => {
+    console.log("Navigation pop closing");
     setNavigateToCalculations(false);
-    localStorage.setItem("values", []);
-    localStorage.setItem("total", 0.0);
-    localStorage.setItem("resubmitButtonClicked", false)
+    
+    if (!sameGymnast) {
+      console.log("Same gymnast selected");
+      localStorage.setItem("values", []);
+      localStorage.setItem("total", 0.0);
+      localStorage.setItem("resubmitButtonClicked", false)
+      setSameGymnast(false);
+    }
+    
+    console.log("Navigating to calculations");
     navigate("/calculationsjudges");
   };
 
@@ -69,7 +77,7 @@ const ScoreCardJudges = () => {
     socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
     setHeadOfGroup(false);
     setNextGymnast(null);
-    setCurrApparatus(null);
+    // setCurrApparatus(null);
     setPenalty(null);
     setDeductionTotal(null);
     setStartScore(null);
@@ -81,6 +89,7 @@ const ScoreCardJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
+    localStorage.removeItem('joinedJudges');
     setEventEnded(false);
     navigate('/homejudges');
   };
@@ -101,7 +110,7 @@ const ScoreCardJudges = () => {
             <Popup message={`The next gymnast selected to compete is ${nextGymnast.first_name} ${nextGymnast.last_name} (${nextGymnast.gymnast_id})`} onClose={closeNavPop} />
           )}
           {showResubmissionPopup &&  (
-            <Popup message="The head judge is requesting a resubmission of your deductions." onClose={closeResubmitPop} />
+            <Popup message={resubmissionMessage || "The head judge is requesting a resubmission of your deductions."} onClose={closeResubmitPop} />
           )}
           {resubmissionApproved &&  (
             <Popup message="The head judge has approved your score resubmission." onClose={closeApprovedPop} />

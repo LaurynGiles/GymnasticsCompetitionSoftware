@@ -19,6 +19,7 @@ export const NotificationProvider = ({ children }) => {
   const [groupId, setGroupId] = useState(null);
   const [headOfGroup, setHeadOfGroup] = useState(false);
   const [nextGymnast, setNextGymnast] = useState(null);
+  const [sameGymnast, setSameGymnast] = useState(false);
   const [currApparatus, setCurrApparatus] = useState(null);
   const [deductionTotal, setDeductionTotal] = useState(null);
   const [receivedDeductions, setReceivedDeductions] = useState([]);
@@ -31,6 +32,7 @@ export const NotificationProvider = ({ children }) => {
   const [judgingStarted, setJudgingStarted] = useState(false);
   const [totalGymnasts, setTotalGymnasts] = useState(0);
   const [eventEnded, setEventEnded] = useState(false);
+  const [resubmissionMessage, setResubmissionMessage] = useState(null);
 
   useEffect(() => {
     // const socketConnection = io("http://localhost:5000");
@@ -77,6 +79,13 @@ export const NotificationProvider = ({ children }) => {
 
     socketConnection.on("judgeJoined", (judge) => {
       console.log(judge);
+      
+      // Update local storage
+      const storedJudges = JSON.parse(localStorage.getItem("joinedJudges")) || [];
+      const updatedJudges = [...storedJudges, judge];
+      localStorage.setItem("joinedJudges", JSON.stringify(updatedJudges));
+    
+      // Update state
       setJoinedJudges(prev => [...prev, judge]);
     });
 
@@ -90,6 +99,9 @@ export const NotificationProvider = ({ children }) => {
 
     socketConnection.on("nextGymnast", (gymnast) => {
       console.log(`Next gymnast to be judged: ${gymnast.gymnast_id} ${gymnast.first_name} ${gymnast.last_name}`);
+      if (gymnast == nextGymnast) {
+        setSameGymnast(true);
+      }
       setNextGymnast(gymnast);
       setFinalScore(null);
       setStartScore(null);
@@ -130,6 +142,7 @@ export const NotificationProvider = ({ children }) => {
       console.log(`Resubmission request received: ${message}`);
       addNotification({ type: "resubmission", message: message, sender: "head", time: new Date().toLocaleTimeString() });
       setShowResubmissionPopup(true);
+      setResubmissionMessage(message);
     });
 
     socketConnection.on("judgeResubmission", (judgeData) => {
@@ -259,7 +272,11 @@ export const NotificationProvider = ({ children }) => {
       setTotalGymnasts,
       eventEnded,
       setEventEnded,
-      setJoinedJudges
+      setJoinedJudges,
+      sameGymnast,
+      setSameGymnast,
+      resubmissionMessage,
+      setResubmissionMessage
     }}>
       {children}
     </NotificationContext.Provider>

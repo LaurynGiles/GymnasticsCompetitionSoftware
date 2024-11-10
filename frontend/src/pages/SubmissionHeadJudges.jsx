@@ -14,6 +14,7 @@ import ScoreSubmissionBlock from "../components/ScoreSubmissionBlock";
 import ResubmitRequest from "../components/ResubmitRequest.jsx";
 import { useNotifications } from "../utils/connection.jsx";
 import { submitDifficulty, submitExecution } from "../utils/api.js";
+import RequestPopup from "../components/RequestPopup.jsx";
 
 const SubmissionHeadJudges = () => {
   const {startScore, penalty, receivedDeductions, currApparatus,joinedJudges, nextGymnast, setReceivedDeductions, resubmissionRequests, 
@@ -54,6 +55,10 @@ const SubmissionHeadJudges = () => {
 
   const handleSendClick = () => {
 
+    setShowRequestPopup(true);
+  };
+
+  const handleHigh = () => {
     console.log("Send request for judge ID:", judgeId);
 
     const judge = joinedJudges.find(j => j.judge_id === judgeId);
@@ -66,10 +71,30 @@ const SubmissionHeadJudges = () => {
         apparatus: currApparatus,
         judgeId, 
         socketId: socketIdToSend,
+        type: "high"
       });
 
-    setShowRequestPopup(true);
-  };
+    setShowRequestPopup(false);
+  }
+
+  const handleLow = () => {
+    console.log("Send request for judge ID:", judgeId);
+
+    const judge = joinedJudges.find(j => j.judge_id === judgeId);
+    console.log(judge)
+    const socketIdToSend = judge ? judge.socket_id : null; 
+    console.log(socketIdToSend)
+
+      socket.emit('headRequestResubmission', {
+        groupId, 
+        apparatus: currApparatus,
+        judgeId, 
+        socketId: socketIdToSend,
+        type: "low"
+      });
+
+    setShowRequestPopup(false);
+  }
 
   const handleSubmitClick = () => {
 
@@ -177,7 +202,7 @@ const SubmissionHeadJudges = () => {
 
     setHeadOfGroup(false);
     setNextGymnast(null);
-    setCurrApparatus(null);
+    // setCurrApparatus(null);
     setPenalty(null);
     setDeductionTotal(null);
     setStartScore(null);
@@ -189,6 +214,7 @@ const SubmissionHeadJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
+    localStorage.removeItem('joinedJudges');
     navigate('/homejudges');
   };
 
@@ -268,7 +294,7 @@ const SubmissionHeadJudges = () => {
           
         </div>
       </div>
-      {showRequestPopup && <Popup message={`Request sent to ${requestName}`} onClose={() => setShowRequestPopup(false)} />}
+      {showRequestPopup && <RequestPopup message={`Request sent to ${requestName}`} onHigh={handleHigh} onLow={handleLow}/>}
       {showErrorPopup && <Popup message={errorMessage} onClose={() => setShowErrorPopup(false)} />}
       {showSubmitPopup && <Popup message={"Submitted final score"} onClose={handleClosePopup} />}
       {leaveGroup && <LeavePopup message={"Are you sure that you want to leave the judging table."} onYes={handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}

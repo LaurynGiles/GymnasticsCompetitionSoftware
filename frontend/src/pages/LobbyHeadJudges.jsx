@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import BlockHeader from "../components/BlockHeader";
 import Header from "../components/Header";
@@ -19,6 +19,15 @@ const LobbyHeadJudges = () => {
   console.log(prevPage);
   const [leaveGroup, setLeaveGroup] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Load joined judges from local storage if they exist
+    const storedJoinedJudges = JSON.parse(localStorage.getItem("joinedJudges"));
+    console.log(`Fetching judges ${storedJoinedJudges}`);
+    if (storedJoinedJudges) {
+      setJoinedJudges(storedJoinedJudges);
+    }
+  }, [setJoinedJudges]);
 
   const handleApprove = (request) => {
     if (judgingStarted) {
@@ -50,7 +59,7 @@ const LobbyHeadJudges = () => {
 
     setHeadOfGroup(false);
     setNextGymnast(null);
-    setCurrApparatus(null);
+    // setCurrApparatus(null);
     setPenalty(null);
     setDeductionTotal(null);
     setStartScore(null);
@@ -62,6 +71,7 @@ const LobbyHeadJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
+    localStorage.removeItem('joinedJudges');
     navigate('/homejudges');
   };
 

@@ -65,6 +65,7 @@ io.on('connection', (socket) => {
       judgeDetails.set(judge_id, { judge_fname, judge_lname });
       
       console.log(`Judge ${judge_id} (${judge_fname} ${judge_lname}) logged in.`);
+      io.to(socket.id).emit('serverMessage', `Welcome to ScoreMatics!`);
       callback({ success: true, judge_id, judge_fname, judge_lname });
     }
   });
@@ -78,7 +79,7 @@ io.on('connection', (socket) => {
       for (const groupId in groupUsers) {
         groupUsers[groupId] = groupUsers[groupId].filter(id => id !== socket.id);
 
-        if (headJudges[groupId] === socket.id) {
+        if (headJudges[groupId] === judge_id) {
           delete headJudges[groupId];
           console.log(`Head judge of group ${groupId} (${judge_id}) logged out.`);
         }
@@ -113,25 +114,58 @@ io.on('connection', (socket) => {
       }
 
       groupUsers[group_id] = [];
-      headJudges[group_id] = socket.id;
-      console.log(`Head judge of group ${group_id} set to ${headJudges[group_id]}`);
 
-      groupUsers[group_id].push(socket.id);
+      if (headJudges[group_id] != judge_id) {
 
-      socket.join(`group_${group_id}`);
-      io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
-      console.log(`Socket ${socket.id} started group ${group_id}`);
-      console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
-      callback({ success: true, isHeadJudge: true });
-      return;
+        headJudges[group_id] = judge_id;
+        console.log(`Head judge of group ${group_id} set to ${headJudges[group_id]}`);
+
+        groupUsers[group_id].push(socket.id);
+
+        socket.join(`group_${group_id}`);
+        io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
+        console.log(`Socket ${socket.id} started group ${group_id}`);
+        console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
+        callback({ success: true, isHeadJudge: true, rejoin: false });
+        return;
+
+      } else {
+
+        console.log(`Head judge of group ${group_id} rejoined: ${headJudges[group_id]}`);
+
+        groupUsers[group_id].push(socket.id);
+
+        socket.join(`group_${group_id}`);
+        io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
+        console.log(`Socket ${socket.id} started group ${group_id}`);
+        console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
+        callback({ success: true, isHeadJudge: true, rejoin: true });
+        return;
+
+      }
+
+      // groupUsers[group_id].push(socket.id);
+
+      // socket.join(`group_${group_id}`);
+      // io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
+      // console.log(`Socket ${socket.id} started group ${group_id}`);
+      // console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
+      // callback({ success: true, isHeadJudge: true, rejoin: true });
+      // return;
 
     } else if (!head_judge && !headJudges[group_id]) {
       console.log("Error: Group has not been started by a head judge")
       callback({ success: false, error: 'This event needs to be started by a Head judge' });
       return;
+
+    } else if (head_judge && headJudges[group_id] == judge_id) {
+      console.log(`Head judge of group ${group_id} rejoined: ${headJudges[group_id]}`);
+      callback({ success: true, isHeadJudge: true, rejoin: true });
+      return;
+      
     }
 
-    io.to(headJudges[group_id]).emit('joinRequest', { group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id: socket.id });
+    io.to(loggedInJudges.get(headJudges[group_id])).emit('joinRequest', { group_id, apparatus, judge_id, judge_fname, judge_lname, socket_id: socket.id });
 
     callback({ success: true, isHeadJudge: false, message: 'Join request sent, waiting for approval.' });
   });
@@ -151,7 +185,7 @@ io.on('connection', (socket) => {
     io.to(socket_id).emit('joinApproved', { group_id, apparatus });
     io.to(socket_id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou joined the judging table.`);
     
-    io.to(headJudges[group_id]).emit('judgeJoined', { group_id, judge_id, judge_fname, judge_lname, socket_id });
+    io.to(loggedInJudges.get(headJudges[group_id])).emit('judgeJoined', { group_id, judge_id, judge_fname, judge_lname, socket_id });
 
     console.log(`Judge ${judge_id} approved to join group ${group_id}`);
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
@@ -180,13 +214,16 @@ io.on('connection', (socket) => {
     socket.leave(`group_${group_id}`);
     groupUsers[group_id] = groupUsers[group_id].filter(id => id !== socket.id);
 
+    console.log(loggedInJudges);
     console.log(headJudges[group_id]);
+    console.log(loggedInJudges.get(headJudges[group_id]));
     console.log(socket.id);
-    if (headJudges[group_id] === socket.id) {
+    if (headJudges[group_id] === judge_id) {
       console.log("Head judge left group");
-      delete headJudges[group_id];
+      // delete headJudges[group_id];
     }
 
+    // loggedInJudges.delete(judge_id);
     io.to(`group_${group_id}`).emit('serverMessage', `${judge_fname} ${judge_lname} left the group`);
     io.to(`group_${group_id}`).emit('judgeLeaveGroup', {judge_id, judge_fname, judge_lname, group_id});
     console.log(`Socket left group${group_id}`);
@@ -195,7 +232,7 @@ io.on('connection', (socket) => {
     if (groupUsers[group_id].length === 0) {
       // If no users left in the group, remove the group
       delete groupUsers[group_id];
-  }
+    }
   });
 
   socket.on('judgeGymnast', ({ groupId, gymnast }) => {
@@ -205,7 +242,11 @@ io.on('connection', (socket) => {
   });
 
   socket.on('submitDeduction', ({ groupId, judgeId, firstName, lastName, deduction, analysis }) => {
-    const headJudgeId = headJudges[groupId];
+    console.log(groupId)
+    console.log(headJudges[groupId])
+    console.log(loggedInJudges)
+    const headJudgeId = loggedInJudges.get(headJudges[groupId]);
+    console.log(`Head judge submission: ${headJudgeId}`);
     if (headJudgeId) {
       io.to(headJudgeId).emit('receiveDeduction', {
         judgeId,
@@ -261,7 +302,7 @@ io.on('connection', (socket) => {
     for (const [judge_id, socketId] of loggedInJudges.entries()) {
         if (socketId === socket.id) {
             disconnectedJudgeId = judge_id;
-            loggedInJudges.delete(judge_id);
+            // loggedInJudges.delete(judge_id);
             
             if (judgeDetails.has(judge_id)) {
               const { judge_fname, judge_lname } = judgeDetails.get(judge_id);
@@ -275,9 +316,9 @@ io.on('connection', (socket) => {
                     // Remove the judge from the group's user list
                     groupUsers[groupId] = groupUsers[groupId].filter(id => id !== socket.id);
 
-                    if (headJudges[groupId] === socket.id) {
+                    if (loggedInJudges.get(headJudges[groupId]) === socket.id) {
                         // Handle if the disconnected judge was the head judge
-                        delete headJudges[groupId];
+                        // delete headJudges[groupId];
                         console.log(`Head judge of group ${groupId} (${judge_id}) disconnected.`);
                     }
 
@@ -316,16 +357,16 @@ io.on('connection', (socket) => {
     io.to(`group_${groupId}`).emit('groupMessage', `Head judge:\n${message}`);
   });
 
-  socket.on('headRequestResubmission', ({ groupId, apparatus, judgeId, socketId }) => {
+  socket.on('headRequestResubmission', ({ groupId, apparatus, judgeId, socketId, type }) => {
     if (socketId) {
-      io.to(socketId).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge has requested that you resubmit your score.`);
+      io.to(socketId).emit('resubmissionRequest', `The head judge has requested that you resubmit your deductions, it was too ${type}.`);
     } else {
-      io.to(`group_${groupId}`).emit('resubmissionRequest', `Event ${groupId}, ${apparatus}:\nThe head judge has requested that all judges resubmit their scores.`);
+      io.to(`group_${groupId}`).emit('resubmissionRequest', `The head judge has requested that all judges resubmit their deductions, they were too ${type}.`);
     }
   });
 
   socket.on('judgeRequestResubmission', ({ groupId, judgeId, judge_fname, judge_lname }) => {
-    const socketId = headJudges[groupId]
+    const socketId = loggedInJudges.get(headJudges[groupId]);
     console.log(`Sending resubmission request to head judge ${socketId}`);
 
     io.to(socketId).emit('judgeResubmission', {groupId, judgeId, judge_fname, judge_lname, socketId: socket.id});

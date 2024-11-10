@@ -65,7 +65,7 @@ const StartingScoreHeadJudges = () => {
 
     setHeadOfGroup(false);
     setNextGymnast(null);
-    setCurrApparatus(null);
+    // setCurrApparatus(null);
     setPenalty(null);
     setDeductionTotal(null);
     setStartScore(null);
@@ -77,6 +77,7 @@ const StartingScoreHeadJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
+    localStorage.removeItem('joinedJudges');
     navigate('/homejudges');
   };
 

@@ -12,6 +12,8 @@ const InfoBlock = () => {
 
     useEffect(() => {
         if (nextGymnast) {
+          console.log(currApparatus);
+          console.log(nextGymnast);
             setApparatus(`${currApparatus} event`);
             setLevel(`- Level ${nextGymnast.level}`);
             setAge(`${nextGymnast.age} yrs`);

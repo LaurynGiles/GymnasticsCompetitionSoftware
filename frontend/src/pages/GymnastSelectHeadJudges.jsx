@@ -80,6 +80,8 @@ const GymnastSelectHeadJudges = () => {
 
   const handleSelectGymnast = (gymnastId) => {
     setSelectedGymnast(gymnastId);
+    setNextGymnast(gymnastInfo.find(gym => gym.gymnast_id === gymnastId));
+    console.log(gymnastInfo.find(gym => gym.gymnast_id === gymnastId));
     setError(false);
   };
 
@@ -107,7 +109,7 @@ const GymnastSelectHeadJudges = () => {
     setEventEnded(false);
     setHeadOfGroup(false);
     setNextGymnast(null);
-    setCurrApparatus(null);
+    // setCurrApparatus(null);
     setPenalty(null);
     setDeductionTotal(null);
     setStartScore(null);
@@ -119,6 +121,7 @@ const GymnastSelectHeadJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
+    localStorage.removeItem('joinedJudges');
     navigate('/homejudges');
   };
 

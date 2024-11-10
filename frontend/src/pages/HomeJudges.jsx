@@ -46,7 +46,7 @@ const HomeJudges = () => {
       const savedState = localStorage.getItem('homeJudgesState');
       if (savedState) {
         const state = JSON.parse(savedState);
-        setComp(state.comp || "");
+        setComp(state.comp);
         setApparatus(state.apparatus || "");
         setApparatusId(state.apparatusId || null);
         setNoSelect(state.noSelect);

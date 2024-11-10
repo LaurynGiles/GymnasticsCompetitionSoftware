@@ -9,6 +9,7 @@ import DeductionBlockSquare from "../components/DeductionBlockSquare";
 import LeavePopup from "../components/LeavePopup.jsx";
 import { useNotifications } from "../utils/connection.jsx";
 import { useNavigate } from "react-router-dom";
+import Popup from "../components/Popup.jsx";
 
 const CalculationsJudges = () => {
 
@@ -16,8 +17,9 @@ const CalculationsJudges = () => {
   const [total, setTotal] = useState(0.0);
   const [layout, setLayout] = useState(0);
   const [leaveGroup, setLeaveGroup] = useState(false);
-  const { groupId, socket, headOfGroup, setHeadOfGroup, setNextGymnast, setCurrApparatus, setPenalty, 
-    setDeductionTotal, setStartScore, setFinalScore, judgeInfo, setNavigateToCalculations, setJudgingStarted, setJoinedJudges  } = useNotifications();
+  const { groupId, socket, headOfGroup, setHeadOfGroup, setNextGymnast, setCurrApparatus, setPenalty, nextGymnast, sameGymnast, setSameGymnast,
+    setDeductionTotal, setStartScore, setFinalScore, judgeInfo, setNavigateToCalculations, setJudgingStarted, setJoinedJudges,
+    navigateToCalculations } = useNotifications();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,6 +67,19 @@ const CalculationsJudges = () => {
   const addValue = (value) => {
     setValues([...values, value]);
     incrementTotal(value);
+  };
+
+  const closeNavPop = () => {
+    setNavigateToCalculations(false);
+
+    if (!sameGymnast) {
+      localStorage.setItem("values", []);
+      localStorage.setItem("total", 0.0);
+      localStorage.setItem("resubmitButtonClicked", false)
+      setSameGymnast(false);
+    }
+    
+    navigate("/calculationsjudges");
   };
 
   const removeValue = (index) => {
@@ -115,7 +130,7 @@ const CalculationsJudges = () => {
 
     setHeadOfGroup(false);
     setNextGymnast(null);
-    setCurrApparatus(null);
+    // setCurrApparatus(null);
     setPenalty(null);
     setDeductionTotal(null);
     setStartScore(null);
@@ -127,6 +142,7 @@ const CalculationsJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
+    localStorage.removeItem('joinedJudges');
     navigate('/homejudges');
   };
 
@@ -146,6 +162,9 @@ const CalculationsJudges = () => {
           </div>
         </div>
       </div>
+      {navigateToCalculations && !headOfGroup && (
+            <Popup message={`The next gymnast selected to compete is ${nextGymnast.first_name} ${nextGymnast.last_name} (${nextGymnast.gymnast_id})`} onClose={closeNavPop} />
+      )}
       {leaveGroup && <LeavePopup message={"Are you sure that you want to leave the judging table."} onYes={handleLeaveGroup} onNo={() => setLeaveGroup(false)}/>}
     </div>
   );

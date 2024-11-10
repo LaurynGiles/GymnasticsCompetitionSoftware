@@ -12,6 +12,7 @@ const TotalDeductionsBlock = ({ total, values }) => {
     console.log(total);
     setDeductionTotal(total);
     console.log(values);
+    console.log(`Submitting to group: ${groupId}`);
 
     socket.emit('submitDeduction', { 
       groupId, 

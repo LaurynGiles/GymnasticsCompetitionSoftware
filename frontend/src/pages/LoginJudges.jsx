@@ -12,6 +12,19 @@ const LoginJudges = () => {
   const navigate = useNavigate();
   const { setJudgeInfo, socket } = useNotifications();
 
+  useEffect(() => {
+    // Check if judgeInfo exists in local storage
+    const storedJudgeInfo = JSON.parse(localStorage.getItem("judgeInfo"));
+    if (storedJudgeInfo && storedJudgeInfo.judge_id) {
+      // Emit logout message to the server with judge_id
+      socket.emit("logout", { judge_id: storedJudgeInfo.judge_id });
+      console.log(`Judge ${storedJudgeInfo.judge_id} logged out.`);
+
+      // Remove judgeInfo from local storage
+      localStorage.removeItem("judgeInfo");
+    }
+  }, [socket]);
+  
   const handleLogin = async () => {
     try {
       const response = await loginJudge(number);
