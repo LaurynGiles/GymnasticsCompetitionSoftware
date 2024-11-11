@@ -15,12 +15,10 @@ const ScoreRange = ({ minScore = "", maxScore = "", setMinScore, setMaxScore, ha
         />
       </div>
 
-      {/* "To" Label */}
-      <div className="font-medium text-prussian-blue text-lg">
+      {/* <div className="font-medium text-prussian-blue text-lg">
         to
       </div>
 
-      {/* Maximum Score Input */}
       <div className="flex items-center gap-2">
         <ScoreInput
           text={maxScore}
@@ -28,14 +26,14 @@ const ScoreRange = ({ minScore = "", maxScore = "", setMinScore, setMaxScore, ha
           placeholder="Max Score"
           hasError={hasError}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
 
 ScoreRange.propTypes = {
   minScore: PropTypes.string,
-  maxScore: PropTypes.string,
+  // maxScore: PropTypes.string,
   setMinScore: PropTypes.func.isRequired,
   setMaxScore: PropTypes.func.isRequired,
   hasError: PropTypes.bool,

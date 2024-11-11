@@ -1,18 +1,33 @@
-  import React, {useState, useEffect} from "react";
-  import { useNavigate } from "react-router-dom";
-  import { useNotifications } from "../utils/connection.jsx";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useNotifications } from "../utils/connection.jsx";
+import { getQualificationsByCompetition } from "../utils/api.js";
 
-  const CompBox = ({ competition }) => {
+const CompBox = ({ competition }) => {
+  const { setCompetitionInfo } = useNotifications();
+  const [statusMessage, setStatusMessage] = useState("");
+  const navigate = useNavigate();
 
-    const { setCompetitionInfo } = useNotifications();
-    const [statusMessage, setStatusMessage] = useState("");
-    const navigate = useNavigate();
+  const handleNavigateToResults = async () => {
+    setCompetitionInfo(competition);
+    localStorage.setItem("currentCompetition", JSON.stringify(competition));
 
-    const handleNavigateToResults = () => {
-      setCompetitionInfo(competition);
-      localStorage.setItem('currentCompetition', JSON.stringify(competition));
-      navigate("/results");
-    };
+    try {
+      // Fetch qualifications by competition ID
+      const result = await getQualificationsByCompetition(competition.competition_id);
+      
+      if (result.success) {
+        // Store qualifications in local storage
+        localStorage.setItem("currQualifications", JSON.stringify(result.data));
+        navigate("/results");
+      } else {
+        setStatusMessage(result.message);
+      }
+    } catch (error) {
+      console.error("Error navigating to results:", error);
+      setStatusMessage("An error occurred while navigating to results.");
+    }
+  };
 
     return (
       <div className="flex flex-col items-center gap-0 py-0 lg:w-[60%] md:w-[85%] w-[90%] h-full border-0 cursor-pointer hover:border-2 hover:border-glaucous"

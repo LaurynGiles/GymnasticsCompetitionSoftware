@@ -44,23 +44,11 @@ module.exports = {
         type: Sequelize.DECIMAL(5, 2),
         allowNull: true,
       },
-      bronze_max_score: {
-        type: Sequelize.DECIMAL(5, 2),
-        allowNull: true,
-      },
       silver_min_score: {
         type: Sequelize.DECIMAL(5, 2),
         allowNull: true,
       },
-      silver_max_score: {
-        type: Sequelize.DECIMAL(5, 2),
-        allowNull: true,
-      },
       gold_min_score: {
-        type: Sequelize.DECIMAL(5, 2),
-        allowNull: true,
-      },
-      gold_max_score: {
         type: Sequelize.DECIMAL(5, 2),
         allowNull: true,
       },

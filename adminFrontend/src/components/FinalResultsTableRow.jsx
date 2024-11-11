@@ -1,11 +1,29 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import SmallTableBlock from "./SmallTableBlock";
 import LargeTableBlock from "./LargeTableBlock";
 
 const FinalResultsTableRow = ({ gymnast_id, apparatus_list, gymnast_name, final_score, isFirstRow }) => {
   // Set a default value for final_score if it is undefined
+  const [medal, setMedal] = useState("");
   const safeFinalScore = final_score !== undefined ? final_score : 0;
+
+  useEffect(() => {
+    const competitionData = localStorage.getItem("currentCompetition");
+    if (competitionData) {
+      const { bronze_min_score, silver_min_score, gold_min_score } = JSON.parse(competitionData);
+
+      // Determine the medal based on score thresholds
+      const getMedal = (score) => {
+        if (score >= gold_min_score) return "Gold";
+        if (score >= silver_min_score) return "Silver";
+        if (score >= bronze_min_score) return "Bronze";
+        return "No Medal";
+      };
+
+      setMedal(getMedal(safeFinalScore));
+    }
+  }, [safeFinalScore]);
 
   return (
     <div className="flex shadow-md justify-start bg-anti-flash-white gap-6 p-2">
@@ -29,6 +47,8 @@ const FinalResultsTableRow = ({ gymnast_id, apparatus_list, gymnast_name, final_
           )}
 
           <LargeTableBlock text={safeFinalScore.toFixed(3)} title={"Total Score"} /> {/* Total Score */}
+
+          <LargeTableBlock text={medal} title={"Medal"} /> {/* Medal */}
         </>
       ) : (
         <>
@@ -48,6 +68,9 @@ const FinalResultsTableRow = ({ gymnast_id, apparatus_list, gymnast_name, final_
           )}
 
           <LargeTableBlock text={safeFinalScore.toFixed(3)} /> {/* Total Score */}
+
+          <LargeTableBlock text={medal} /> {/* Medal */}
+          
         </>
       )}
     </div>

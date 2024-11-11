@@ -241,9 +241,9 @@ const ConfigPage = () => {
     }
   };
 
-  const handleScoreChange = (minName, maxName, value) => {
-    setCompetition(prev => ({ ...prev, [minName]: value.min, [maxName]: value.max }));
-  };
+  // const handleScoreChange = (minName, value) => {
+  //   setCompetition(prev => ({ ...prev, [minName]: value.min }));
+  // };
 
   const handleAddQualification = () => {
     if (newQualName && !isNaN(parseFloat(newQualScore))) {
@@ -387,27 +387,27 @@ const ConfigPage = () => {
                   <InputLabel text="Bronze" />
                   <ScoreRange 
                     minScore={competition.minBronze}
-                    maxScore={competition.maxBronze}
-                    setMinScore={(value) => handleScoreChange('minBronze', 'maxBronze', { min: value, max: competition.maxBronze })}
-                    setMaxScore={(value) => handleScoreChange('minBronze', 'maxBronze', { min: competition.minBronze, max: value })}
+                    // maxScore={competition.maxBronze}
+                    setMinScore={(value) => handleChange({ target: { name: 'minBronze', value: value } })}
+                    // setMaxScore={(value) => handleScoreChange('minBronze', 'maxBronze', { min: competition.minBronze, max: value })}
                   />
                 </div>
                 <div className="flex items-center gap-4">
                   <InputLabel text="Silver" />
                   <ScoreRange 
                     minScore={competition.minSilver}
-                    maxScore={competition.maxSilver}
-                    setMinScore={(value) => handleScoreChange('minSilver', 'maxSilver', { min: value, max: competition.maxSilver })}
-                    setMaxScore={(value) => handleScoreChange('minSilver', 'maxSilver', { min: competition.minSilver, max: value })}
+                    // maxScore={competition.maxSilver}
+                    setMinScore={(value) => handleChange({ target: { name: 'minSilver', value: value } })}
+                    // setMaxScore={(value) => handleScoreChange('minSilver', 'maxSilver', { min: competition.minSilver, max: value })}
                   />
                 </div>
                 <div className="flex items-center gap-4">
                   <InputLabel text="Gold" />
                   <ScoreRange 
                     minScore={competition.minGold}
-                    maxScore={competition.maxGold}
-                    setMinScore={(value) => handleScoreChange('minGold', 'maxGold', { min: value, max: competition.maxGold })}
-                    setMaxScore={(value) => handleScoreChange('minGold', 'maxGold', { min: competition.minGold, max: value })}
+                    // maxScore={competition.maxGold}
+                    setMinScore={(value) => handleChange({ target: { name: 'minGold', value: value } })}
+                    // setMaxScore={(value) => handleScoreChange('minGold', 'maxGold', { min: competition.minGold, max: value })}
                   />
                 </div>
               </div>

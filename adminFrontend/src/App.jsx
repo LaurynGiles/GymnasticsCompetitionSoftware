@@ -15,6 +15,7 @@ import CompletePage from './pages/CompletePage.jsx';
 import GymnastDataPage from './pages/GymnastDataPage.jsx';
 import JudgeDataPage from './pages/JudgeDataPage.jsx';
 import QRCodePage from './pages/QRCodePage.jsx';
+import QualificationsPage from './pages/QualificationsPage.jsx';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/completeSetup" element={<CompletePage/>} />
           <Route path="/results" element={<ResultsPage/>} />
           <Route path="/finalResults" element={<FinalResultsPage/>} />
+          <Route path="/qualifications" element={<QualificationsPage/>} />
           <Route path="/qrcode" element={<QRCodePage/>} />
 
           <Route path="/gymnastData" element={<GymnastDataPage/>} />

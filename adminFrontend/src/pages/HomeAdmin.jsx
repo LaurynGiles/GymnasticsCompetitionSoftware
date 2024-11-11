@@ -14,8 +14,7 @@ const HomeAdmin = () => {
 
   const { adminInfo, socket } = useNotifications();
   const [compBoxes, setCompBoxes] = useState([]);
-  const [compApparatuses, setCompApparatuses] = useState([]);
-  const [compQualifications, setQualifications] = useState([]);
+  // const [compApparatuses, setCompApparatuses] = useState([]);
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");

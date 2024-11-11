@@ -123,8 +123,7 @@ const CompletePage = () => {
     const storedCompetition = JSON.parse(localStorage.getItem('competition')) || {};
     const requiredCompetitionFields = [
       "name", "location", "startDate", "endDate", "style",
-      "minBronze", "maxBronze", "minSilver", "maxSilver", 
-      "minGold", "maxGold"
+      "minBronze", "minSilver", "minGold"
     ];
   
     for (const field of requiredCompetitionFields) {
@@ -252,11 +251,11 @@ const CompletePage = () => {
       location: storedCompetition.location,
       style: storedCompetition.style,
       bronze_min_score: storedCompetition.minBronze,
-      bronze_max_score: storedCompetition.maxBronze,
+      // bronze_max_score: storedCompetition.maxBronze,
       silver_min_score: storedCompetition.minSilver,
-      silver_max_score: storedCompetition.maxSilver,
+      // silver_max_score: storedCompetition.maxSilver,
       gold_min_score: storedCompetition.minGold,
-      gold_max_score: storedCompetition.maxGold,
+      // gold_max_score: storedCompetition.maxGold,
     };
   
     console.log("Competition Payload:", payload);
