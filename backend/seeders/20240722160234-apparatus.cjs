@@ -26,6 +26,30 @@ module.exports = {
         competition_id: 1,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        apparatus_name: 'Vault',
+        competition_id: 2,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        apparatus_name: 'Floor',
+        competition_id: 2,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        apparatus_name: 'Double bars',
+        competition_id: 2,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        apparatus_name: 'Balance beam',
+        competition_id: 2,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {});
   },

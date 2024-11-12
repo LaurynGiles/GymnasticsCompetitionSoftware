@@ -38,6 +38,18 @@ module.exports = {
         completed: false,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        time_slot_id: 3,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        time_slot_id: 3,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {});
   },

@@ -114,6 +114,34 @@ module.exports = {
         completed: false,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        group_id: 6,
+        apparatus_id: 5,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 6,
+        apparatus_id: 6,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 7,
+        apparatus_id: 7,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        group_id: 7,
+        apparatus_id: 8,
+        completed: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {});
   },
