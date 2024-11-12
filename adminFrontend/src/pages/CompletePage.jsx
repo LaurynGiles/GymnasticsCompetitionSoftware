@@ -490,7 +490,7 @@ const CompletePage = () => {
               </span>
               <span className="font-montserrat font-medium text-md md:text-lg lg:text-xl">
                 <br />
-                You have successfully configured all required competition information.
+                Once all pages have turned green, you would have successfully configured all required competition information.
                 Your competition setup is now complete, and you are ready to create and start the competition.
                 <br />
                 <br />
@@ -507,15 +507,11 @@ const CompletePage = () => {
                 <br />
                 <br />
               </span>
-              <span className="font-montserrat font-semibold text-lg md:text-xl lg:text-2xl">
-                Congratulations on completing the setup!
-              </span>
               <span className="font-montserrat font-medium text-md md:text-lg lg:text-xl">
                 <br />
                 You’re now one step closer to a smooth and efficient competition experience.
                 Thank you for using ScoreMatics to manage your event.
                 <br />
-                Click the button below to finalize your setup and officially create the competition.
               </span>
             </p>
           </div>

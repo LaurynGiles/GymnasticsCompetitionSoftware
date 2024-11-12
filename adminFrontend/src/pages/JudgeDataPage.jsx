@@ -10,6 +10,7 @@ import NavigationBarResults from "../components/NavigationBarResults.jsx";
 import TickIcon from "../components/TickIcon.jsx";
 import DeletePopup from "../components/DeletePopup.jsx";
 import JudgeTableRow from "../components/JudgeTableRow.jsx";
+import Popup from "../components/Popup.jsx"
 
 const JudgeDataPage = () => {
   const [isNavVisible, setIsNavVisible] = useState(true);

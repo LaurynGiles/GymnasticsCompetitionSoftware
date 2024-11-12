@@ -35,7 +35,7 @@ const WelcomePage = () => {
                 <br />
               </span>
               <span className="font-montserrat font-medium text-md md:text-lg lg:text-xl">
-                Upload all required competition details, including the competition details, program, participants, and
+                Upload all required competition details, including the competition details, timeslots, gymnast groups, gymnasts and
                 judges, are uploaded to their respective tabs.
                 <br />
                 For your convenience, we have provide Excel spreadsheet files that you can download and use to import
