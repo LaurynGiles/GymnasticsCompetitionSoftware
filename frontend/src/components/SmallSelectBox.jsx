@@ -11,16 +11,24 @@ const SmallSelectBox = ({ option, setOption, setJudgeId }) => {
   const [judgeMap, setJudgeMap] = useState({});
 
   useEffect(() => {
-    // Get joined judges from localStorage if available
+    // Retrieve head judge info from local storage
+    const storedJudgeInfo = localStorage.getItem("judgeInfo");
+    const headJudge = storedJudgeInfo ? JSON.parse(storedJudgeInfo) : null;
+    const headJudgeId = headJudge?.judge_id;
+
+    // Retrieve joined judges from local storage if available
     const storedJoinedJudges = localStorage.getItem("joinedJudges");
     const parsedJoinedJudges = storedJoinedJudges ? JSON.parse(storedJoinedJudges) : [];
     
     // Use the parsed data from localStorage or the real-time `joinedJudges` from `useNotifications`
     const currentJoinedJudges = joinedJudges.length ? joinedJudges : parsedJoinedJudges;
 
+    // Filter out the head judge from the list of joined judges
+    const filteredJudges = currentJoinedJudges.filter(judge => judge.judge_id !== headJudgeId);
+
     // Map judge data into `allOptions` and `judgeMap`
     const newJudgeMap = {};
-    currentJoinedJudges.forEach(judge => {
+    filteredJudges.forEach(judge => {
       const name = `${judge.first_name} ${judge.last_name}`;
       newJudgeMap[name] = judge.judge_id;
     });

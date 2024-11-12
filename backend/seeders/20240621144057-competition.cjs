@@ -29,19 +29,19 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      {
-        competition_name: 'Winter Championships',
-        admin_id: 1,
-        start_date: '2024-06-15',
-        end_date: '2024-06-17',
-        location: 'Frost Town',
-        style: 'WAG',
-        bronze_min_score: 20.0,
-        silver_min_score: 25.0,
-        gold_min_score: 35.0,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
+      // {
+      //   competition_name: 'Winter Championships',
+      //   admin_id: 1,
+      //   start_date: '2024-06-15',
+      //   end_date: '2024-06-17',
+      //   location: 'Frost Town',
+      //   style: 'WAG',
+      //   bronze_min_score: 20.0,
+      //   silver_min_score: 25.0,
+      //   gold_min_score: 35.0,
+      //   createdAt: new Date(),
+      //   updatedAt: new Date()
+      // }
     ], {});
   },
   down: async (queryInterface, Sequelize) => {
