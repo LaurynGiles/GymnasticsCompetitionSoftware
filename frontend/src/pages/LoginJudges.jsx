@@ -70,6 +70,7 @@ const LoginJudges = () => {
         setJudgeInfo(judgeInfo);
 
         localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
+        localStorage.removeItem("homeJudgesState");
 
         console.log(judge_id);
         console.log(role);

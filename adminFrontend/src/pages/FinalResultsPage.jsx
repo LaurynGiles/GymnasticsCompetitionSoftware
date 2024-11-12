@@ -140,38 +140,45 @@ const FinalResultsPage = () => {
                     <div className="flex flex-col w-full gap-20">
 
                       {/* Step 2: Map over grouped results */}
-                      {Object.keys(groupedResults).map((sessionId) => (
-                        <div className="flex flex-col gap-6" key={sessionId}>
-                          <LargeHeader text={`Competition ${sessionId}`} />
+                      {Object.keys(groupedResults).map((sessionId, index) => {
+                        // Calculate the position and convert it to a letter
+                        const letter = String.fromCharCode(65 + index); // 'A' corresponds to ASCII 65
 
-                          {/* Map over level and age group */}
-                          {Object.keys(groupedResults[sessionId]).map((levelAgeGroupKey) => (
-                            <div className="flex flex-col gap-2" key={levelAgeGroupKey}>
-                              <Header text={`Level ${levelAgeGroupKey.replace("-", ": ")} yrs`} /> {/* Display Level and Age Group Header */}
-                              
-                              {/* Container for Results and Edit Icons */}
-                              <div className="flex flex-row gap-4">
-                                {/* Column for Final Results */}
-                                <div className="flex flex-col gap-2 w-full">
-                                  {/* Sort the gymnasts by total final score in descending order */}
-                                  {Object.entries(groupedResults[sessionId][levelAgeGroupKey])
-                                    .sort(([, a], [, b]) => b.totalFinalScore - a.totalFinalScore) // Sort by totalFinalScore in descending order
-                                    .map(([gymnastId, gymnastData], index) => (
-                                      <FinalResultsTableRow 
-                                        key={gymnastId}
-                                        gymnast_id={Number(gymnastId)}
-                                        gymnast_name={gymnastData.gymnast_name}
-                                        apparatus_list={gymnastData.apparatusScores} // Pass apparatus scores
-                                        final_score={gymnastData.totalFinalScore} // Pass total final score
-                                        isFirstRow={index === 0} // Set to true only for the first row of the gymnast
-                                      />
-                                    ))}
+                        return (
+                          <div className="flex flex-col gap-6" key={sessionId}>
+                            <LargeHeader text={`Competition ${letter}`} /> {/* Display the letter instead of sessionId */}
+
+                            {/* Map over level and age group */}
+                            {Object.keys(groupedResults[sessionId]).map((levelAgeGroupKey) => (
+                              <div className="flex flex-col gap-2" key={levelAgeGroupKey}>
+                                <Header text={`Level ${levelAgeGroupKey.replace("-", ": ")} yrs`} /> {/* Display Level and Age Group Header */}
+                                
+                                {/* Container for Results and Edit Icons */}
+                                <div className="flex flex-row gap-4">
+                                  {/* Column for Final Results */}
+                                  <div className="flex flex-col gap-2 w-full">
+                                    {/* Sort the gymnasts by total final score in descending order */}
+                                    {Object.entries(groupedResults[sessionId][levelAgeGroupKey])
+                                      .sort(([, a], [, b]) => b.totalFinalScore - a.totalFinalScore) // Sort by totalFinalScore in descending order
+                                      .map(([gymnastId, gymnastData], index) => (
+                                        <FinalResultsTableRow 
+                                          key={gymnastId}
+                                          gymnast_id={Number(gymnastId)}
+                                          gymnast_name={gymnastData.gymnast_name}
+                                          apparatus_list={gymnastData.apparatusScores} // Pass apparatus scores
+                                          final_score={gymnastData.totalFinalScore} // Pass total final score
+                                          isFirstRow={index === 0} // Set to true only for the first row of the gymnast
+                                        />
+                                      ))}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      ))}
+                            ))}
+                          </div>
+                        );
+                    })}
+
+
                     </div>
                   </div>
                 </div>

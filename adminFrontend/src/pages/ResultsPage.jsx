@@ -323,121 +323,117 @@ const ResultsPage = () => {
                     <div className="flex flex-col w-full gap-20">
 
                     {/* Step 2: Map over grouped results */}
-                    {Object.keys(groupedResults).map((sessionId) => (
-                        <div className="flex flex-col gap-10" key={sessionId}>
-                          <LargeHeader text={`Competition ${sessionId}`} />
+                    {Object.keys(groupedResults).map((sessionId, index) => {
+                    // Calculate the position and convert it to a letter
+                    const letter = String.fromCharCode(65 + index); // 'A' corresponds to ASCII 65
 
-                          {Object.keys(groupedResults[sessionId]).map((levelAgeGroupKey) => (
-                            <div className="flex flex-col gap-8" key={levelAgeGroupKey}>
-                              {/* Display Level and Age Group Header if needed */}
-                              <Header text={`Level ${levelAgeGroupKey.replace("-", ": ")} yrs`} /> {/* Optional: Customize display */}
+                    return (
+                      <div className="flex flex-col gap-10" key={sessionId}>
+                        <LargeHeader text={`Competition ${letter}`} /> {/* Display the letter instead of sessionId */}
 
-                              {Object.keys(groupedResults[sessionId][levelAgeGroupKey]).map((apparatusName) => {
-                                // Sort the results by final score within this apparatus group
-                                const sortedResults = groupedResults[sessionId][levelAgeGroupKey][apparatusName].map(result => {
-                                  const finalScore = calculateFinalScore(result.difficulty, result.execution, result.penalty);
-                                  return { ...result, finalScore }; // Add finalScore to the result
-                                }).sort((a, b) => b.finalScore - a.finalScore); // Sort in descending order
+                        {Object.keys(groupedResults[sessionId]).map((levelAgeGroupKey) => (
+                          <div className="flex flex-col gap-8" key={levelAgeGroupKey}>
+                            <Header text={`Level ${levelAgeGroupKey.replace("-", ": ")} yrs`} />
 
-                                return (
-                                  <div className="flex flex-col gap-3" key={apparatusName}>
-                                    <div className="flex flex-row gap-4">
-                                      {/* This div contains the Results and JudgeScore rows */}
-                                      <div className="flex flex-col w-full gap-3">
-                                      {sortedResults.map((result, index) => {
-                                          const key = `${result.gymnast_id}-${result.apparatus_name}`;
+                                {Object.keys(groupedResults[sessionId][levelAgeGroupKey]).map((apparatusName) => {
+                                  const sortedResults = groupedResults[sessionId][levelAgeGroupKey][apparatusName]
+                                    .map(result => {
+                                      const finalScore = calculateFinalScore(result.difficulty, result.execution, result.penalty);
+                                      return { ...result, finalScore };
+                                    })
+                                    .sort((a, b) => b.finalScore - a.finalScore);
 
-                                          const editedResult = editRows[key];
+                                      return (
+                                        <div className="flex flex-col gap-3" key={apparatusName}>
+                                          <div className="flex flex-row gap-4">
+                                            <div className="flex flex-col w-full gap-3">
+                                              {sortedResults.map((result, index) => {
+                                                const key = `${result.gymnast_id}-${result.apparatus_name}`;
+                                                const editedResult = editRows[key];
+                                                const dataToDisplay = editedResult || result;
 
-                                          // Use updated gymnast data if it exists, otherwise use the original gymnast data
-                                          const dataToDisplay = editedResult || result;
+                                                return (
+                                                  <div className="flex flex-col" key={result.gymnast_id}>
+                                                    {editRows[key] ? (
+                                                      <ResultsEditTableRow
+                                                        gymnast_id={dataToDisplay.gymnast_id}
+                                                        gymnast_name={dataToDisplay.gymnast_name}
+                                                        apparatus_name={dataToDisplay.apparatus_name}
+                                                        difficulty={dataToDisplay.difficulty}
+                                                        execution={dataToDisplay.execution}
+                                                        penalty={dataToDisplay.penalty}
+                                                        isFirstRow={index === 0}
+                                                        onUpdate={(updatedFields) =>
+                                                          handleUpdateResults(dataToDisplay.gymnast_id, dataToDisplay.apparatus_name, updatedFields)
+                                                        }
+                                                      />
+                                                    ) : (
+                                                      <ResultsTableRow
+                                                        gymnast_id={result.gymnast_id}
+                                                        gymnast_name={result.gymnast_name}
+                                                        apparatus_name={result.apparatus_name}
+                                                        difficulty={result.difficulty}
+                                                        execution={result.execution}
+                                                        penalty={result.penalty}
+                                                        onClick={() => handleRowClick(result.gymnast_id, result.apparatus_name, result.judges, result.execution)}
+                                                        isFirstRow={index === 0}
+                                                      />
+                                                    )}
 
-                                          return (
-                                            <div className="flex flex-col" key={result.gymnast_id}>
-                                              {editRows[key] ? (
-                                                <ResultsEditTableRow
-                                                  gymnast_id={dataToDisplay.gymnast_id}
-                                                  gymnast_name={dataToDisplay.gymnast_name}
-                                                  apparatus_name={dataToDisplay.apparatus_name}
-                                                  difficulty={dataToDisplay.difficulty}
-                                                  execution={dataToDisplay.execution}
-                                                  penalty={dataToDisplay.penalty}
-                                                  isFirstRow={index === 0}
-                                                  onUpdate={(updatedFields) =>
-                                                    handleUpdateResults(dataToDisplay.gymnast_id, dataToDisplay.apparatus_name, updatedFields)
-                                                  }
-                                                />
-                                              ) : (
-                                                <ResultsTableRow
-                                                  gymnast_id={result.gymnast_id}
-                                                  gymnast_name={result.gymnast_name}
-                                                  apparatus_name={result.apparatus_name}
-                                                  difficulty={result.difficulty}
-                                                  execution={result.execution}
-                                                  penalty={result.penalty}
-                                                  onClick={() => handleRowClick(result.gymnast_id, result.apparatus_name, result.judges, result.execution)}
-                                                  isFirstRow={index === 0}
-                                                />
-                                              )}
-
-                                            
-                                              {clickedRows[key] && editRows[key]? (
-                                                 <JudgeEditTableRow
-                                                  judges={dataToDisplay.judges} // Pass the array of judge IDs
-                                                  executions={dataToDisplay.execution} // Pass the execution scores
-                                                  setExecutions={(updatedExecutions) =>
-                                                    handleUpdateExecutions(result.gymnast_id, result.apparatus_name, {
-                                                      execution: updatedExecutions,
-                                                    })
-                                                  } // Update the executions in local storage and state
-                                                />
-                                              ) : (
-                                                clickedRows[key] && (
-                                                  <JudgeScoreTableRow
-                                                    gymnast_id={result.gymnast_id}
-                                                    executions={result.execution}
-                                                    judges={result.judges}
-                                                  />
-                                                )
-                                              )}
+                                                    {clickedRows[key] && editRows[key] ? (
+                                                      <JudgeEditTableRow
+                                                        judges={dataToDisplay.judges}
+                                                        executions={dataToDisplay.execution}
+                                                        setExecutions={(updatedExecutions) =>
+                                                          handleUpdateExecutions(result.gymnast_id, result.apparatus_name, {
+                                                            execution: updatedExecutions,
+                                                          })
+                                                        }
+                                                      />
+                                                    ) : (
+                                                      clickedRows[key] && (
+                                                        <JudgeScoreTableRow
+                                                          gymnast_id={result.gymnast_id}
+                                                          executions={result.execution}
+                                                          judges={result.judges}
+                                                        />
+                                                      )
+                                                    )}
+                                                  </div>
+                                                );
+                                              })}
                                             </div>
-                                          );
-                                        })}
-                                      </div>
-                                
-                                      {/* This div contains the EditIcons */}
-                                      <div className="flex flex-col gap-1">
-                                      <div className="flex flex-col gap-1">
-                                          {sortedResults.map((result, index) => (
-                                            <div 
-                                              className={`flex justify-end 
-                                                ${index === 0 && clickedRows[`${result.gymnast_id}-${result.apparatus_name}`] ? 'pt-[82px] pb-[124px]' : ''}
-                                                ${index === 0 && !clickedRows[`${result.gymnast_id}-${result.apparatus_name}`] ? 'pt-[82px] pb-[23px]' : ''}
-                                                ${index > 0 && clickedRows[`${result.gymnast_id}-${result.apparatus_name}`] ? 'py-[21px] pb-[118px]' : ''}
-                                                ${index > 0 && !clickedRows[`${result.gymnast_id}-${result.apparatus_name}`] ? 'py-[21px]' : ''}
-                                              `} 
-                                              key={result.gymnast_id}
-                                            >
-                                              { editRows[`${result.gymnast_id}-${result.apparatus_name}`] ? (
-                                                <TickIcon onClick={() => handleUpdateResultsDB(`${result.gymnast_id}-${result.apparatus_name}`)}/>
-                                              ) : (
-                                                (result.difficulty_judge !== null && result.judges.length > 0 && result.execution.length > 0) && (
-                                                  <EditIcon onClick={() => handleEditClick(result.gymnast_id, result.apparatus_name, result)}/>
-                                                )
-                                              )}
+
+                                            <div className="flex flex-col gap-1">
+                                              {sortedResults.map((result, index) => (
+                                                <div
+                                                  className={`flex justify-end 
+                                                    ${index === 0 && clickedRows[`${result.gymnast_id}-${result.apparatus_name}`] ? 'pt-[82px] pb-[124px]' : ''}
+                                                    ${index === 0 && !clickedRows[`${result.gymnast_id}-${result.apparatus_name}`] ? 'pt-[82px] pb-[23px]' : ''}
+                                                    ${index > 0 && clickedRows[`${result.gymnast_id}-${result.apparatus_name}`] ? 'py-[21px] pb-[118px]' : ''}
+                                                    ${index > 0 && !clickedRows[`${result.gymnast_id}-${result.apparatus_name}`] ? 'py-[21px]' : ''}
+                                                  `}
+                                                  key={result.gymnast_id}
+                                                >
+                                                  {editRows[`${result.gymnast_id}-${result.apparatus_name}`] ? (
+                                                    <TickIcon onClick={() => handleUpdateResultsDB(`${result.gymnast_id}-${result.apparatus_name}`)} />
+                                                  ) : (
+                                                    (result.difficulty_judge !== null && result.judges.length > 0 && result.execution.length > 0) && (
+                                                      <EditIcon onClick={() => handleEditClick(result.gymnast_id, result.apparatus_name, result)} />
+                                                    )
+                                                  )}
+                                                </div>
+                                              ))}
                                             </div>
-                                          ))}
+                                          </div>
                                         </div>
-                                      </div>
-                                    </div>
+                                      );
+                                    })}
                                   </div>
-                                );
-
-                              })}
-                            </div>
-                          ))}
-                        </div>
-                      ))}
+                                ))}
+                              </div>
+                            );
+                        })}
                       
                     </div>
                   </div>

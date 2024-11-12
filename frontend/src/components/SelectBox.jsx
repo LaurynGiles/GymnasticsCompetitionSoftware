@@ -26,11 +26,13 @@ const SelectBox = ({ noSelect, title, option , setOption, setOptionId, allOption
 
   const renderOption = (option) => {
     if (optionType === "Competition") {
-        return `Competition ${option}`;
+      const position = allOptions.indexOf(option);
+      const letter = String.fromCharCode(65 + position);  // Convert position to letter (A=65 in ASCII)
+      return `Competition ${letter}`;
     } else {
-        return option;
+      return option;
     }
-};
+  };
 
 return (
   <div className="flex flex-col items-center justify-center gap-4 p-4 md:p-6 relative">

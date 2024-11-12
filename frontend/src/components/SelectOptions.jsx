@@ -7,7 +7,9 @@ const SelectOptions = ({ allOptions, handleOptionClick, optionType }) => {
 
   const renderOption = (option) => {
     if (optionType === "Competition") {
-      return `Competition ${option}`;
+      const position = allOptions.indexOf(option);
+      const letter = String.fromCharCode(65 + position);  // Convert position to letter (A=65 in ASCII)
+      return `Competition ${letter}`;
     } else {
       return option;
     }
