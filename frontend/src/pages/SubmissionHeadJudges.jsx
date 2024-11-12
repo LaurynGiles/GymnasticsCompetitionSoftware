@@ -100,7 +100,7 @@ const SubmissionHeadJudges = () => {
 
     console.log(`Judges: ${joinedJudges.length}`)
 
-    if (receivedDeductions.length != (joinedJudges.length + 1)) {
+    if (receivedDeductions.length != (joinedJudges.length)) {
       setConfirmSubmit(true);
     } else {
       submitScores();
@@ -114,41 +114,6 @@ const SubmissionHeadJudges = () => {
       navigate("/gymnastselect");
     }
   };
-
-  // const submitScores = async () => {
-
-  //   try {
-  //     const difficultyResponse = await submitDifficulty(groupId, judgeInfo.judge_id, nextGymnast.gymnast_id, startScore, penalty);
-  //     console.log("Difficulty submitted:", difficultyResponse);
-  //   } catch (error) {
-  //     console.error("Failed to submit difficulty:", error);
-  //   }
-
-  //   receivedDeductions.forEach(async (judge) => {
-  //     try {
-  //       const executionResponse = await submitExecution(groupId, judge.judgeId, nextGymnast.gymnast_id, judge.deduction, penalty);
-  //       console.log(`Execution submitted for judge ${judge.judgeId}:`, executionResponse);
-  //     } catch (error) {
-  //       console.error(`Failed to submit execution for judge ${judge.judgeId}:`, error);
-  //     }
-  //   });
-
-  //   socket.emit('finalScoreSubmitted', { groupId, finalScore: (startScore - penalty - averageDeduction).toFixed(3) });
-    
-  //   // setDeductionTotal(null);
-  //   // setPenalty(null);
-  //   // setFinalScore(null);
-  //   // setStartScore(null);
-  //   setReceivedDeductions([]);
-
-  //   // localStorage.setItem("values", []);
-  //   // localStorage.setItem("total", 0.0);
-  //   // localStorage.setItem("startScore", 0.0);
-  //   // localStorage.setItem("penalty", 0.0);
-
-  //   setShowSubmitPopup(true);
-  //   setNavigateOnClose(true);
-  // }
 
   const submitScores = async () => {
     try {
@@ -198,7 +163,7 @@ const SubmissionHeadJudges = () => {
     setLeaveGroup(false);
     socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
 
-    setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
+    // setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
 
     setHeadOfGroup(false);
     setNextGymnast(null);
@@ -214,7 +179,7 @@ const SubmissionHeadJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
-    localStorage.removeItem('joinedJudges');
+    // localStorage.removeItem('joinedJudges');
     navigate('/homejudges');
   };
 

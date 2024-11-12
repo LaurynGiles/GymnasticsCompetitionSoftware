@@ -105,7 +105,7 @@ const GymnastSelectHeadJudges = () => {
     setLeaveGroup(false);
     socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
 
-    setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
+    // setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
     setEventEnded(false);
     setHeadOfGroup(false);
     setNextGymnast(null);
@@ -121,7 +121,7 @@ const GymnastSelectHeadJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
-    localStorage.removeItem('joinedJudges');
+    // localStorage.removeItem('joinedJudges');
     navigate('/homejudges');
   };
 

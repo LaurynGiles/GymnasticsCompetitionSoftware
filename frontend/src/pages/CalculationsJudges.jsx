@@ -126,7 +126,7 @@ const CalculationsJudges = () => {
     setLeaveGroup(false);
     socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
 
-    setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
+    // setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
 
     setHeadOfGroup(false);
     setNextGymnast(null);

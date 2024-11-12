@@ -35,6 +35,10 @@ export const NotificationProvider = ({ children }) => {
   const [resubmissionMessage, setResubmissionMessage] = useState(null);
 
   useEffect(() => {
+    console.log("Updated joinedJudges state:", joinedJudges);
+  }, [joinedJudges]);
+
+  useEffect(() => {
     // const socketConnection = io("http://localhost:5000");
     const socketConnection = io("https://gymnasticscompetitionsoftware.onrender.com");
     setSocket(socketConnection);
@@ -77,17 +81,29 @@ export const NotificationProvider = ({ children }) => {
       setJoinRequests(prev => [...prev, request]);
     });
 
-    socketConnection.on("judgeJoined", (judge) => {
-      console.log(judge);
+    // socketConnection.on("judgeList", (judges) => {
+    //   console.log(judges);
       
-      // Update local storage
-      const storedJudges = JSON.parse(localStorage.getItem("joinedJudges")) || [];
-      const updatedJudges = [...storedJudges, judge];
-      localStorage.setItem("joinedJudges", JSON.stringify(updatedJudges));
+    //   const updatedJudges = [judges];
+    //   localStorage.setItem("joinedJudges", JSON.stringify(updatedJudges));
     
-      // Update state
-      setJoinedJudges(prev => [...prev, judge]);
+    //   setJoinedJudges(prev => [...prev, judge]);
+    // });
+
+    socketConnection.on("allJudgesInGroup", (judges) => {
+      // Log the received list of judges to verify data
+      console.log("Received judges list from server:", judges);
+    
+      // Update local storage with the list of judges
+      localStorage.setItem("joinedJudges", JSON.stringify(judges));
+    
+      // Update state with the list of judges
+      setJoinedJudges(judges);  // This will trigger a re-render with updated state
+      
+      // Optional: Log the state after setting it, though this will log the state before the next render
+      console.log("Updated state for joinedJudges:", joinedJudges);
     });
+    
 
     socketConnection.on("joinApproved", ({ group_id, apparatus }) => {
       console.log(`Join approved for group ${group_id}`);
@@ -165,21 +181,6 @@ export const NotificationProvider = ({ children }) => {
     /** SET HEAD OF GROUP and GROUP ID back to normal when leaving a group */
 
     return () => {
-      // socketConnection.off("judgeDisconnected", handleJudgeDisconnected);
-      // socketConnection.off("judgeLeaveGroup", handleJudgeLeaveGroup);
-      // socketConnection.off("eventEnded", handleEventEnded);
-      // socketConnection.off("rejectionMessage", handleRejectionMessage);
-      // socketConnection.off("serverMessage", handleServerMessage);
-      // socketConnection.off("groupMessage", handleGroupMessage);
-      // socketConnection.off("joinRequest", handleJoinRequest);
-      // socketConnection.off("judgeJoined", handleJudgeJoined);
-      // socketConnection.off("joinApproved", handleJoinApproved);
-      // socketConnection.off("nextGymnast", handleNextGymnast);
-      // socketConnection.off("receiveDeduction", handleReceiveDeduction);
-      // socketConnection.off("scoresUpdated", handleScoresUpdated);
-      // socketConnection.off("updateFinalScore", handleUpdateFinalScore);
-      // socketConnection.off("resubmissionRequest", handleResubmissionRequest);
-      // socketConnection.off("judgeResubmission", handleJudgeResubmission);
       socketConnection.close();
     };
   }, []);
@@ -213,16 +214,6 @@ export const NotificationProvider = ({ children }) => {
     });
     setResubmissionRequests(prev => prev.filter(judge => judge.judgeId !== judgeData.judgeId));
   };
-
-  // const fetchJudgeInfo = async (judge_id) => {
-  //   try {
-  //       const judgeInfo = await getJudgeInfo(judge_id);
-  //       return judgeInfo;
-  //   } catch (error) {
-  //       console.error('Error fetching judge info:', error);
-  //       return null;
-  //   }
-  // };
 
   return (
     <NotificationContext.Provider value={{

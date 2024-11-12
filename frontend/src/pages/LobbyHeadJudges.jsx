@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import NavigationBarDefault from "../components/NavigationBarDefault";
 import BlockHeader from "../components/BlockHeader";
 import Header from "../components/Header";
@@ -10,30 +10,29 @@ import { useNotifications } from "../utils/connection.jsx";
 import LeavePopup from "../components/LeavePopup.jsx";
 
 const LobbyHeadJudges = () => {
+  const { 
+    groupId, setHeadOfGroup, setJoinedJudges, setNextGymnast, setCurrApparatus, setPenalty, setDeductionTotal, 
+    setStartScore, setFinalScore, setNavigateToCalculations, joinRequests, joinedJudges, approveJoinRequest, 
+    rejectJoinRequest, judgeInfo, judgingStarted, setJudgingStarted, nextGymnast, socket 
+  } = useNotifications();
 
-  const { groupId, setHeadOfGroup, setJoinedJudges, setNextGymnast, setCurrApparatus, setPenalty, setDeductionTotal, setStartScore, setFinalScore, 
-    setNavigateToCalculations, joinRequests, joinedJudges, approveJoinRequest, rejectJoinRequest, judgeInfo, judgingStarted, 
-    setJudgingStarted, nextGymnast, socket } = useNotifications();
   const location = useLocation();
   const prevPage = location.state?.currPage || "/homejudges";
-  console.log(prevPage);
   const [leaveGroup, setLeaveGroup] = useState(false);
   const navigate = useNavigate();
 
+  // Load joinedJudges from localStorage on mount
   useEffect(() => {
-    // Load joined judges from local storage if they exist
-    const storedJoinedJudges = JSON.parse(localStorage.getItem("joinedJudges"));
-    console.log(`Fetching judges ${storedJoinedJudges}`);
-    if (storedJoinedJudges) {
-      setJoinedJudges(storedJoinedJudges);
+    const storedJudges = JSON.parse(localStorage.getItem("joinedJudges"));
+    console.log(`JOINED ${storedJudges}`);
+    if (storedJudges) {
+      setJoinedJudges(storedJudges);
     }
   }, [setJoinedJudges]);
 
   const handleApprove = (request) => {
     if (judgingStarted) {
-      console.log(nextGymnast);
-      console.log(request);
-      socket.emit('judgeGymnastSingle', {scoketId: request.socket_id, groupId: request.group_id, gymnast: nextGymnast});
+      socket.emit('judgeGymnastSingle', { socketId: request.socket_id, groupId: request.group_id, gymnast: nextGymnast });
     }
     approveJoinRequest(request);
   };
@@ -53,13 +52,10 @@ const LobbyHeadJudges = () => {
 
   const handleLeaveGroup = () => {
     setLeaveGroup(false);
-    socket.emit('leaveGroup', {group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname});
-
-    setJoinedJudges(prev => prev.filter(judge => judge.judge_id === judgeInfo.judge_id));
-
+    socket.emit('leaveGroup', { group_id: groupId, judge_id: judgeInfo.judge_id, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname });
+    setJoinedJudges(prev => prev.filter(judge => judge.judge_id !== judgeInfo.judge_id));
     setHeadOfGroup(false);
     setNextGymnast(null);
-    // setCurrApparatus(null);
     setPenalty(null);
     setDeductionTotal(null);
     setStartScore(null);
@@ -74,7 +70,6 @@ const LobbyHeadJudges = () => {
     localStorage.removeItem('joinedJudges');
     navigate('/homejudges');
   };
-
 
   return (
     <div className="bg-bright-white flex flex-row justify-center w-full min-h-screen">
@@ -98,11 +93,11 @@ const LobbyHeadJudges = () => {
               </div>
             <Header text={"Judges at the table"}/>
               <div className="flex flex-col items-center w-[95%] md:w-[70%] lg:w-[45%] pl-4 pr-4 md:pr-10 pt-4 pb-10 gap-2 bg-anti-flash-white rounded-lg">
-                <RemoveRequest name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`}/>
+                {/* <RemoveRequest name={`${judgeInfo.judge_fname} ${judgeInfo.judge_lname}`}/> */}
                 {joinedJudges.map((judge, index) => (
                   <RemoveRequest 
                     key={index} 
-                    name={`${judge.judge_fname} ${judge.judge_lname}`} 
+                    name={`${judge.first_name} ${judge.last_name}`} 
                   />
                 ))}
               </div>
@@ -120,4 +115,4 @@ const LobbyHeadJudges = () => {
   );
 };
 
-export default LobbyHeadJudges
+export default LobbyHeadJudges;

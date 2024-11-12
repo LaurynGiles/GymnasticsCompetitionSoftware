@@ -31,6 +31,7 @@ const HomeJudges = () => {
       setDeductionTotal(null);
       setFinalScore(null);
       setJoinStatus("");
+      setNoSelect(false);
       navigate("/calculationsjudges");
     }
   }, [navigateToCalculations, navigate, setNavigateToCalculations]);
@@ -60,7 +61,11 @@ const HomeJudges = () => {
     const fetchData = async () => {
       if (!judgeInfo?.competition_id) return;
 
+      console.log(judgeInfo);
+
       const activeTimeSlot = await getActiveTimeSlot(judgeInfo.competition_id);
+
+      console.log(activeTimeSlot);
 
       if (activeTimeSlot) {
         const sessions = await getSessionsByTimeSlot(activeTimeSlot.time_slot_id);
@@ -109,9 +114,9 @@ const HomeJudges = () => {
     }
   }, [comp, apparatusId]);
 
-  useEffect(() => {
-      saveStateToLocalStorage();
-  }, [comp, apparatus, apparatusId]);
+  // useEffect(() => {
+  //     saveStateToLocalStorage();
+  // }, [comp, apparatus, apparatusId]);
 
   return (
       <div className="bg-bright-white w-full">

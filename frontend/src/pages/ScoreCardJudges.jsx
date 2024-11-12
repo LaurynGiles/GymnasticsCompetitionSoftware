@@ -89,7 +89,7 @@ const ScoreCardJudges = () => {
     localStorage.removeItem('startScore');
     localStorage.removeItem('total');
     localStorage.removeItem('values');
-    localStorage.removeItem('joinedJudges');
+    // localStorage.removeItem('joinedJudges');
     setEventEnded(false);
     navigate('/homejudges');
   };

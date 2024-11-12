@@ -7,7 +7,7 @@ const InputBox = ({number, setNumber, hasError}) => {
   };
 
     return (
-      <div className={`flex w-[284px] items-center gap-[10px] pl-[10px] pr-[130px] py-[10px] flex-[0_0_auto] relative bg-bright-white rounded-[20px] ${hasError ? 'border-2 border-red-500' : ''}`}>
+      <div className={`flex w-[284px] md:w-[400px] items-center gap-[10px] pl-[10px] pr-[130px] py-[10px] flex-[0_0_auto] relative bg-bright-white rounded-[20px] ${hasError ? 'border-2 border-red-500' : ''}`}>
         <input
           type="text"
           value={number}

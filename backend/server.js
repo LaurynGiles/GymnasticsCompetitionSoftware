@@ -105,8 +105,11 @@ io.on('connection', (socket) => {
         return;
       }
     }
+
+    console.log("GROUP USERS:", groupUsers);
     
-    if (!groupUsers[group_id]) {
+    if (!groupUsers[group_id] || groupUsers[group_id].length === 0) {
+      console.log(`GROUP users for groups: ${groupUsers[group_id]}`);
       if (!head_judge) {
         console.log("Error: Group has not been started by a head judge")
         callback({ success: false, error: 'This event needs to be started by a Head judge' });
@@ -122,12 +125,13 @@ io.on('connection', (socket) => {
 
         groupUsers[group_id].push(socket.id);
 
+        console.log("GROUP USERS:", groupUsers[group_id]);
+
         socket.join(`group_${group_id}`);
         io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
         console.log(`Socket ${socket.id} started group ${group_id}`);
         console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
         callback({ success: true, isHeadJudge: true, rejoin: false });
-        return;
 
       } else {
 
@@ -135,23 +139,34 @@ io.on('connection', (socket) => {
 
         groupUsers[group_id].push(socket.id);
 
+        console.log("GROUP USERS:", groupUsers[group_id]);
+
         socket.join(`group_${group_id}`);
         io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
         console.log(`Socket ${socket.id} started group ${group_id}`);
         console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
         callback({ success: true, isHeadJudge: true, rejoin: true });
-        return;
 
       }
 
-      // groupUsers[group_id].push(socket.id);
+      console.log(groupUsers[group_id])
+      const judgesInGroup = groupUsers[group_id].map((judgeSocketId) => {
+        const judgeId = Array.from(loggedInJudges.entries()).find(([, socketId]) => socketId === judgeSocketId)?.[0];
+        if (judgeId && judgeDetails.has(judgeId)) {
+          const { judge_fname, judge_lname } = judgeDetails.get(judgeId);
+          return {
+            judge_id: judgeId,
+            first_name: judge_fname,
+            last_name: judge_lname,
+            socket_id: judgeSocketId
+          };
+        }
+        return null;
+      }).filter(Boolean);
 
-      // socket.join(`group_${group_id}`);
-      // io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
-      // console.log(`Socket ${socket.id} started group ${group_id}`);
-      // console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
-      // callback({ success: true, isHeadJudge: true, rejoin: true });
-      // return;
+      console.log(judgesInGroup);
+      io.to(socket.id).emit('allJudgesInGroup', judgesInGroup);  // Send list of judges to the head judge
+      return;
 
     } else if (!head_judge && !headJudges[group_id]) {
       console.log("Error: Group has not been started by a head judge")
@@ -160,7 +175,37 @@ io.on('connection', (socket) => {
 
     } else if (head_judge && headJudges[group_id] == judge_id) {
       console.log(`Head judge of group ${group_id} rejoined: ${headJudges[group_id]}`);
+
+      groupUsers[group_id].push(socket.id);
+
+      console.log("GROUP USERS:", groupUsers[group_id]);
+
+      socket.join(`group_${group_id}`);
+      io.to(socket.id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou started the judging table.`);
+      console.log(`Socket ${socket.id} started group ${group_id}`);
+      console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
+
       callback({ success: true, isHeadJudge: true, rejoin: true });
+
+      // console.log(judgesInGroup);
+      console.log(loggedInJudges);
+      const judgesInGroup = groupUsers[group_id].map((judgeSocketId) => {
+        const judgeId = Array.from(loggedInJudges.entries()).find(([, socketId]) => socketId === judgeSocketId)?.[0];
+        if (judgeId && judgeDetails.has(judgeId)) {
+          const { judge_fname, judge_lname } = judgeDetails.get(judgeId);
+          return {
+            judge_id: judgeId,
+            first_name: judge_fname,
+            last_name: judge_lname,
+            socket_id: judgeSocketId
+          };
+        }
+        return null;
+      }).filter(Boolean);
+
+      console.log(judgesInGroup);
+      io.to(socket.id).emit('allJudgesInGroup', judgesInGroup);  // Send list of judges to the head judge
+
       return;
       
     }
@@ -184,8 +229,25 @@ io.on('connection', (socket) => {
 
     io.to(socket_id).emit('joinApproved', { group_id, apparatus });
     io.to(socket_id).emit('serverMessage', `Event ${group_id}, ${apparatus}:\nYou joined the judging table.`);
+
+    const headJudgeSocketId = loggedInJudges.get(headJudges[group_id]);
+
+    if (headJudgeSocketId) {
+      const judgeList = groupUsers[group_id].map((socketId) => {
+        const judgeId = Array.from(loggedInJudges.entries()).find(([id, sid]) => sid === socketId)?.[0];
+        const details = judgeDetails.get(judgeId);
+        return {
+          judge_id: judgeId,
+          first_name: details?.judge_fname,
+          last_name: details?.judge_lname,
+          socket_id: socketId,
+        };
+      });
+  
+      io.to(headJudgeSocketId).emit('allJudgesInGroup', judgeList);
+    }
     
-    io.to(loggedInJudges.get(headJudges[group_id])).emit('judgeJoined', { group_id, judge_id, judge_fname, judge_lname, socket_id });
+    // io.to(loggedInJudges.get(headJudges[group_id])).emit('judgeJoined', { judge_id, judge_fname, judge_lname, socket_id });
 
     console.log(`Judge ${judge_id} approved to join group ${group_id}`);
     console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
@@ -226,12 +288,26 @@ io.on('connection', (socket) => {
     // loggedInJudges.delete(judge_id);
     io.to(`group_${group_id}`).emit('serverMessage', `${judge_fname} ${judge_lname} left the group`);
     io.to(`group_${group_id}`).emit('judgeLeaveGroup', {judge_id, judge_fname, judge_lname, group_id});
-    console.log(`Socket left group${group_id}`);
-    console.log(`Group ${group_id} members: ${groupUsers[group_id]}`);
 
+    // Prepare an updated list of judges in the group for the head judge
+    const updatedJudgesList = groupUsers[group_id].map(socketId => {
+      const judgeId = [...loggedInJudges.entries()].find(([_, id]) => id === socketId)?.[0];
+      const { judge_fname, judge_lname } = judgeDetails.get(judgeId) || {};
+      return { judge_id: judgeId, first_name: judge_fname, last_name: judge_lname, socket_id: socketId };
+    }).filter(judge => judge.judge_id); // Ensure only valid judges are included
+    
+    // Send updated judge list to the head judge if they’re still in the group
+    const headJudgeSocketId = loggedInJudges.get(headJudges[group_id]);
+    if (headJudgeSocketId) {
+      io.to(headJudgeSocketId).emit('allJudgesInGroup', updatedJudgesList);
+    }
+
+    console.log(`Updated group ${group_id} members: ${JSON.stringify(updatedJudgesList)}`);
+
+    // If no users are left in the group, clean up the group data
     if (groupUsers[group_id].length === 0) {
-      // If no users left in the group, remove the group
       delete groupUsers[group_id];
+      console.log(`Group ${group_id} deleted as it has no remaining members.`);
     }
   });
 

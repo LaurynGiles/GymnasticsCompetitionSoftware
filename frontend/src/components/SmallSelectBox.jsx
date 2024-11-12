@@ -3,8 +3,7 @@ import ArrowIcon from "./ArrowIcon";
 import SelectOptions from "./SelectOptions";
 import { useNotifications } from "../utils/connection.jsx";
 
-const SmallSelectBox = ({ option , setOption, setJudgeId }) => {
-
+const SmallSelectBox = ({ option, setOption, setJudgeId }) => {
   const { joinedJudges } = useNotifications();
   const [showPopup, setShowPopup] = useState(false);
   const [rotateArrow, setRotateArrow] = useState(0);
@@ -12,9 +11,17 @@ const SmallSelectBox = ({ option , setOption, setJudgeId }) => {
   const [judgeMap, setJudgeMap] = useState({});
 
   useEffect(() => {
+    // Get joined judges from localStorage if available
+    const storedJoinedJudges = localStorage.getItem("joinedJudges");
+    const parsedJoinedJudges = storedJoinedJudges ? JSON.parse(storedJoinedJudges) : [];
+    
+    // Use the parsed data from localStorage or the real-time `joinedJudges` from `useNotifications`
+    const currentJoinedJudges = joinedJudges.length ? joinedJudges : parsedJoinedJudges;
+
+    // Map judge data into `allOptions` and `judgeMap`
     const newJudgeMap = {};
-    joinedJudges.forEach(judge => {
-      const name = `${judge.judge_fname} ${judge.judge_lname}`;
+    currentJoinedJudges.forEach(judge => {
+      const name = `${judge.first_name} ${judge.last_name}`;
       newJudgeMap[name] = judge.judge_id;
     });
     setAllOptions(["All", ...Object.keys(newJudgeMap)]);

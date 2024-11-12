@@ -7,7 +7,8 @@
 
   const EventBox = ({group_id, apparatus, levels, ages, gymnasts, complete, setShowError, setError, setNoSelect}) => {
 
-    const { judgeInfo, joinStatus, setJoinStatus, setGroupId, socket, groupId, setCurrApparatus, setHeadOfGroup, setTotalGymnasts, totalGymnasts } = useNotifications();
+    const [judgeInfo, setJudgeInfo] = useState(null);
+    const { joinStatus, setJoinStatus, setGroupId, socket, groupId, setCurrApparatus, setHeadOfGroup, setTotalGymnasts, totalGymnasts } = useNotifications();
     const [showPopup, setShowPopup] = useState(false);
     const [rotateArrow, setRotateArrow] = useState(180);
     const [statusMessage, setStatusMessage] = useState("");
@@ -15,6 +16,14 @@
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const navigate = useNavigate();
   
+    useEffect(() => {
+      const storedJudgeInfo = JSON.parse(localStorage.getItem("judgeInfo"));
+      if (storedJudgeInfo) {
+        setJudgeInfo(storedJudgeInfo);
+        // setComp(storedJudgeInfo.competition_id);
+      }
+    }, []);
+
     useEffect(() => {
 
         console.log(`Complete ${complete}`);
@@ -93,6 +102,11 @@
 
     const handleJoinGroup = (group_id) => {
       return new Promise((resolve, reject) => {
+        if (!judgeInfo) {
+          reject("Judge information is missing.");
+          return;
+        }
+
         socket.emit('joinGroup', {group_id, apparatus, judge_id: judgeInfo.judge_id, head_judge: judgeInfo.head_judge, judge_fname: judgeInfo.judge_fname, judge_lname: judgeInfo.judge_lname }, (response) => {
           if (response.success) {
 
@@ -149,11 +163,7 @@
           </div>
           <div className="flex items-center justify-between md:justify-end md:gap-14 md:w-[40%] px-4 py-3">
               <div onClick={!isButtonDisabled ? handleJudgeHome : null}>
-                {!judgeInfo.head_judge ? (
-                  <TinyBlueButton title={"Join"} group_id={group_id} buttonClass={buttonClass}/>
-                ) : (
-                  <TinyBlueButton title={"Start"} group_id={group_id} buttonClass={buttonClass}/>
-                )}
+                <TinyBlueButton title={judgeInfo && judgeInfo.head_judge ? "Start" : "Join"} group_id={group_id} buttonClass={buttonClass} />
               </div>
             <div onClick={handleArrowClick}>
               <ArrowIcon rotation={rotateArrow}/>
