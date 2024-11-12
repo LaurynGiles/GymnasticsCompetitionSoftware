@@ -19,11 +19,6 @@ const HomeAdmin = () => {
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const storedCompBoxes = JSON.parse(localStorage.getItem('compBoxes')) || [];
-    setCompBoxes(storedCompBoxes);
-  }, []);
-
   // Fetch competitions from the API
   useEffect(() => {
     const fetchCompetitions = async () => {

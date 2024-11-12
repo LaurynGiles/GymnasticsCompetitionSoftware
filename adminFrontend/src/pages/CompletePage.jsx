@@ -415,6 +415,8 @@ const CompletePage = () => {
         }
       }
   
+      const defaultGender = storedCompetition.style === "MAG" ? "M" : "F";
+
       const storedGymnasts = JSON.parse(localStorage.getItem('gymnasts')) || [];
       for (const gymnast of storedGymnasts) {
         const gymnastPayload = {
@@ -426,6 +428,7 @@ const CompletePage = () => {
           district: gymnast.district,
           level: gymnast.level,
           age: gymnast.age ? gymnast.age.replace(' yrs', '') : '',
+          gender: defaultGender,
           group_id: groupMapping[gymnast.group_id], // Link to the gymnast group created earlier
         };
         console.log("Creating Gymnast Payload:", gymnastPayload);

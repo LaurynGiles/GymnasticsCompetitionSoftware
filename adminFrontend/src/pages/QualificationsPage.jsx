@@ -105,7 +105,7 @@ const QualificationsPage = () => {
           <PageHeader title={competitionInfo.competition_name} />
 
           <div className="flex flex-col gap-8">
-            <ConfigHeader text="Final Results" />
+            <ConfigHeader text="Qualifications" />
             <div className="bg-white p-5 rounded-lg w-full">
               <div className="flex flex-col items-center justify-start">
 

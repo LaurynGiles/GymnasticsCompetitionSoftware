@@ -67,3 +67,20 @@ export async function deleteAdmin(req, res, next) {
         next(error);
     }
 }
+
+export async function checkAdminExists(req, res, next) {
+    try {
+        const { username } = req.params;
+        const adminExists = await Admin.findOne({ where: { username } });
+
+        console.log(adminExists)
+        
+        if (adminExists) {
+            res.status(200).json({ exists: true });
+        } else {
+            res.status(200).json({ exists: false });
+        }
+    } catch (error) {
+        next(error);
+    }
+}

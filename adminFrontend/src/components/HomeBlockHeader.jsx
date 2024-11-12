@@ -18,7 +18,7 @@ const HomeBlockHeader = ({ text, exitOnClick }) => {
       <div className="flex items-center gap-2 md:gap-4">
         <ExitIcon onClick={exitOnClick} />
         <SettingsIcon />
-        <QRIcon onClick={handleQRCodeClick} />
+        {/* <QRIcon onClick={handleQRCodeClick} /> */}
       </div>
       
       {/* Center Text */}
@@ -32,7 +32,7 @@ const HomeBlockHeader = ({ text, exitOnClick }) => {
       <div className="flex items-center gap-2 md:gap-4" style={{ visibility: 'hidden' }}>
         <ExitIcon />
         <SettingsIcon />
-        <QRIcon />
+        {/* <QRIcon /> */}
       </div>
     </div>
   );

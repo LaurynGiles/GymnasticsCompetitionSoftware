@@ -338,4 +338,28 @@ export const getFinalResults = async (competitionId) => {
             }
         }
     };
+
+    export const createAdmin = async (adminData) => {
+        try {
+            const response = await axiosInstance.post('/admins', adminData);
+            return { success: true, data: response.data };
+        } catch (error) {
+            console.error("Error creating admin:", error);
+            if (error.response && error.response.data) {
+                return { success: false, message: error.response.data.message };
+            } else {
+                return { success: false, message: 'An error occurred while creating the admin' };
+            }
+        }
+    };
+
+    export const checkAdminExists = async (username) => {
+        try {
+            const response = await axiosInstance.get(`/admins/exists/${username}`);
+            return { success: true, exists: response.data.exists };
+        } catch (error) {
+            console.error("Error checking admin existence:", error);
+            return { success: false, message: 'An error occurred while checking admin existence' };
+        }
+    };
     

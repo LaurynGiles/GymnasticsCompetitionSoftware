@@ -15,6 +15,7 @@ module.exports = {
         group_id: 1,
         level: "1",
         age: "7-8",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -30,6 +31,7 @@ module.exports = {
         group_id: 1,
         level: "1",
         age: "7-8",
+        gender: "M",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -45,6 +47,7 @@ module.exports = {
         group_id: 2,
         level: "1",
         age: "9-10",
+        gender: "M",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -60,6 +63,7 @@ module.exports = {
         group_id: 2,
         level: "1",
         age: "9-10",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -75,6 +79,7 @@ module.exports = {
         group_id: 1,
         level: "1",
         age: "7-8",
+        gender: "M",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -90,6 +95,7 @@ module.exports = {
         group_id: 1,
         level: "1",
         age: "7-8",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -105,6 +111,7 @@ module.exports = {
         group_id: 2,
         level: "1",
         age: "9-10",
+        gender: "M",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -120,6 +127,7 @@ module.exports = {
         group_id: 2,
         level: "1",
         age: "9-10",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -135,6 +143,7 @@ module.exports = {
         group_id: 1,
         level: "1",
         age: "7-8",
+        gender: "M",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -150,6 +159,7 @@ module.exports = {
         group_id: 1,
         level: "1",
         age: "7-8",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -165,6 +175,7 @@ module.exports = {
         group_id: 3,
         level: "1",
         age: "11-12",
+        gender: "M",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -180,6 +191,7 @@ module.exports = {
         group_id: 3,
         level: "1",
         age: "11-12",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -195,6 +207,7 @@ module.exports = {
         group_id: 3,
         level: "1",
         age: "11-12",
+        gender: "M",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -210,6 +223,7 @@ module.exports = {
         group_id: 3,
         level: "1",
         age: "11-12",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -225,6 +239,7 @@ module.exports = {
         group_id: 3,
         level: "1",
         age: "11-12",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -240,6 +255,7 @@ module.exports = {
         group_id: 3,
         level: "1",
         age: "11-12",
+        gender: "M",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -255,6 +271,7 @@ module.exports = {
         group_id: 4,
         level: "1",
         age: "13-14",
+        gender: "F",
         createdAt: new Date(),
         updatedAt: new Date()
       }

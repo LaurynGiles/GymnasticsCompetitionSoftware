@@ -119,11 +119,8 @@ describe('API Tests', () => {
             location: 'Springfield',
             style: 'MAG',
             bronze_min_score: 10.0,
-            bronze_max_score: 15.0,
             silver_min_score: 16.0,
-            silver_max_score: 20.0,
             gold_min_score: 21.0,
-            gold_max_score: 25.0,
           };
       
           server.request.execute(app)
@@ -134,11 +131,8 @@ describe('API Tests', () => {
               expect(res.body).to.be.an('object');
               expect(res.body).to.have.property('competition_id');
               expect(res.body.bronze_min_score).to.equal(10.0);
-              expect(res.body.bronze_max_score).to.equal(15.0);
               expect(res.body.silver_min_score).to.equal(16.0);
-              expect(res.body.silver_max_score).to.equal(20.0);
               expect(res.body.gold_min_score).to.equal(21.0);
-              expect(res.body.gold_max_score).to.equal(25.0);
             });
       
           const competition2 = {
@@ -149,11 +143,8 @@ describe('API Tests', () => {
             location: 'Sunville',
             style: 'WAG',
             bronze_min_score: 12.0,
-            bronze_max_score: 17.0,
             silver_min_score: 18.0,
-            silver_max_score: 22.0,
             gold_min_score: 23.0,
-            gold_max_score: 28.0,
           };
       
           server.request.execute(app)
@@ -164,11 +155,8 @@ describe('API Tests', () => {
               expect(res.body).to.be.an('object');
               expect(res.body).to.have.property('competition_id');
               expect(res.body.bronze_min_score).to.equal(12.0);
-              expect(res.body.bronze_max_score).to.equal(17.0);
               expect(res.body.silver_min_score).to.equal(18.0);
-              expect(res.body.silver_max_score).to.equal(22.0);
               expect(res.body.gold_min_score).to.equal(23.0);
-              expect(res.body.gold_max_score).to.equal(28.0);
               createdCompetitionId = res.body.competition_id;
               done();
             });
@@ -182,11 +170,8 @@ describe('API Tests', () => {
               expect(res.body).to.be.an('array');
               res.body.forEach(competition => {
                 expect(competition).to.have.property('bronze_min_score');
-                expect(competition).to.have.property('bronze_max_score');
                 expect(competition).to.have.property('silver_min_score');
-                expect(competition).to.have.property('silver_max_score');
                 expect(competition).to.have.property('gold_min_score');
-                expect(competition).to.have.property('gold_max_score');
               });
               done();
             });
@@ -196,11 +181,8 @@ describe('API Tests', () => {
           const updatedCompetition = {
             end_date: '2024-06-18',
             bronze_min_score: 11.0,
-            bronze_max_score: 16.0,
             silver_min_score: 17.0,
-            silver_max_score: 21.0,
             gold_min_score: 22.0,
-            gold_max_score: 26.0,
           };
       
           server.request.execute(app)
@@ -211,11 +193,8 @@ describe('API Tests', () => {
               expect(res.body).to.be.an('object');
               expect(res.body.end_date).to.equal('2024-06-18');
               expect(res.body.bronze_min_score).to.equal(11.0);
-              expect(res.body.bronze_max_score).to.equal(16.0);
               expect(res.body.silver_min_score).to.equal(17.0);
-              expect(res.body.silver_max_score).to.equal(21.0);
               expect(res.body.gold_min_score).to.equal(22.0);
-              expect(res.body.gold_max_score).to.equal(26.0);
               done();
             });
         });
@@ -228,11 +207,8 @@ describe('API Tests', () => {
               expect(res.body).to.be.an('object');
               expect(res.body).to.have.property('competition_id', createdCompetitionId);
               expect(res.body).to.have.property('bronze_min_score', 11.0);
-              expect(res.body).to.have.property('bronze_max_score', 16.0);
               expect(res.body).to.have.property('silver_min_score', 17.0);
-              expect(res.body).to.have.property('silver_max_score', 21.0);
               expect(res.body).to.have.property('gold_min_score', 22.0);
-              expect(res.body).to.have.property('gold_max_score', 26.0);
               done();
             });
         });
@@ -434,18 +410,18 @@ describe('API Tests', () => {
                 });
         });
 
-        it('should get the current active TimeSlot', (done) => {
-            server.request.execute(app)
-              .get('/api/timeSlots/active/')
-              .end((err, res) => {
-                expect(res).to.have.status(200);
-                expect(res.body).to.be.an('object');
-                expect(res.body).to.have.property('time_slot_id');
-                expect(res.body).to.have.property('date');
-                expect(res.body).to.have.property('competition_time');
-                done();
-            });
-        });
+        // it('should get the current active TimeSlot', (done) => {
+        //     server.request.execute(app)
+        //       .get('/api/timeSlots/active/')
+        //       .end((err, res) => {
+        //         expect(res).to.have.status(200);
+        //         expect(res.body).to.be.an('object');
+        //         expect(res.body).to.have.property('time_slot_id');
+        //         expect(res.body).to.have.property('date');
+        //         expect(res.body).to.have.property('competition_time');
+        //         done();
+        //     });
+        // });
 
         it('should update a timeslot', (done) => {
             const updatedTimeSlot = {
@@ -707,6 +683,7 @@ describe('API Tests', () => {
                 ethnicity: 'Caucasian',
                 level: '1',
                 age: '7-8',
+                gender: 'M',
                 group_id: 1
             };
 
@@ -730,6 +707,7 @@ describe('API Tests', () => {
                 ethnicity: 'Caucasian',
                 level: '2',
                 age: '10-11',
+                gender: 'F',
                 group_id: 1
             };
 

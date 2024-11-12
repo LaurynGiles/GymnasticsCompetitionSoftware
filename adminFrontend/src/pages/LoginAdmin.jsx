@@ -14,10 +14,13 @@ const LoginAdmin = () => {
   const navigate = useNavigate();
   const { setAdminInfo, socket } = useNotifications();
 
-  // useEffect(() => {
-    // localStorage.clear();
-    // localStorage.setItem("layout", 0);
-  // }, []);
+  useEffect(() => {
+    const storedCredentials = JSON.parse(localStorage.getItem("newAdminCredentials"));
+    if (storedCredentials) {
+      setUsername(storedCredentials.username);
+      setPassword(storedCredentials.password);
+    }
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -43,6 +46,7 @@ const LoginAdmin = () => {
         socket.emit('adminLogin', { admin_id, username}, (socketResponse) => {
           if (socketResponse.success) {
             console.log("Socket joined successfully");
+            localStorage.removeItem("newAdminCredentials");
             navigate('/homeAdmin');
           } else {
             console.log("Socket bad error");
@@ -60,6 +64,10 @@ const LoginAdmin = () => {
 
   };
 
+  const handleNavigateToRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <div className="bg-glaucous flex flex-col items-center w-full h-screen">
       <div className="w-full h-[40%] flex">
@@ -75,7 +83,7 @@ const LoginAdmin = () => {
               <InputBox number={password} setNumber={setPassword} hasError={!!errorMessage} title={"Password"}/>
             </div>
               <BlueButton title="Login" onClick={handleLogin}/>
-              <RegisterLink />
+              <RegisterLink onClick={handleNavigateToRegister}/>
           </div>
           
       </div>

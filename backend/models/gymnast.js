@@ -45,6 +45,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    gender: {
+      type: DataTypes.STRING(1),
+      allowNull: false,
+    },
     group_id: {
       type: DataTypes.INTEGER,
       allowNull: true,

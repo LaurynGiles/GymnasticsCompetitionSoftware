@@ -15,6 +15,7 @@ import { getFinalResults } from "../utils/api.js";
 import Header from "../components/Header.jsx";
 import LargeHeader from "../components/LargeHeader.jsx";
 import EditIcon from "../components/EditIcon.jsx";
+import Popup from "../components/Popup.jsx";
 
 const FinalResultsPage = () => {
 

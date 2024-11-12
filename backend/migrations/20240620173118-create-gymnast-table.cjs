@@ -50,6 +50,13 @@ module.exports = {
         type: Sequelize.STRING(20),
         allowNull: false,
       },
+      gender: {
+        type: Sequelize.STRING(1),
+        allowNull: false,
+        validate: {
+          isIn: [['M', 'F']],
+        },
+      },
       group_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
